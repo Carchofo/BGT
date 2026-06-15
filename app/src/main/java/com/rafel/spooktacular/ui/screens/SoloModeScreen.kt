@@ -1,5 +1,6 @@
 package com.rafel.spooktacular.ui.screens
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -28,6 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import com.rafel.spooktacular.R
 import com.rafel.spooktacular.ui.theme.*
 import com.rafel.spooktacular.ui.util.CardSoundPlayer
@@ -179,6 +181,11 @@ fun SoloModeScreen(onBack: () -> Unit = {}) {
     var turnCards  by remember { mutableStateOf<List<KilltronCard>>(emptyList()) }
     var selectedTab by remember { mutableIntStateOf(0) }
 
+    // Intercepta el botón atrás del sistema mientras se juega
+    BackHandler(enabled = phase == SoloPhase.PLAYING) {
+        phase = SoloPhase.READY
+    }
+
     fun drawTurn(): List<KilltronCard> {
         if (idxA >= queueA.size) { queueA = DECK_A_CARDS.shuffled(); idxA = 0 }
         if (idxB >= queueB.size) { queueB = DECK_B_CARDS.shuffled(); idxB = 0 }
@@ -191,7 +198,7 @@ fun SoloModeScreen(onBack: () -> Unit = {}) {
             TopAppBar(
                 title = {
                     Text(
-                        if (phase == SoloPhase.READY) "🤖  Killtron" else "Turno $turnNumber · Carta ${cardIndex + 1}/3",
+                        if (phase == SoloPhase.READY) stringResource(R.string.killtron_title) else stringResource(R.string.killtron_turn_card, turnNumber, cardIndex + 1),
                         style = MaterialTheme.typography.titleLarge,
                         color = GhostWhite, fontWeight = FontWeight.Bold
                     )
@@ -218,13 +225,13 @@ fun SoloModeScreen(onBack: () -> Unit = {}) {
                 NavigationBarItem(
                     selected = selectedTab == 0, onClick = { selectedTab = 0 },
                     icon = { Icon(Icons.Default.Settings, null) },
-                    label = { Text("Setup") },
+                    label = { Text(stringResource(R.string.nav_setup)) },
                     colors = navColors
                 )
                 NavigationBarItem(
                     selected = selectedTab == 1, onClick = { selectedTab = 1 },
                     icon = { Icon(Icons.Default.SmartToy, null) },
-                    label = { Text("Juego") },
+                    label = { Text(stringResource(R.string.nav_game)) },
                     colors = navColors
                 )
             }
@@ -250,21 +257,13 @@ fun SoloModeScreen(onBack: () -> Unit = {}) {
                     SoloPhase.PLAYING -> PlayingScreen(
                         cards = turnCards,
                         cardIndex = cardIndex,
-                        onNext = {
-                            if (cardIndex < 2) {
-                                soundPlayer.playDeal()
-                                cardIndex++
-                            } else {
-                                // Turno completado — volver a READY
-                                turnNumber++
-                                phase = SoloPhase.READY
-                            }
+                        onSelectCard = { i ->
+                            soundPlayer.playFlip()
+                            cardIndex = i
                         },
-                        onPrev = {
-                            if (cardIndex > 0) {
-                                soundPlayer.playFlip()
-                                cardIndex--
-                            }
+                        onEndTurn = {
+                            turnNumber++
+                            phase = SoloPhase.READY
                         }
                     )
                 }
@@ -296,27 +295,27 @@ private fun ReadyScreen(turnNumber: Int, onStart: () -> Unit) {
     ) {
         if (turnNumber > 1) {
             Text(
-                "Turno $turnNumber",
+                stringResource(R.string.killtron_turn_label, turnNumber),
                 style = MaterialTheme.typography.headlineMedium,
                 color = HalloweenOrange, fontWeight = FontWeight.Black
             )
             Spacer(Modifier.height(8.dp))
             Text(
-                "Killtron ejecuta su programa",
+                stringResource(R.string.killtron_executing),
                 style = MaterialTheme.typography.bodyMedium,
                 color = GhostWhite.copy(alpha = 0.5f)
             )
             Spacer(Modifier.height(32.dp))
         } else {
             Text(
-                "KILLTRON-3000",
+                stringResource(R.string.killtron_name),
                 style = MaterialTheme.typography.headlineMedium.copy(letterSpacing = 3.sp),
                 color = HalloweenOrange, fontWeight = FontWeight.Black,
                 textAlign = TextAlign.Center
             )
             Spacer(Modifier.height(6.dp))
             Text(
-                "Pulsa la carta para iniciar el turno",
+                stringResource(R.string.killtron_start_hint),
                 style = MaterialTheme.typography.bodyMedium,
                 color = GhostWhite.copy(alpha = 0.5f),
                 textAlign = TextAlign.Center
@@ -341,7 +340,7 @@ private fun ReadyScreen(turnNumber: Int, onStart: () -> Unit) {
         ) {
             Image(
                 painter = painterResource(R.drawable.card_back),
-                contentDescription = "Empezar turno",
+                contentDescription = stringResource(R.string.cd_start_turn),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize()
             )
@@ -359,7 +358,7 @@ private fun ReadyScreen(turnNumber: Int, onStart: () -> Unit) {
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        if (turnNumber == 1) "▶  EMPEZAR PARTIDA" else "▶  TURNO $turnNumber",
+                        if (turnNumber == 1) stringResource(R.string.btn_start_game) else stringResource(R.string.btn_turn_n, turnNumber),
                         style = MaterialTheme.typography.titleMedium,
                         color = HalloweenOrange,
                         fontWeight = FontWeight.Black,
@@ -371,27 +370,138 @@ private fun ReadyScreen(turnNumber: Int, onStart: () -> Unit) {
     }
 }
 
-// ── Pantalla PLAYING — 3 cartas en secuencia ──────────────────────────────────
+// ── Localización de cartas ────────────────────────────────────────────────────
+
+@Composable
+private fun localizeCard(card: KilltronCard): KilltronCard = when (card.name) {
+    "Forcejeo" -> card.copy(
+        deckLabel = stringResource(R.string.deck_a_label),
+        description = stringResource(R.string.card_forcejeo_desc),
+        steps = listOf(
+            "🤖" to stringResource(R.string.card_forcejeo_step1),
+            "🏆" to stringResource(R.string.card_forcejeo_step2),
+            "👻" to stringResource(R.string.card_forcejeo_step3),
+            "🎨" to stringResource(R.string.card_forcejeo_step4)
+        )
+    )
+    "Despliegue" -> card.copy(
+        deckLabel = stringResource(R.string.deck_a_label),
+        description = stringResource(R.string.card_despliegue_desc)
+    )
+    "Sobresalto" -> card.copy(
+        deckLabel = stringResource(R.string.deck_a_label),
+        description = stringResource(R.string.card_sobresalto_desc)
+    )
+    "Avalancha" -> card.copy(
+        deckLabel = stringResource(R.string.deck_b_label),
+        description = stringResource(R.string.card_avalancha_desc),
+        steps = listOf(
+            "💥" to stringResource(R.string.card_avalancha_step1),
+            "🏠" to stringResource(R.string.card_avalancha_step2),
+            "🚪" to stringResource(R.string.card_avalancha_step3),
+            "🏅" to stringResource(R.string.card_avalancha_step4)
+        )
+    )
+    "Buscar" -> card.copy(
+        deckLabel = stringResource(R.string.deck_b_label),
+        description = stringResource(R.string.card_buscar_desc),
+        steps = listOf(
+            "👥" to stringResource(R.string.card_buscar_step1),
+            "🤝" to stringResource(R.string.card_buscar_step2),
+            "🃏" to stringResource(R.string.card_buscar_step3),
+            "🔄" to stringResource(R.string.card_buscar_step4)
+        )
+    )
+    "Arco Voltaico" -> card.copy(
+        deckLabel = stringResource(R.string.deck_b_label),
+        description = stringResource(R.string.card_arco_desc),
+        steps = listOf(
+            "⚡" to stringResource(R.string.card_arco_step1),
+            "🔗" to stringResource(R.string.card_arco_step2),
+            "📉" to stringResource(R.string.card_arco_step3),
+            "⚠️" to stringResource(R.string.card_arco_step4)
+        )
+    )
+    "Acosar" -> card.copy(
+        deckLabel = stringResource(R.string.deck_c_label),
+        description = stringResource(R.string.card_acosar_desc),
+        steps = listOf(
+            "👻" to stringResource(R.string.card_acosar_step1),
+            "🧭" to stringResource(R.string.card_acosar_step2),
+            "🎨" to stringResource(R.string.card_acosar_step3),
+            "👻" to stringResource(R.string.card_acosar_step4)
+        )
+    )
+    "Exterminar" -> card.copy(
+        deckLabel = stringResource(R.string.deck_c_label),
+        description = stringResource(R.string.card_exterminar_desc),
+        steps = listOf(
+            "👻" to stringResource(R.string.card_exterminar_step1),
+            "🧭" to stringResource(R.string.card_exterminar_step2),
+            "🎨" to stringResource(R.string.card_exterminar_step3),
+            "🏅" to stringResource(R.string.card_exterminar_step4)
+        )
+    )
+    "Comer" -> card.copy(
+        deckLabel = stringResource(R.string.deck_c_label),
+        description = stringResource(R.string.card_comer_desc),
+        steps = listOf(
+            "🍖" to stringResource(R.string.card_comer_step1),
+            "🎨" to stringResource(R.string.card_comer_step2),
+            "🎟️" to stringResource(R.string.card_comer_step3),
+            "👥" to stringResource(R.string.card_comer_step4)
+        )
+    )
+    else -> card
+}
+
+// ── Resolución dinámica de movimiento según la carta final ────────────────────
+
+@Composable
+private fun resolveCard(card: KilltronCard, finalCard: KilltronCard): KilltronCard {
+    val localized = localizeCard(card)
+    val movStep = "➡️" to when (finalCard.name) {
+        "Exterminar", "Acosar" -> stringResource(R.string.move_result_spectators, finalCard.name)
+        "Comer"                -> stringResource(R.string.move_result_eat)
+        else                   -> stringResource(R.string.move_result_generic)
+    }
+    val doorStep = "🚪" to stringResource(R.string.move_door_tiebreak)
+    val adjStep  = "➡️" to stringResource(R.string.move_adjacent_only)
+    return when (card.name) {
+        "Despliegue" -> localized.copy(steps = listOf(movStep, doorStep, adjStep))
+        "Sobresalto" -> localized.copy(
+            steps = listOf(
+                movStep, doorStep,
+                "🃏" to stringResource(R.string.card_sobresalto_step2),
+                "⚠️" to stringResource(R.string.card_sobresalto_step3),
+                "🔄" to stringResource(R.string.card_sobresalto_step4)
+            )
+        )
+        else -> localized
+    }
+}
+
+// ── Pantalla PLAYING — 3 cartas reveladas a la vez, tabs clicables ────────────
 
 @Composable
 private fun PlayingScreen(
     cards: List<KilltronCard>,
     cardIndex: Int,
-    onNext: () -> Unit,
-    onPrev: () -> Unit
+    onSelectCard: (Int) -> Unit,
+    onEndTurn: () -> Unit
 ) {
     if (cards.isEmpty()) return
-    val card = cards[cardIndex]
-    val isLast = cardIndex == cards.size - 1
+    val finalCard = cards.last()
+    val card = resolveCard(cards[cardIndex], finalCard)  // @Composable — OK aquí
 
     Column(
         Modifier.fillMaxSize().padding(horizontal = 24.dp, vertical = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        // ── Indicador A / B / C ───────────────────────────────────────────────
+        // ── Tabs A / B / C — todos clicables desde el inicio ─────────────────
         Row(
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             cards.forEachIndexed { i, c ->
@@ -400,26 +510,36 @@ private fun PlayingScreen(
                     Modifier
                         .clip(RoundedCornerShape(8.dp))
                         .background(if (active) c.deckColor else CardBorder)
-                        .padding(horizontal = if (active) 14.dp else 10.dp, vertical = 5.dp)
+                        .clickable { onSelectCard(i) }
+                        .padding(horizontal = if (active) 14.dp else 10.dp, vertical = 6.dp)
                 ) {
-                    Text(
-                        c.deckLabel,
-                        style = MaterialTheme.typography.labelLarge.copy(fontSize = 11.sp),
-                        color = if (active) GhostWhite else GhostWhite.copy(alpha = 0.35f),
-                        fontWeight = if (active) FontWeight.Bold else FontWeight.Normal
-                    )
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(
+                            c.deckLabel,
+                            style = MaterialTheme.typography.labelLarge.copy(fontSize = 11.sp),
+                            color = if (active) GhostWhite else GhostWhite.copy(alpha = 0.5f),
+                            fontWeight = if (active) FontWeight.Bold else FontWeight.Normal
+                        )
+                        if (!active) {
+                            Text(
+                                c.name,
+                                style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp),
+                                color = GhostWhite.copy(alpha = 0.4f)
+                            )
+                        }
+                    }
                 }
             }
         }
 
-        // ── Carta + pasos ─────────────────────────────────────────────────────
+        // ── Carta activa + pasos ──────────────────────────────────────────────
         Column(
             Modifier
                 .weight(1f)
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Carta
+            Spacer(Modifier.height(12.dp))
             Row(verticalAlignment = Alignment.Top) {
                 Box(
                     Modifier
@@ -452,9 +572,8 @@ private fun PlayingScreen(
                 }
             }
 
-            Spacer(Modifier.height(20.dp))
+            Spacer(Modifier.height(16.dp))
 
-            // Pasos de ejecución
             Card(
                 colors = CardDefaults.cardColors(containerColor = CardBackground),
                 border = BorderStroke(1.dp, card.deckColor.copy(alpha = 0.4f)),
@@ -462,10 +581,9 @@ private fun PlayingScreen(
             ) {
                 Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     Text(
-                        "Cómo lo ejecuta Killtron",
+                        stringResource(R.string.card_how_killtron_executes),
                         style = MaterialTheme.typography.titleSmall,
-                        color = card.deckColor,
-                        fontWeight = FontWeight.Bold
+                        color = card.deckColor, fontWeight = FontWeight.Bold
                     )
                     HorizontalDivider(color = card.deckColor.copy(alpha = 0.25f))
                     card.steps.forEachIndexed { i, (emoji, texto) ->
@@ -473,8 +591,7 @@ private fun PlayingScreen(
                             Text(
                                 "${i + 1}.",
                                 style = MaterialTheme.typography.labelLarge,
-                                color = card.deckColor,
-                                fontWeight = FontWeight.Bold,
+                                color = card.deckColor, fontWeight = FontWeight.Bold,
                                 modifier = Modifier.width(22.dp)
                             )
                             Text(emoji, fontSize = 14.sp, modifier = Modifier.padding(end = 6.dp))
@@ -489,21 +606,19 @@ private fun PlayingScreen(
                     }
                 }
             }
-
             Spacer(Modifier.height(12.dp))
         }
 
-        // ── Botones siguiente / anterior ──────────────────────────────────────
+        // ── Navegación entre cartas + Fin de turno ───────────────────────────
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Row(
                 Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                // Botón Anterior
                 OutlinedButton(
-                    onClick = onPrev,
+                    onClick = { if (cardIndex > 0) onSelectCard(cardIndex - 1) },
                     enabled = cardIndex > 0,
-                    modifier = Modifier.weight(1f).height(52.dp),
+                    modifier = Modifier.weight(1f).height(50.dp),
                     shape = RoundedCornerShape(14.dp),
                     border = BorderStroke(1.dp, if (cardIndex > 0) CardBorder else CardBorder.copy(alpha = 0.3f))
                 ) {
@@ -511,28 +626,43 @@ private fun PlayingScreen(
                         tint = if (cardIndex > 0) GhostWhite else GhostWhite.copy(alpha = 0.3f),
                         modifier = Modifier.size(20.dp))
                     Spacer(Modifier.width(4.dp))
-                    Text("Anterior",
+                    Text(stringResource(R.string.btn_prev),
                         color = if (cardIndex > 0) GhostWhite else GhostWhite.copy(alpha = 0.3f))
                 }
-
-                // Botón Siguiente / Fin de turno
                 Button(
-                    onClick = onNext,
-                    modifier = Modifier.weight(1f).height(52.dp),
+                    onClick = { if (cardIndex < cards.size - 1) onSelectCard(cardIndex + 1) },
+                    enabled = cardIndex < cards.size - 1,
+                    modifier = Modifier.weight(1f).height(50.dp),
                     shape = RoundedCornerShape(14.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = HalloweenOrange)
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = HalloweenOrange,
+                        disabledContainerColor = HalloweenOrange.copy(alpha = 0.3f)
+                    )
                 ) {
-                    Text(
-                        if (isLast) "Fin turno" else "Siguiente",
-                        color = NightBlack, fontWeight = FontWeight.Bold
-                    )
+                    Text(stringResource(R.string.btn_next),
+                        color = if (cardIndex < cards.size - 1) NightBlack else NightBlack.copy(alpha = 0.5f),
+                        fontWeight = FontWeight.Bold)
                     Spacer(Modifier.width(4.dp))
-                    Icon(
-                        if (isLast) Icons.AutoMirrored.Filled.ArrowForward
-                        else Icons.AutoMirrored.Filled.NavigateNext,
-                        null, tint = NightBlack, modifier = Modifier.size(20.dp)
-                    )
+                    Icon(Icons.AutoMirrored.Filled.NavigateNext, null,
+                        tint = if (cardIndex < cards.size - 1) NightBlack else NightBlack.copy(alpha = 0.5f),
+                        modifier = Modifier.size(20.dp))
                 }
+            }
+            Spacer(Modifier.height(6.dp))
+            // Fin de turno — pequeño y discreto para evitar pulsaciones accidentales
+            TextButton(
+                onClick = onEndTurn,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Icon(Icons.AutoMirrored.Filled.ArrowForward, null,
+                    tint = GhostWhite.copy(alpha = 0.4f),
+                    modifier = Modifier.size(14.dp))
+                Spacer(Modifier.width(4.dp))
+                Text(
+                    stringResource(R.string.btn_end_turn),
+                    color = GhostWhite.copy(alpha = 0.4f),
+                    style = MaterialTheme.typography.bodySmall
+                )
             }
         }
     }
@@ -546,36 +676,22 @@ private fun SpookySetupTab(modifier: Modifier = Modifier) {
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Text("Preparación · Spooktacular", color = GhostWhite, fontWeight = FontWeight.Bold,
+        Text(stringResource(R.string.spooky_setup_title), color = GhostWhite, fontWeight = FontWeight.Bold,
             style = MaterialTheme.typography.titleLarge)
-        Text("Terror en el Silver Cinema · 1 a 5 jugadores",
+        Text(stringResource(R.string.spooky_setup_subtitle),
             color = HalloweenOrange.copy(alpha = 0.6f),
             style = MaterialTheme.typography.bodySmall)
 
-        SpookySetupBlock("🎬 Tablero",
-            "• Despliega el tablero del Silver Cinema con sus estancias conectadas por puertas.\n" +
-            "• Coloca el marcador de ronda en la posición 1.\n" +
-            "• Prepara el saco con los espectadores de todos los colores.\n" +
-            "• Distribuye los espectadores iniciales: 2-3 por estancia según el mapa.")
-        SpookySetupBlock("👤 Cada jugador recibe",
-            "• 1 meeple en su color.\n" +
-            "• Coloca tu meeple en la estancia inicial asignada (o elegida).\n" +
-            "• Marcador de puntos → casilla 0 del track de puntuación.\n" +
-            "• Sin cartas ni recursos al inicio.")
-        SpookySetupBlock("🤖 Killtron-3000",
-            "• Coloca a Killtron en la estancia central del cine (la más conectada).\n" +
-            "• Mezcla el Mazo A 🟠 por separado (Forcejeo, Despliegue, Sobresalto…).\n" +
-            "• Mezcla el Mazo B 🟣 por separado (Avalancha, Buscar, Arco Voltaico…).\n" +
-            "• Mezcla el Mazo C 🟢 por separado (Devorar, Comer…).\n" +
-            "• Cada turno Killtron ejecuta 1 carta de cada mazo (A → B → C).")
-        SpookySetupBlock("🎯 Objetivo y fin de partida",
-            "• El juego termina cuando Killtron completa su condición de victoria o se agota el tiempo.\n" +
-            "• El jugador con más puntos al final gana.\n" +
-            "• En modo solitario: intenta superar tu propia puntuación.")
-        SpookySetupBlock("🃏 Solo mode — Killtron AI",
-            "• El jugador actúa primero cada turno.\n" +
-            "• Luego pulsa la carta para revelar el turno de Killtron (3 cartas en secuencia).\n" +
-            "• Consulta la pestaña Juego para ejecutar el turno de Killtron.")
+        SpookySetupBlock(stringResource(R.string.spooky_setup_board_title),
+            stringResource(R.string.spooky_setup_board_body))
+        SpookySetupBlock(stringResource(R.string.spooky_setup_player_title),
+            stringResource(R.string.spooky_setup_player_body))
+        SpookySetupBlock(stringResource(R.string.spooky_setup_killtron_title),
+            stringResource(R.string.spooky_setup_killtron_body))
+        SpookySetupBlock(stringResource(R.string.spooky_setup_objective_title),
+            stringResource(R.string.spooky_setup_objective_body))
+        SpookySetupBlock(stringResource(R.string.spooky_setup_soloai_title),
+            stringResource(R.string.spooky_setup_soloai_body))
     }
 }
 

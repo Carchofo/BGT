@@ -1,0 +1,626 @@
+<resources>
+    <string name="app_name">Spooktacular</string>
+
+    <!-- ── Disclaimer ── -->
+    <string name="disclaimer_title">TBG – Tools Board Games</string>
+    <string name="disclaimer_accept_btn">Accept &amp; Continue</string>
+    <string name="disclaimer_section1_title">🎮  Independent application</string>
+    <string name="disclaimer_section1_body">TBG – Tools Board Games is not affiliated with or endorsed by Board&amp;Dice, AEG, Capstone Games, Samaruc Games, Bad Comet, Plan B Games or Blue Orange Games.</string>
+    <string name="disclaimer_section2_title">©  Intellectual property</string>
+    <string name="disclaimer_section2_body">Game names and logos are property of their respective publishers. Their mention is for identification purposes only.</string>
+    <string name="disclaimer_section3_title">🃏  Requires the physical game</string>
+    <string name="disclaimer_section3_body">This app is a companion tool. You need the physical game to use it. It does not include complete rules or copyright-protected content.</string>
+    <string name="disclaimer_section4_title">👥  Fan-made solo modes</string>
+    <string name="disclaimer_section4_body">The solo modes are based on variants freely published on BoardGameGeek by the community. Credit belongs to their original authors.</string>
+
+    <!-- ── HomeScreen ── -->
+    <string name="cd_show_all">Show all</string>
+    <string name="cd_show_favorites">Show favorites</string>
+    <string name="cd_mute">Mute</string>
+    <string name="cd_unmute">Unmute</string>
+    <string name="search_placeholder">Search game…</string>
+    <string name="cd_clear_search">Clear</string>
+    <string name="empty_no_favorites_title">No favorites yet</string>
+    <string name="empty_no_favorites_body">Tap ★ on any game to save it here</string>
+    <string name="empty_no_results_title">No results</string>
+    <string name="empty_no_results_body">Try a different search term</string>
+    <string name="feature_solo">Solo</string>
+    <string name="feature_scoring">Scoring</string>
+    <string name="feature_rules">Rules</string>
+    <string name="cd_remove_favorite">Remove favorite</string>
+    <string name="cd_add_favorite">Add favorite</string>
+    <string name="label_coming_soon">Coming soon</string>
+
+    <!-- ── Navigation tab labels (shared) ── -->
+    <string name="nav_setup">Setup</string>
+    <string name="nav_solo">Solo</string>
+    <string name="nav_scoring">Scoring</string>
+    <string name="nav_rules">Rules</string>
+    <string name="nav_game">Game</string>
+    <string name="nav_scoreboard">Scoreboard</string>
+
+    <!-- ── SoloModeScreen (Spooktacular / Killtron) ── -->
+    <string name="killtron_title">🤖  Killtron</string>
+    <string name="killtron_turn_card">Turn %1$d · Card %2$d/3</string>
+    <string name="killtron_turn_label">Turn %1$d</string>
+    <string name="killtron_executing">Killtron executes its program</string>
+    <string name="killtron_start_hint">Tap the card to start the turn</string>
+    <string name="killtron_name">KILLTRON-3000</string>
+    <string name="btn_start_game">▶  START GAME</string>
+    <string name="btn_turn_n">▶  TURN %1$d</string>
+    <string name="cd_start_turn">Start turn</string>
+    <string name="card_how_killtron_executes">How Killtron executes it</string>
+    <string name="btn_prev">Previous</string>
+    <string name="btn_next">Next</string>
+    <string name="btn_end_turn">End turn</string>
+    <string name="spooky_setup_title">Setup · Spooktacular</string>
+    <string name="spooky_setup_subtitle">Horror at the Silver Cinema · 1 to 5 players</string>
+    <string name="spooky_setup_board_title">🎬 Board</string>
+    <string name="spooky_setup_board_body">• Lay out the Silver Cinema board with its rooms connected by doors.\n• Place the round marker on position 1.\n• Prepare the bag with spectators of all colors.\n• Distribute the starting spectators: 2-3 per room as shown on the map.</string>
+    <string name="spooky_setup_player_title">👤 Each player receives</string>
+    <string name="spooky_setup_player_body">• 1 meeple in their color.\n• Place your meeple in the assigned (or chosen) starting room.\n• Score marker → space 0 on the scoring track.\n• No cards or resources at the start.</string>
+    <string name="spooky_setup_killtron_title">🤖 Killtron-3000</string>
+    <string name="spooky_setup_killtron_body">• Place Killtron in the central cinema room (the most connected one).\n• Shuffle Deck A 🟠 separately (Struggle, Deploy, Startle…).\n• Shuffle Deck B 🟣 separately (Avalanche, Search, Arc Voltaic…).\n• Shuffle Deck C 🟢 separately (Devour, Eat…).\n• Each turn Killtron executes 1 card from each deck (A → B → C).</string>
+    <string name="spooky_setup_objective_title">🎯 Objective and end of game</string>
+    <string name="spooky_setup_objective_body">• The game ends when Killtron completes its victory condition or time runs out.\n• The player with the most points at the end wins.\n• Solo mode: try to beat your own score.</string>
+    <string name="spooky_setup_soloai_title">🃏 Solo mode — Killtron AI</string>
+    <string name="spooky_setup_soloai_body">• The player acts first each turn.\n• Then tap the card to reveal Killtron\'s turn (3 cards in sequence).\n• Check the Game tab to execute Killtron\'s turn.</string>
+
+    <!-- ── CMSoloModeScreen (Criaturas Maravillosas) ── -->
+    <string name="cm_title">🦋  Criaturas Maravillosas</string>
+    <string name="cm_solo_mode_title">Solo Mode</string>
+    <string name="cm_vs_tingent">vs. Tingent</string>
+    <string name="cm_difficulty_label">Difficulty level</string>
+    <string name="cm_tracker_unverified">The track actions for this difficulty have not been verified yet. The game will work but tracker actions will not be shown.</string>
+    <string name="btn_start_game_cm">▶  Start game</string>
+    <string name="cm_tracker_title">Tingent Tracker</string>
+    <string name="cm_tracker_pos">Pos. %1$d / %2$d</string>
+    <string name="cm_turn_label">· Turn %1$d</string>
+    <string name="cm_draw_first_card">Tap to draw the first card</string>
+    <string name="cm_action_label">Action</string>
+    <string name="cm_tracker_action_label">⚙️ Tracker action</string>
+    <string name="cm_tracker_advances">Marker advances</string>
+    <string name="cm_tracker_stays">Marker stays</string>
+    <string name="btn_draw_first">Draw Tingent\'s first card</string>
+    <string name="btn_next_turn_draw">Next turn · Draw card</string>
+    <string name="cm_zone_yellow">Yellow Zone</string>
+    <string name="cm_zone_brown">Brown Zone</string>
+    <string name="cm_legend_yellow">Yellow zone</string>
+    <string name="cm_legend_brown">Brown zone</string>
+    <string name="cm_score_title">Score Count</string>
+    <string name="cm_score_subtitle">Enter values when the game ends</string>
+    <string name="cm_score_you">🧑 You</string>
+    <string name="cm_score_tingent">🤖 Tingent · %1$s</string>
+    <string name="cm_result_win">🎉 YOU WIN!</string>
+    <string name="cm_result_tie">🤝 TIE</string>
+    <string name="cm_result_lose">💀 TINGENT WINS</string>
+    <string name="cm_score_you_vs_tingent">You: %1$d VP  ·  Tingent: %2$d VP</string>
+    <string name="cm_rules_title">Quick Reference</string>
+    <string name="cm_rules_turn_title">🦋 Tingent\'s Turn</string>
+    <string name="cm_rules_turn_1">1. Draw a card from Tingent\'s deck</string>
+    <string name="cm_rules_turn_2">2. Apply the action for the current zone (yellow or brown)</string>
+    <string name="cm_rules_turn_3">3. If the card has a red ⚙️ → advance the tracker</string>
+    <string name="cm_rules_turn_4">4. If the tracker reaches the threshold → enter the Brown Zone and reshuffle</string>
+    <string name="cm_rules_turn_5">5. If the tracker lands on a special space → also execute that action</string>
+    <string name="cm_rules_zone_title">🟡→🟤 Zone Transition</string>
+    <string name="cm_rules_zone_body">When the tracker reaches the difficulty threshold, Tingent enters the Brown Zone. All cards use the brown side from that point. The deck is reshuffled.</string>
+    <string name="cm_rules_tracker_title">📋 Special Tracker Actions</string>
+    <string name="cm_rules_tracker_1">📋 Face-up card → take the target species with highest VP from the Territory + 1 egg</string>
+    <string name="cm_rules_tracker_2">📥 Face-down card → draw from deck face down (scores at end based on difficulty)</string>
+    <string name="cm_rules_tracker_3">🗺️ Discovery → place a Habitat tile on a lake with an egg; Tingent takes the egg</string>
+    <string name="cm_rules_tracker_4">⏱️ Time Advance → advance the Time track marker; apply the effect immediately</string>
+    <string name="cm_rules_tingent_score_title">🏆 Tingent\'s Score</string>
+    <string name="cm_rules_tingent_score_1">End Game cards face up × 5 VP</string>
+    <string name="cm_rules_tingent_score_2">Creature cards face up: sum of printed VP</string>
+    <string name="cm_rules_tingent_score_3">Completed achievements: sum of VP</string>
+    <string name="cm_rules_tingent_score_4">Trophies × 3 VP</string>
+    <string name="cm_rules_tingent_score_5">Eggs × 1 VP</string>
+    <string name="cm_rules_tingent_score_6">Face-down cards × [1 / 2 / 3 VP based on difficulty]</string>
+    <string name="cm_rules_player_score_title">🧑 Player\'s Score</string>
+    <string name="cm_rules_player_score_1">End Game cards: printed VP</string>
+    <string name="cm_rules_player_score_2">Creature cards: sum of red seals</string>
+    <string name="cm_rules_player_score_3">Achievements: 6 / 12 / 15 VP each</string>
+    <string name="cm_rules_player_score_4">Trophies × 3 VP</string>
+    <string name="cm_rules_player_score_5">Resources + Butterfly hunters ÷ 4 (round down)</string>
+    <string name="cm_setup_title">Setup · Criaturas Maravillosas</string>
+    <string name="cm_setup_subtitle">2 to 4 players · Worker placement + tableau</string>
+    <string name="cm_setup_board_title">🗺️ Main board</string>
+    <string name="cm_setup_board_body">• Assemble the hexagonal island board and place habitat tokens in their spaces.\n• Shuffle the creature cards and form the visible market (cards face up).\n• Randomly draw 7 objective tiles and place them visible to all.\n• Place the supply board with starting resources.</string>
+    <string name="cm_setup_player_title">👤 Each player receives</string>
+    <string name="cm_setup_player_body">• 1 double-layered personal board.\n• Choose 1 Captain from those available → place their Captain board next to your personal board.\n• 3 crew in your color.\n• Choose 4 starting cards from the 8 available.\n• Starting resources based on turn order:\n  1st player → no bonus\n  2nd player → +1 resource\n  3rd player → +2 resources\n  4th player → +3 resources</string>
+    <string name="cm_setup_solo_title">🎯 Solo mode — Tingent</string>
+    <string name="cm_setup_solo_body">• Place Tingent\'s marker on position 1 of the tracker.\n• Shuffle the Tingent card deck (12 cards).\n• Tingent has NO personal board or resources — only the tracker and their deck.\n• The player configures the difficulty before starting (see Solo tab).</string>
+    <string name="cm_setup_turnorder_title">🔄 Turn order</string>
+    <string name="cm_setup_turnorder_body">• The player with the lowest-value creature goes first.\n• Tingent acts after each player turn based on the revealed card.</string>
+
+    <!-- ── TiletumSoloScreen ── -->
+    <string name="til_title">🏛️  Tiletum · Titus</string>
+    <string name="til_round_turn">Round %1$d/4 · Turn %2$d/3</string>
+    <string name="til_solo_title">Tiletum · Solo Mode</string>
+    <string name="til_vs_titus">vs. Cardinal Titus</string>
+    <string name="til_quick_setup">Quick setup</string>
+    <string name="til_challenge_cards_title">Challenge cards (difficulty)</string>
+    <string name="til_challenge_cards_subtitle">Add challenge cards to the base deck of 13 cards.</string>
+    <string name="til_deck_total">Total deck: %1$d cards</string>
+    <string name="btn_start_game_til">▶  Start game</string>
+    <string name="til_difficulty_easy">Easy\n(0)</string>
+    <string name="til_difficulty_normal">Normal\n(2)</string>
+    <string name="til_difficulty_hard">Hard\n(5)</string>
+    <string name="til_score_you">You</string>
+    <string name="til_score_titus">Titus</string>
+    <string name="til_preferred_dice">Preferred dice:</string>
+    <string name="til_titus_priorities">Titus priorities</string>
+    <string name="til_selected_die">Die selected by Titus</string>
+    <string name="til_die_value">Value:</string>
+    <string name="til_die_color">Color:</string>
+    <string name="til_titus_scores">Titus scores</string>
+    <string name="til_yellow_die_pts">%1$d pts (yellow die)</string>
+    <string name="til_die_pts_x2">%1$d pts (%2$d ×2)</string>
+    <string name="til_titus_scores_detail">→ Titus scores %1$s</string>
+    <string name="btn_confirm_turn">Confirm turn →</string>
+    <string name="til_king_phase">👑 King Phase</string>
+    <string name="til_king_question">Is Titus ahead on the King track?</string>
+    <string name="til_king_yes">Yes</string>
+    <string name="til_king_no">No</string>
+    <string name="til_king_rules">• Discard the bonus tile from the King track\n• Titus gains 4 base VP\n• Adjust VP based on position on the King meter</string>
+    <string name="til_king_extra_vp">Additional VP from the King meter</string>
+    <string name="btn_continue_fair">Continue → Fair Phase</string>
+    <string name="til_fair_phase">🏪 Fair Phase</string>
+    <string name="til_fair_round">Round %1$d/4</string>
+    <string name="til_fair_no_map">Titus scores without needing map presence.</string>
+    <string name="til_fair_formula_hard">(a+b) × (round+1) = (%1$d+%2$d) × %3$d</string>
+    <string name="til_fair_formula_normal">(a+b) × round = (%1$d+%2$d) × %3$d</string>
+    <string name="til_fair_a">Value a (fair)</string>
+    <string name="til_fair_b">Value b (fair)</string>
+    <string name="btn_next_round">Next round →</string>
+    <string name="btn_final_score">Final score →</string>
+    <string name="til_final_score_title">🏆 Final Score</string>
+    <string name="til_your_score">Your score</string>
+    <string name="til_your_houses">Your houses on the map</string>
+    <string name="til_your_pillars">Your pillars on the map</string>
+    <string name="til_accumulated">Accumulated: %1$d VP</string>
+    <string name="til_titus_contracts">Titus contracts</string>
+    <string name="til_titus_cathedrals">Titus cathedrals</string>
+    <string name="til_titus_score_title">Titus score</string>
+    <string name="til_result_win">🎉 YOU WIN!</string>
+    <string name="til_result_lose">💀 TITUS WINS</string>
+    <string name="til_result_tie">🤝 TIE</string>
+    <string name="til_you_vs_titus">You: %1$d VP  ·  Titus: %2$d VP</string>
+    <string name="btn_new_game">↺ New game</string>
+    <string name="til_challenge_badge">CHALLENGE</string>
+    <string name="til_score_tab_title">Score Count</string>
+    <string name="til_you_score_section">🧑 You</string>
+    <string name="til_vp_in_game">VP accumulated in game</string>
+    <string name="til_houses_x_pillars">Houses × Pillars on the map</string>
+    <string name="til_houses">Houses</string>
+    <string name="til_pillars">Pillars</string>
+    <string name="til_buildings">Completed buildings (max. 6)</string>
+    <string name="til_resources_div4">Final resources  (÷4)</string>
+    <string name="til_contracts_x_cathedrals">Contracts × Cathedrals</string>
+    <string name="til_quick_setup_1">⚙️ Configure as a 2-player game</string>
+    <string name="til_quick_setup_2">🚫 Remove the special fair tile from the King track</string>
+    <string name="til_quick_setup_3">🎒 You start: 1 wool, 1 stone, 1 iron, 1 food, 1 gold</string>
+    <string name="til_quick_setup_4">🤖 Titus does not pay or collect resources</string>
+    <string name="til_rules_title">Quick Reference</string>
+    <string name="til_rules_turn_title">🎲 Titus\'s Turn</string>
+    <string name="til_rules_turn_1">1. Draw the top card from Titus\'s deck</string>
+    <string name="til_rules_turn_2">2. Titus takes the die based on the card\'s order (priority colors)</string>
+    <string name="til_rules_turn_3">3. Apply action priorities in order (first one that can be executed)</string>
+    <string name="til_rules_turn_4">4. Score: Yellow die = die value; others = value × 2</string>
+    <string name="til_rules_turn_5">5. Move to the next turn (3 turns per round)</string>
+    <string name="til_rules_dice_title">🎲 Titus\'s Die Scoring</string>
+    <string name="til_rules_dice_1">Yellow die → scores the exact die value (no multiplier)</string>
+    <string name="til_rules_dice_2">Any other color → scores die value × 2</string>
+    <string name="til_rules_dice_3">Example: Blue die with value 4 → 8 VP for Titus</string>
+    <string name="til_rules_phases_title">🔄 Phases per Round (×4 rounds)</string>
+    <string name="til_rules_phases_1">1. Game Phase: 3 alternating turns (you / Titus / you, 2-player variant)</string>
+    <string name="til_rules_phases_2">2. King Phase: score the King track; Titus acts based on priorities</string>
+    <string name="til_rules_phases_3">3. Fair Phase: score in the active Fair City</string>
+    <string name="til_rules_phases_4">After Round 4 → Final Score</string>
+    <string name="til_rules_player_score_title">🏆 Player\'s Final Score</string>
+    <string name="til_rules_player_score_1">VP accumulated during the game</string>
+    <string name="til_rules_player_score_2">Houses on map × Pillars on map</string>
+    <string name="til_rules_player_score_3">Completed buildings: 1-2 → 0 VP, 3 → 5, 4 → 10, 5 → 20, 6 → 30 VP</string>
+    <string name="til_rules_player_score_4">Resources at end ÷ 4 (round down)</string>
+    <string name="til_rules_titus_score_title">🤖 Titus\'s Final Score</string>
+    <string name="til_rules_titus_score_1">VP accumulated during the game (dice)</string>
+    <string name="til_rules_titus_score_2">Titus contracts × Titus cathedrals</string>
+    <string name="til_setup_title">Setup · Tiletum</string>
+    <string name="til_setup_subtitle">2 to 4 players · Europe 15th century</string>
+    <string name="til_setup_board_title">🗺️ Main board</string>
+    <string name="til_setup_board_body">• Lay out the main Europe map board.\n• Place the building tiles in the cities according to the game mode.\n• Place the contract tiles face up in their spaces.\n• Shuffle and deal the objective cards as instructed.\n• Prepare the bag with 1 die of each color per player.</string>
+    <string name="til_setup_player_title">👤 Each player receives</string>
+    <string name="til_setup_player_body">• 1 personal board.\n• Architect + Merchant → place both in the city of Tiletum (map start).\n• 1 house → on Tiletum on the main board.\n• 5 houses → on the 5 left spaces of the personal board. 2 houses aside.\n• 5 columns → on the 5 right spaces of the personal board. 2 columns aside.\n• 1 VP marker → space 0 on the scoring track.\n• 1 unit of each resource: stone 🪨, wood 🪵, glass 🔵, cloth 🟤.</string>
+    <string name="til_setup_coins_title">🪙 Starting coins (by turn order)</string>
+    <string name="til_setup_coins_body">• 1st player → 1 gold coin\n• 2nd player → 3 gold coins\n• 3rd player → 5 gold coins\n• 4th player → 6 gold coins</string>
+    <string name="til_setup_solo_title">🤖 Solo mode — Titus</string>
+    <string name="til_setup_solo_body">• Titus receives no board or resources.\n• Before starting, configure the number of challenge cards (0–3).\n• Titus accumulates VP via an internal tracker (see Solo tab).\n• The player starts with 10 VP as a head start.</string>
+
+    <!-- ── MaracaiboSoloScreen ── -->
+    <string name="mr_title">⚓  Pirates of Maracaibo</string>
+    <string name="mr_round">Round %1$d / 3</string>
+    <string name="mr_solo_title">Pirates of Maracaibo</string>
+    <string name="mr_solo_subtitle">Solo Mode vs Jordan</string>
+    <string name="mr_difficulty_label">Difficulty</string>
+    <string name="mr_b_cards_count">B cards in Jordan\'s deck: %1$d of 6</string>
+    <string name="mr_expansion_title">⚔️  Pirates Expansion</string>
+    <string name="mr_expansion_subtitle">Forts and captains rules for Jordan</string>
+    <string name="mr_prep_title">📋 Setup</string>
+    <string name="btn_set_sail">⚓  Set Sail!</string>
+    <string name="mr_jordan_in_gulf_title">Jordan is in the Gulf</string>
+    <string name="mr_jordan_in_gulf_active">Next turn: moves to Maracaibo → +1 upgrade → +6 VP</string>
+    <string name="mr_jordan_in_gulf_inactive">Activate if Jordan ends their turn in the Gulf</string>
+    <string name="mr_jordan_title">Jordan</string>
+    <string name="mr_jordan_vp">%1$d VP accumulated</string>
+    <string name="mr_hideout_marker">Hideout Marker (Raid/Explore)</string>
+    <string name="mr_current_raid">🗡️  Current Raid</string>
+    <string name="mr_current_explore">🧭  Current Explore</string>
+    <string name="mr_verify_treasures">(check if exceeds in treasures)</string>
+    <string name="mr_jordan_turn">Jordan\'s Turn</string>
+    <string name="mr_jordan_in_gulf_note">⚡ Jordan was in the Gulf</string>
+    <string name="mr_gulf_detail">No card is revealed.\n→ Jordan moves to Maracaibo\n→ +1 ship upgrade\n→ +6 VP</string>
+    <string name="btn_execute_maracaibo">✓  Execute — Maracaibo</string>
+    <string name="mr_is_b_card">Is it a B card?</string>
+    <string name="mr_bonus_action_title">⭐ Bonus action (first)</string>
+    <string name="mr_bonus_action_body">Perform the B card bonus action and tap the corresponding button:</string>
+    <string name="mr_main_actions_hint">Jordan tries each action in order. Perform the first possible one:</string>
+    <string name="btn_jordan_action">✓  Jordan performs this action</string>
+    <string name="mr_upgrade_title">⚓  Ship Upgrade Effect</string>
+    <string name="mr_upgrade_hint">Check Jordan\'s board and select the slot that was just filled:</string>
+    <string name="mr_rules_reference">📋  Jordan\'s Rules</string>
+    <string name="mr_btn_close_turn">Close turn</string>
+    <string name="mr_btn_jordan_turn">⚡ Jordan\'s Turn</string>
+    <string name="mr_btn_end_round">→ End Round %1$d</string>
+    <string name="mr_btn_final_score">🏆 Final Score</string>
+    <string name="mr_btn_calc_vp">📊 Calculate VP</string>
+    <string name="mr_final_score_title">🏆  Final Score</string>
+    <string name="mr_jordan_score_title">Jordan\'s Score</string>
+    <string name="mr_your_score_reminder">Your score (reminder)</string>
+    <string name="btn_back_to_game">← Back to game</string>
+    <string name="mr_score_title">Score Count</string>
+    <string name="mr_score_jordan">🤖 Jordan</string>
+    <string name="mr_score_you">🧑 You</string>
+    <string name="mr_result_win">🎉 YOU WIN!</string>
+    <string name="mr_result_tie">🤝 TIE</string>
+    <string name="mr_result_lose">💀 JORDAN WINS</string>
+    <string name="mr_you_vs_jordan">You: %1$d VP  ·  Jordan: %2$d VP</string>
+    <string name="mr_mission_bonus_label">Bonus ≥6 missions  (+10 VP)</string>
+    <string name="mr_rules_title">Quick Reference</string>
+    <string name="mr_setup_title">Setup · Pirates of Maracaibo</string>
+    <string name="mr_setup_subtitle">1 to 4 players · The Caribbean, 17th century</string>
+    <string name="mr_setup_board_title">🗺️ Main board</string>
+    <string name="mr_setup_board_body">• Lay out the Caribbean board with ports and locations.\n• Place the round marker on space 1.\n• Deal port cards to their locations as instructed.\n• Place missions and available ship upgrades.</string>
+    <string name="mr_setup_player_title">👤 Each player receives</string>
+    <string name="mr_setup_player_body">• 1 ship board.\n• 24 discs → 2 on each circular space of the ship board.\n• Ship → Havana space on the main board.\n• Explorer → starting space on the exploration track.\n• 1 token on the combat track → space 1.\n• 1 token on the doubloon income track → space 8.\n• 1 token on the VP income track → space 0.\n• 1 disc on space 0 of the main VP track.\n• 1 influence token on space 0 of each nation (3 tokens).\n• 8 cards from deck A (draw blind).</string>
+    <string name="mr_setup_doubloons_title">🪙 Starting doubloons</string>
+    <string name="mr_setup_doubloons_body">• 1st player → 8 doubloons.\n• 2nd player → 9 doubloons.\n• 3rd player → 10 doubloons.\n• 4th player → 11 doubloons.</string>
+    <string name="mr_setup_solo_title">🤖 Solo mode — Jordan</string>
+    <string name="mr_setup_solo_body">• Jordan has no personal board.\n• Track: rivers explored, upgrades, missions and residences.\n• The player configures the mode (standard / expansion) on the setup screen.\n• See the Solo tab for Jordan\'s turn tracker.</string>
+
+    <!-- ── CastleComboSoloScreen ── -->
+    <string name="cc_title">Castle Combo</string>
+    <string name="cc_subtitle">Solo mode · Opponent: Anton</string>
+    <string name="cc_difficulty">Difficulty</string>
+    <string name="cc_difficulty_easy">Easy</string>
+    <string name="cc_difficulty_normal">Normal</string>
+    <string name="cc_difficulty_hard">Hard</string>
+    <string name="cc_turn_label">Game turn</string>
+    <string name="cc_of_nine">of 9</string>
+    <string name="cc_anton_turn">Anton\'s turn 🤖</string>
+    <string name="cc_your_turn">Your turn 👤</string>
+    <string name="cc_anton_resources_title">Anton\'s resources (accumulated)</string>
+    <string name="cc_anton_resources_hint">Record the resources Anton gains from card abilities during the game.</string>
+    <string name="cc_anton_guide_title">Anton\'s turn · Quick guide</string>
+    <string name="cc_score_title">Your score</string>
+    <string name="cc_result_tie">Tie!</string>
+    <string name="cc_result_win">You win! 🏆</string>
+    <string name="cc_result_anton_wins">Anton wins 🤖</string>
+    <string name="cc_difficulty_display">Difficulty: %1$s</string>
+    <string name="cc_notes_if_missing_easy">only if condition is met</string>
+    <string name="cc_notes_if_missing_hard">always (regardless of condition)</string>
+    <string name="cc_rules_title">Castle Combo · Solo Mode</string>
+    <string name="cc_rules_subtitle">Fan-made solo mode (ben_uez, BGG) · Requires printed decision and priority cards.</string>
+    <string name="cc_setup_title">Setup · Castle Combo</string>
+    <string name="cc_setup_subtitle">1 to 4 players · Combo game</string>
+    <string name="cc_setup_board_title">🗺️ Central board</string>
+    <string name="cc_setup_board_body">• Place the central board with the lower market (Lower City) and upper market (Upper City).\n• Deal cards in 2 rows based on player count:\n  → 1-2 players: 2 columns. 3-4 players: 3 columns.\n• Place the coin (gold) and key supply accessible to all.</string>
+    <string name="cc_setup_player_title">👤 Each player receives</string>
+    <string name="cc_setup_player_body">• 15 gold coins.\n• 2 keys.\n• No cards at the start — cards are purchased during the game.\n• No personal board (the 3×3 is formed in your play area).</string>
+    <string name="cc_setup_solo_title">🤖 Solo mode — Anton</string>
+    <string name="cc_setup_solo_body">• Anton receives no components at the start of the game.\n• Track: coins, keys and discounts Anton accumulates during the game.\n• At the end Anton converts resources to VP based on chosen difficulty:\n  Easy → keys ×1, coins ÷2, discounts ×1\n  Normal → keys ×1, coins ×1, discounts ×2\n  Hard → keys ×2, coins ×2, discounts ×3</string>
+    <string name="cc_setup_turn_title">🃏 Anton\'s turn</string>
+    <string name="cc_setup_turn_body">• Each time the player buys a card, Anton also draws or acts according to the solo rules.\n• See the Solo tab for Anton\'s turn tracker.</string>
+    <!-- DifficultyTable rows -->
+    <string name="cc_diff_row_keys">Keys</string>
+    <string name="cc_diff_row_coins">Coins</string>
+    <string name="cc_diff_row_discounts">Discounts</string>
+    <string name="cc_diff_row_if_missing">«If missing»</string>
+    <string name="cc_diff_keys_easy">1 VP/ea</string>
+    <string name="cc_diff_keys_normal">1 VP/ea</string>
+    <string name="cc_diff_keys_hard">2 VP/ea</string>
+    <string name="cc_diff_coins_easy">1 VP/2</string>
+    <string name="cc_diff_coins_normal">1 VP/ea</string>
+    <string name="cc_diff_coins_hard">2 VP/ea</string>
+    <string name="cc_diff_discounts_easy">1 VP/ea</string>
+    <string name="cc_diff_discounts_normal">2 VP/ea</string>
+    <string name="cc_diff_discounts_hard">3 VP/ea</string>
+    <string name="cc_diff_if_missing_easy">Only if missing</string>
+    <string name="cc_diff_if_missing_normal">Always</string>
+    <string name="cc_diff_if_missing_hard">Always</string>
+    <!-- AntonTurnGuide steps -->
+    <string name="cc_guide_step_1">Reveal the top decision card from the deck.</string>
+    <string name="cc_guide_step_2">Anton takes the first card in the current row matching the indicated priority.</string>
+    <string name="cc_guide_step_3">If no match, check the other two priorities on the card. If still none, use priorities 4, 5 and 6 (priority cards above the board).</string>
+    <string name="cc_guide_step_4">Anton pays no cost. Gains ALL the ability benefits (\'or\' → \'and\').</string>
+    <string name="cc_guide_step_5">Anton places cards left to right, top to bottom. Exception: cards that score by specific position go to the first valid slot.</string>
+    <string name="cc_guide_step_6">Move the Messenger if the card indicates it.</string>
+    <string name="cc_guide_step_7">Apply any additional effects from the decision card.</string>
+    <!-- CCScoreTab counter labels -->
+    <string name="cc_scrolls_player">📜 Scrolls (sum of all cards)</string>
+    <string name="cc_keys_player">🗝️ Keys (1 VP each)</string>
+    <string name="cc_score_anton_title">Anton</string>
+    <string name="cc_scrolls_anton">📜 Card scrolls</string>
+    <string name="cc_keys_anton_normal">🗝️ Keys (1 VP ea)</string>
+    <string name="cc_keys_anton_hard">🗝️ Keys (2 VP ea)</string>
+    <string name="cc_coin_rule_easy">1 VP per 2 coins</string>
+    <string name="cc_coin_rule_normal">1 VP each</string>
+    <string name="cc_coin_rule_hard">2 VP each</string>
+    <string name="cc_coins_anton">🪙 Coins (%1$s)</string>
+    <string name="cc_discounts_anton">⚡ Discounts (%1$d VP ea)</string>
+    <string name="cc_notes_if_missing">Note: «if X missing» cards score %1$s.</string>
+    <!-- CCRulesTab rule blocks -->
+    <string name="cc_rules_prep_title">⚙️ Setup</string>
+    <string name="cc_rules_prep_body">Set up the game normally. Add Anton\'s board.\nShuffle the 6 priority cards (colors = shield types) and place them above Anton\'s board (one per column).\nShuffle the 12 decision cards and place them face down. Anton starts with no coins or keys.\nChoose the difficulty. You are the starting player.</string>
+    <string name="cc_rules_anton_turn_title">🎮 Anton\'s turn</string>
+    <string name="cc_rules_anton_turn_body">Anton does NOT use keys and ALWAYS takes cards from the current row (where the Messenger is). Only performs steps 2-4.\n\n1. Reveal the top decision card.\n2. Anton takes the first card in the row matching the indicated priority (left or right per the arrow).\n3. No match: try the other two priorities on the card; then priorities 4, 5 and 6 (cards above the board).\n4. Anton pays no costs. Gains ALL benefits (\'or\' → \'and\').\n5. Placement: left→right, top→bottom. Exception: cards scoring by position go to the first valid slot.\n6. Move the Messenger if the card indicates it.\n7. Apply additional effects from the decision card.</string>
+    <string name="cc_rules_effects_title">🃏 Additional effects (decision cards)</string>
+    <string name="cc_rules_effects_body">Discard icon: discard the 3 cards in the current row.\nShuffle icon: shuffle all decision cards back into the deck.</string>
+    <string name="cc_rules_scoring_title">🏆 Anton\'s scoring</string>
+    <string name="cc_rules_scoring_body">Anton scores his cards the same as in multiplayer (scrolls).\nAdditional resources by difficulty:\n\nEASY · Keys: 1VP/ea · Coins: 1VP/2 · Discounts: 1VP/ea · «If missing»: only if condition met\nNORMAL · Keys: 1VP/ea · Coins: 1VP/ea · Discounts: 2VP/ea · «If missing»: always\nHARD · Keys: 2VP/ea · Coins: 2VP/ea · Discounts: 3VP/ea · «If missing»: always\n\nA discount that applies to both rows counts as 2 discounts.</string>
+    <string name="cc_rules_summary_title">📜 Base game scoring summary</string>
+    <string name="cc_rules_summary_body">Each card has a scoring scroll evaluated at the end.\nThe 6 shield types are: Nobility (👑), Military (⚔️), Faith (✝️), Crafts (🔨), Student (📚), Peasant (🌾).\nKeys grant 1 VP each.\nGold only scores if stored in cards with a Bag.\nFace-down cards give no points (but give 6 coins + 2 keys when taken).</string>
+
+    <!-- ── CoimbraSoloScreen ── -->
+    <string name="coi_title">Coimbra</string>
+    <string name="coi_subtitle">Solo mode · Interference bot</string>
+    <string name="coi_solo_tab_title">Current round</string>
+    <string name="coi_of_four">of 4</string>
+    <string name="coi_bot_warning">⚠️ The Bot always goes first every turn.</string>
+    <string name="coi_dice_title">Bot dice</string>
+    <string name="coi_dice_subtitle">Roll 1d6 per die the Bot takes (3 dice per round)</string>
+    <string name="coi_dice_fallback">If the indicated color is unavailable → try the white die → keep going down in number until one is available.</string>
+    <string name="coi_dice_lowhi">Grey/Orange «low» = the lower value of the two available · «high» = the higher value. If only one remains, take it.</string>
+    <string name="coi_city_title">City placement</string>
+    <string name="coi_city_subtitle">Roll 1d6 per Bot die to determine the zone</string>
+    <string name="coi_city_restrictions">Placement restrictions:</string>
+    <string name="coi_city_r1">• Maximum 2 Bot dice in the same zone.</string>
+    <string name="coi_city_r2">• Do not place where there are already 4+ elements (dice + tokens) unless the die guarantees a card for the Bot.</string>
+    <string name="coi_city_r3">• If the resulting zone already has 2 Bot dice or is full → reassign: 1-3 Upper City, 4-6 Central City.</string>
+    <string name="coi_castle_title">Castle</string>
+    <string name="coi_castle_hint">Only applies if the player placed a die in the Castle this turn.</string>
+    <string name="coi_castle_check">Check the value of the 7th leftover die (the one not used):</string>
+    <string name="coi_castle_ge">7th die ≥ your die</string>
+    <string name="coi_castle_ge_result">✅ Ignore</string>
+    <string name="coi_castle_lt">7th die &lt; your die</string>
+    <string name="coi_castle_lt_result">❌ Bot steals 1 token</string>
+    <string name="coi_castle_steal_note">If the Bot steals: roll 1d4 to see which of the 4 favor tokens it takes before you (Bot uses 4 dice that turn).</string>
+    <string name="coi_cards_title">Cards</string>
+    <string name="coi_cards_body1">The 5 die tokens take cards normally (highest influence, ties go leftmost).</string>
+    <string name="coi_cards_body2">When it\'s the Bot\'s turn, roll a die to randomly select among available cards:</string>
+    <string name="coi_cards_roll_4">4 cards → 1-4</string>
+    <string name="coi_cards_roll_3">3 cards → 1-3</string>
+    <string name="coi_cards_roll_2">2 cards → 1-2</string>
+    <string name="coi_cards_roll_1">1 card → takes it</string>
+    <string name="coi_cards_influence">🎯 Bot influence = card\'s influence value + 1 (range 2–5).</string>
+    <string name="coi_cards_no_effect">The Bot does not activate any other card effects besides gaining influence +1.</string>
+    <string name="coi_crowns_title">Crowns</string>
+    <string name="coi_crowns_body1">The player only counts 1 crown for going 2nd in turn order (the Bot always goes 1st).</string>
+    <string name="coi_crowns_body2">Plus crowns gained from favor tokens in the current scoring turn.</string>
+    <string name="coi_crowns_body3">Do not use crown tokens during the game (or only in the last round if desired).</string>
+    <string name="coi_pilgrimages_title">Pilgrimages</string>
+    <string name="coi_pilgrimages_body">The player may choose any of the 4 starting points from Coimbra. The Bot does not make pilgrimages.</string>
+    <string name="coi_char_cards_title">Character cards I</string>
+    <string name="coi_char_cards_body1">The Bot receives 2 random character I cards at the start. Its influence = card value + 1.</string>
+    <string name="coi_char_cards_body2">The player also receives 2 random character I cards from the 8 available (no choice).</string>
+    <string name="coi_char_cards_body3">When a player card would allow stealing resources or VP from another player → always receives the option without VP.</string>
+    <string name="coi_score_total">TOTAL SCORE</string>
+    <string name="coi_score_breakdown">Score breakdown</string>
+    <string name="coi_score_cards">🃏 Guild cards</string>
+    <string name="coi_score_cards_sub">VP from scoring scrolls at the end</string>
+    <string name="coi_score_pilgrimages">⛪ Pilgrimages</string>
+    <string name="coi_score_pilgrimages_sub">Monasteries visited</string>
+    <string name="coi_score_influence">📊 Influence tracks</string>
+    <string name="coi_score_influence_sub">VP from mid-game scoring + end of game</string>
+    <string name="coi_score_coins">🪙 Coins</string>
+    <string name="coi_score_coins_sub">Coins converted to VP</string>
+    <string name="coi_score_favors">⭐ Favor tokens</string>
+    <string name="coi_score_favors_sub">Bonuses from favor tokens</string>
+    <string name="coi_score_others">➕ Others</string>
+    <string name="coi_score_others_sub">Starting cards, crowns, etc.</string>
+    <string name="coi_ranking_title">Leaderboard</string>
+    <string name="coi_rank_bad">Poor result 😬</string>
+    <string name="coi_rank_ok">Acceptable 👍</string>
+    <string name="coi_rank_good">Good 🌟</string>
+    <string name="coi_rank_great">Excellent ⭐</string>
+    <string name="coi_rank_amazing">Incredible! 🏆</string>
+    <string name="coi_rules_title">Coimbra · Solo mode</string>
+    <string name="coi_rules_subtitle">Interference Bot — fan-made by Dave Smith (skybowl, BGG).</string>
+    <string name="coi_rules_prep_title">⚙️ Setup</string>
+    <string name="coi_rules_prep_body">2-player game (you vs. Bot) with these exceptions:\n• The Bot always goes first (every turn, every round).\n• The Bot receives 2 random character I cards; its influence = each card\'s value + 1.\n• The player also receives 2 random character I cards from the 8 (no choice).\n• The player may choose any of the 4 starting points from Coimbra.\n• The Bot does not make pilgrimages.</string>
+    <string name="coi_rules_dice_title">🎲 Bot dice (mnemonic: P-G-O-W-O-W)</string>
+    <string name="coi_rules_dice_body">Roll 1d6 per die the Bot takes:\n1 = Purple · 2 = Green · 3 = Orange low · 4 = White low · 5 = Orange high · 6 = White high\n\nIf color unavailable: try white die → keep going down in number.\n«Low/High» for White and Orange = lower/higher value of the two available. If only one, take it.</string>
+    <string name="coi_rules_city_title">🏙️ City placement</string>
+    <string name="coi_rules_city_body">Roll 1d6 per Bot die:\n1-2 = Upper City · 3-4 = Central City · 5-6 = Lower City\n\nRestrictions: max 2 Bot dice per zone · do not place where there are 4+ total elements (unless die guarantees card for Bot).\nIf zone is blocked → reassign: 1-3 Upper City, 4-6 Central City.</string>
+    <string name="coi_rules_castle_title">🏰 Castle</string>
+    <string name="coi_rules_castle_body">Only if the player placed a die in the Castle this turn:\n\nCompare the 7th leftover die to your Castle die.\n• 7th die ≥ your die → ignore, nothing happens.\n• 7th die &lt; your die → the Bot steals a favor token before you (roll 1d4 to determine which). Bot uses 4 dice that turn.</string>
+    <string name="coi_rules_cards_title">🃏 Cards</string>
+    <string name="coi_rules_cards_body">The 5 die tokens take cards normally (highest influence, ties go leftmost).\n\nWhen it\'s the Bot\'s turn: roll a die among available cards (1-4, 1-3, 1-2, or the last).\n\nBot influence = card\'s influence value + 1 (range 2–5).\nThe Bot does not activate any other card effects.</string>
+    <string name="coi_rules_crowns_title">👑 Crowns</string>
+    <string name="coi_rules_crowns_body">The player only has 1 crown for going 2nd in turn order + crowns from favor tokens in the current scoring turn.\nDo not use crown tokens during the game (optional: use them in the last round).</string>
+    <string name="coi_rules_steal_title">🧍 Character cards with stealing</string>
+    <string name="coi_rules_steal_body">If a player card allows stealing resources or VP from another player → always receives the option without VP.</string>
+    <string name="coi_rules_results_title">🏆 Results table</string>
+    <string name="coi_rules_results_body">&lt; 130 → Poor result\n130–160 → Acceptable\n160–190 → Good\n190–220 → Excellent\n&gt; 220 → Incredible!</string>
+    <string name="coi_setup_title">Setup · Coimbra</string>
+    <string name="coi_setup_subtitle">2 to 4 players · Portugal, 15th century</string>
+    <string name="coi_setup_board_title">🗺️ Main board</string>
+    <string name="coi_setup_board_body">• Unfold the main board and supply board.\n• Place the 6 matching-color dice in the central space.\n• Deal character I cards from the starting deck.\n• Place favor tokens in their spaces.\n• Fill the card market with cards from the 4 monasteries.\n• Mark round 1 on the round track.</string>
+    <string name="coi_setup_player_title">👤 Each player receives</string>
+    <string name="coi_setup_player_body">• 1 double-layer personal board.\n• 3 die holders → in the shutter spaces of the board.\n• 2 cube markers → position 7 on the guard track and coin track.\n• 1 disc → space 0 on the VP track of the main board.\n• 4 discs → space 0 on each of the 4 influence tracks.\n• 7 coins + 7 guards (on the personal board).\n• 2 random character I cards from the starting deck.</string>
+    <string name="coi_setup_solo_title">⚙️ Solo mode — additional setup</string>
+    <string name="coi_setup_solo_body">• The Bot receives 2 random character I cards. Its influence = card value + 1.\n• The player also receives 2 random character I cards (no choice).\n• The Bot does NOT place die holders — uses the leftover die (7th) for the Castle.\n• The player chooses any of the 4 starting points from Coimbra.</string>
+    <string name="coi_setup_turn_title">🎲 Turn order</string>
+    <string name="coi_setup_turn_body">• The Bot always goes FIRST every turn of every round.\n• The player goes second, with 1 fixed crown for being 2nd in turn order.</string>
+
+    <!-- ── Killtron cards ── -->
+    <string name="deck_a_label">Deck A</string>
+    <string name="deck_b_label">Deck B</string>
+    <string name="deck_c_label">Deck C</string>
+    <!-- Forcejeo -->
+    <string name="card_forcejeo_desc">Move a figure from a connected room into your room!</string>
+    <string name="card_forcejeo_step1">Killtron tries to move a player from a connected room into its own.</string>
+    <string name="card_forcejeo_step2">Tie: choose the player with the most points.</string>
+    <string name="card_forcejeo_step3">If no player can be moved, move a spectator not already in its devoured pile.</string>
+    <string name="card_forcejeo_step4">Color priority: Red → Yellow → Green → Blue → Purple.</string>
+    <!-- Despliegue -->
+    <string name="card_despliegue_desc">Move! Killtron moves according to the final card of the turn.</string>
+    <!-- Sobresalto -->
+    <string name="card_sobresalto_desc">Move! Play 1 card! Killtron moves and executes an extra action.</string>
+    <string name="card_sobresalto_step2">Then reveal and execute the top card of Deck A.</string>
+    <string name="card_sobresalto_step3">The extra card is fully resolved before continuing.</string>
+    <string name="card_sobresalto_step4">If Deck A is empty, reshuffle before drawing the extra card.</string>
+    <!-- Avalancha -->
+    <string name="card_avalancha_desc">Move all figures in your room! +2 points per player moved!</string>
+    <string name="card_avalancha_step1">Killtron moves ALL players currently in its room.</string>
+    <string name="card_avalancha_step2">Sends them to the room with the fewest spectators.</string>
+    <string name="card_avalancha_step3">Tie: choose the room with the fewest doors.</string>
+    <string name="card_avalancha_step4">Gains 2 points per player moved. Can accumulate multiple points at once!</string>
+    <!-- Buscar -->
+    <string name="card_buscar_desc">Add 3 spectators! Play 1 card! Killtron fills the board and acts again.</string>
+    <string name="card_buscar_step1">Add 3 spectators from the bag to the room with the fewest total figures.</string>
+    <string name="card_buscar_step2">Tie: you choose where the spectators go.</string>
+    <string name="card_buscar_step3">Then reveal and execute the top card of Deck B.</string>
+    <string name="card_buscar_step4">If Deck B is empty, reshuffle before drawing the extra card.</string>
+    <!-- Arco Voltaico -->
+    <string name="card_arco_desc">Steal 1 point from each player in your room and connected rooms!</string>
+    <string name="card_arco_step1">Identify all players in Killtron\'s room.</string>
+    <string name="card_arco_step2">Also affects players in rooms directly connected by a door.</string>
+    <string name="card_arco_step3">Each affected player loses 1 point. Killtron gains those points.</string>
+    <string name="card_arco_step4">A player at 0 points loses no points (does not go negative).</string>
+    <!-- Acosar -->
+    <string name="card_acosar_desc">Scare spectators then scare again! Killtron scores twice.</string>
+    <string name="card_acosar_step1">1st round: for each door, move 1 spectator to the connected room. +1 pt per spectator.</string>
+    <string name="card_acosar_step2">Start from the top door and continue clockwise.</string>
+    <string name="card_acosar_step3">Color priority: Red → Yellow → Green → Blue → Purple.</string>
+    <string name="card_acosar_step4">2nd round: repeat the full scare process a second time in the same action.</string>
+    <!-- Exterminar -->
+    <string name="card_exterminar_desc">Scare the spectators! Killtron scores immediate points.</string>
+    <string name="card_exterminar_step1">For each door in its room, move 1 spectator to the connected room.</string>
+    <string name="card_exterminar_step2">Start from the top door and continue clockwise.</string>
+    <string name="card_exterminar_step3">Color priority: Red → Yellow → Green → Blue → Purple.</string>
+    <string name="card_exterminar_step4">Gains 1 point for each spectator that passed through a door.</string>
+    <!-- Comer -->
+    <string name="card_comer_desc">Devour 1 spectator of each color! Complete a set and earn a ticket.</string>
+    <string name="card_comer_step1">Killtron devours 1 spectator of each available color in its room.</string>
+    <string name="card_comer_step2">Priority: Red → Yellow → Green → Blue → Purple.</string>
+    <string name="card_comer_step3">If it has 1 of each color (5 colors): delivers the set and earns a ticket (hidden points at end).</string>
+    <string name="card_comer_step4">After completing a set, add 3 spectators to the room with the fewest figures.</string>
+    <!-- resolveMovement -->
+    <string name="move_result_spectators">Final card: %1$s → Killtron moves to the room with the MOST spectators. Tie: most doors.</string>
+    <string name="move_result_eat">Final card: Eat → Killtron moves to the room with the MOST new colors (not in its pile). Tie: most doors.</string>
+    <string name="move_result_generic">Killtron moves according to the final card (Exterminate/Harass → most spectators · Eat → most new colors).</string>
+    <string name="move_door_tiebreak">Tie: choose the room with the most doors.</string>
+    <string name="move_adjacent_only">Only moves to adjacent rooms connected by a door.</string>
+
+    <!-- ── CascadiaScoreScreen ── -->
+    <string name="casc_title">Cascadia</string>
+    <string name="casc_subtitle">Score calculator</string>
+    <string name="casc_score_total">TOTAL SCORE</string>
+    <!-- Animal names -->
+    <string name="casc_bears">Bears</string>
+    <string name="casc_salmon">Salmon</string>
+    <string name="casc_elk">Elk</string>
+    <string name="casc_hawks">Hawks</string>
+    <string name="casc_foxes">Foxes</string>
+    <string name="casc_habitats">Habitats</string>
+    <string name="casc_nature_tokens">Nature tokens</string>
+    <!-- Bear hints -->
+    <string name="casc_bear_a_hint">Non-adjacent groups · increasing points per pair</string>
+    <string name="casc_bear_a_counter">Number of pairs</string>
+    <string name="casc_bear_b_hint">10 VP per group of exactly 3 bears</string>
+    <string name="casc_bear_b_counter">Groups of 3 bears</string>
+    <string name="casc_bear_c_hint">Groups of 1–3 bears · +3 bonus if you have all 3 sizes</string>
+    <string name="casc_bear_c_bonus">✓ Bonus +3 VP (you have all 3 sizes)</string>
+    <string name="casc_bear_d_hint">Groups of 2–4 non-adjacent bears</string>
+    <string name="casc_groups_of_1">Groups of 1 (2 VP ea)</string>
+    <string name="casc_groups_of_2_5">Groups of 2 (5 VP ea)</string>
+    <string name="casc_groups_of_3_8">Groups of 3 (8 VP ea)</string>
+    <string name="casc_groups_of_4_13">Groups of 4 (13 VP ea)</string>
+    <!-- Salmon hints -->
+    <string name="casc_sal_a_hint">Runs (max 2 neighbors per salmon) · up to size 7</string>
+    <string name="casc_sal_b_hint">Runs up to size 5 (runs ≥6 don\'t score)</string>
+    <string name="casc_sal_c_hint">Only runs of size 3 to 5 score</string>
+    <string name="casc_sal_d_hint">Runs ≥3: 1 VP/salmon + 1 VP/adjacent animal · enter the total</string>
+    <string name="casc_sal_total">Total VP salmon</string>
+    <!-- Elk hints -->
+    <string name="casc_elk_a_hint">Straight lines connected by hexagon sides</string>
+    <string name="casc_elk_b_hint">Groups matching exact shapes on the card · enter the total</string>
+    <string name="casc_elk_c_hint">Connected groups of any shape · increasing points by size</string>
+    <string name="casc_elk_d_hint">Circular formation of 7 elk · 23 VP per complete ring</string>
+    <string name="casc_elk_total">Total VP elk</string>
+    <string name="casc_elk_line_2">Lines of 2 (5 VP ea)</string>
+    <string name="casc_elk_line_3">Lines of 3 (9 VP ea)</string>
+    <string name="casc_elk_line_4">Lines of 4 (13 VP ea)</string>
+    <string name="casc_elk_rings">Complete rings (23 VP ea)</string>
+    <!-- Hawk hints -->
+    <string name="casc_hawk_a_hint">Hawks with no adjacent hawk</string>
+    <string name="casc_hawk_a_counter">Isolated hawks</string>
+    <string name="casc_hawk_b_hint">Isolated hawks with direct line of sight to another hawk</string>
+    <string name="casc_hawk_b_counter">Hawks (isolated + with LOS)</string>
+    <string name="casc_hawk_c_hint">3 VP per line of sight between two hawks</string>
+    <string name="casc_hawk_c_counter">Lines of sight</string>
+    <string name="casc_hawk_d_hint">Hawk pairs · points by unique types between them (0=1, 1=2, 2=3, 3=4, 4=5) · enter total</string>
+    <string name="casc_hawk_total">Total VP hawks</string>
+    <!-- Fox hints -->
+    <string name="casc_fox_a_hint">Per fox · unique adjacent types (including foxes)</string>
+    <string name="casc_fox_b_hint">Per fox · unique adjacent pairs (excluding fox pairs)</string>
+    <string name="casc_fox_c_hint">Per fox · most abundant adjacent type (excluding foxes)</string>
+    <string name="casc_fox_d_hint">Per fox pair · unique adjacent pairs</string>
+    <!-- Habitats -->
+    <string name="casc_hab_hint">1 VP per tile in your largest connected area of each habitat · +2 VP per group ≥7 (solo)</string>
+    <string name="casc_hab_mtn">⛰️ Mountains</string>
+    <string name="casc_hab_for">🌲 Forests</string>
+    <string name="casc_hab_pra">🌾 Prairies</string>
+    <string name="casc_hab_wet">🌊 Wetlands</string>
+    <string name="casc_hab_riv">🏞️ Rivers</string>
+    <string name="casc_hab_bonus">Groups ≥7 tiles (+2 VP ea, solo only)</string>
+    <!-- Nature tokens -->
+    <string name="casc_nature_counter">Unused tokens (1 VP ea)</string>
+    <!-- Rules tab -->
+    <string name="casc_rules_title">Rules Summary</string>
+    <string name="casc_rules_bears_title">🐻 Bears</string>
+    <string name="casc_rules_bears_body">Non-adjacent groups.\nA: Increasing points by number of pairs (1p=2, 2p=4, 3p=9, 4p=16, 5p=25).\nB: 10 VP per group of exactly 3.\nC: Groups of 1-3 bears (2/5/8 VP ea) · +3 bonus if you have all 3 sizes.\nD: Groups of 2-4 bears (5/8/13 VP ea).</string>
+    <string name="casc_rules_salmon_title">🐟 Salmon</string>
+    <string name="casc_rules_salmon_body">Runs: each salmon adjacent to max 2 (no other salmon outside the run).\nA: Per run by size (max 7): 2/4/6/9/11/13/15.\nB: Per run by size (max 5): 2/4/6/9/11.\nC: Only runs of size 3-5: 3/5/7 VP.\nD: Runs ≥3 · 1 VP per salmon + 1 VP per adjacent animal.</string>
+    <string name="casc_rules_elk_title">🦌 Elk</string>
+    <string name="casc_rules_elk_body">Can be adjacent between groups. Each elk scores only once.\nA: Straight lines · 2 elk=5, 3=9, 4=13 VP.\nB: Exact shapes from the card.\nC: Groups of any shape · 1/3/5/7/9/11/13 VP for sizes 1-7.\nD: Circular formation of 7 elk · 23 VP per ring.</string>
+    <string name="casc_rules_hawk_title">🦅 Hawks</string>
+    <string name="casc_rules_hawk_body">A: Isolated hawks (no neighbors) · 2/5/8/11/14/17 VP for 1-6.\nB: Isolated with direct line of sight to another hawk · 3/7/12/16 VP.\nC: 3 VP per line of sight (uninterrupted by another hawk).\nD: Pairs · points by unique types between them (0=1, 1=2, 2=3, 3=4, 4=5).</string>
+    <string name="casc_rules_fox_title">🦊 Foxes</string>
+    <string name="casc_rules_fox_body">A: Per fox · unique adjacent types (incl. foxes) · 0/1/2/3/4/5 VP.\nB: Per fox · unique adjacent pairs (excl. foxes) · 0/1/2/3 VP.\nC: Per fox · most abundant adjacent type (excl. foxes) · 0/1/2/3/4 VP.\nD: Per fox pair · unique adjacent pairs · 0/1/2/3/4 VP.</string>
+    <string name="casc_rules_hab_title">🌿 Habitats</string>
+    <string name="casc_rules_hab_body">1 VP per tile in the largest connected area of each type (Mountains, Forests, Prairies, Wetlands, Rivers).\nSolo bonus: +2 VP per area of ≥7 tiles.</string>
+    <string name="casc_rules_nature_title">🍄 Nature tokens</string>
+    <string name="casc_rules_nature_body">1 VP per unused nature token at the end of the game.</string>
+    <!-- Setup tab -->
+    <string name="casc_setup_title">Setup · Cascadia</string>
+    <string name="casc_setup_subtitle">Tile placement game — 1 to 4 players</string>
+    <string name="casc_setup_board_title">🗺️ Main board</string>
+    <string name="casc_setup_board_body">• Shuffle all habitat tiles face down in a pile.\n• Shuffle all wildlife tokens in a bag or face-down pile.\n• Draw 5 tile+token pairs and place them face up to form the central market.\n• Choose 1 scoring card per animal (5 animals) and place them visible.\n  → Standard mode: use side A. Family mode: use cards marked with ★.</string>
+    <string name="casc_setup_player_title">👤 Each player receives</string>
+    <string name="casc_setup_player_body">• 1 starting habitat tile (3 hexagons: 1 single + 2 doubles). Place it face up in front of you.\n• Nature tokens: go to the center, shared by all.\n• No individual resources or personal board.</string>
+    <string name="casc_setup_wildlife_title">🦅 Wildlife tokens</string>
+    <string name="casc_setup_wildlife_body">• Tokens for each animal (bears, elk, salmon, hawks, foxes) are shuffled separately.\n• They come from the deck/bag to refill the central market each turn.</string>
+    <string name="casc_setup_start_title">🏆 Game start</string>
+    <string name="casc_setup_start_body">• The player who most recently visited a national park goes first.\n• Each turn: choose 1 pair (tile + token) from the market and add them to your area.\n• You may spend 1 Nature token to refill or clear the market.</string>
+</resources>

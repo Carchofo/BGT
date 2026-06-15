@@ -11,10 +11,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.rafel.spooktacular.R
 import com.rafel.spooktacular.ui.screens.CascadiaScoreScreen
 import com.rafel.spooktacular.ui.screens.CastleComboSoloScreen
 import com.rafel.spooktacular.ui.screens.CoimbraSoloScreen
@@ -32,17 +34,6 @@ import com.rafel.spooktacular.ui.util.SoundSettings
 
 private const val PREFS_NAME = "tbg_prefs"
 private const val KEY_DISCLAIMER = "disclaimer_accepted"
-
-private val DISCLAIMER_SECTIONS = listOf(
-    "🎮  Aplicación independiente" to
-        "TBG – Tools Board Games no está afiliada ni respaldada por Board&Dice, AEG, Capstone Games, Samaruc Games, Bad Comet, Plan B Games ni Blue Orange Games.",
-    "©  Propiedad intelectual" to
-        "Los nombres de los juegos y sus logotipos son propiedad de sus respectivas editoriales. Su mención es únicamente identificativa.",
-    "🃏  Requiere el juego físico" to
-        "Esta app es un complemento. Necesitas el juego físico para usarla. No incluye reglas completas ni contenido protegido por copyright.",
-    "👥  Modos solitarios fan-made" to
-        "Los modos solitarios están basados en variantes publicadas gratuitamente en BoardGameGeek por la comunidad. El crédito es de sus autores originales."
-)
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,18 +66,24 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DisclaimerDialog(onAccept: () -> Unit) {
+    val sections = listOf(
+        stringResource(R.string.disclaimer_section1_title) to stringResource(R.string.disclaimer_section1_body),
+        stringResource(R.string.disclaimer_section2_title) to stringResource(R.string.disclaimer_section2_body),
+        stringResource(R.string.disclaimer_section3_title) to stringResource(R.string.disclaimer_section3_body),
+        stringResource(R.string.disclaimer_section4_title) to stringResource(R.string.disclaimer_section4_body),
+    )
     AlertDialog(
         onDismissRequest = { /* obligatorio aceptar */ },
         title = {
             Text(
-                "TBG – Tools Board Games",
+                stringResource(R.string.disclaimer_title),
                 fontWeight = FontWeight.Bold,
                 color = GhostWhite
             )
         },
         text = {
             LazyColumn {
-                items(DISCLAIMER_SECTIONS) { (title, body) ->
+                items(sections) { (title, body) ->
                     Text(
                         title,
                         style = MaterialTheme.typography.labelLarge,
@@ -109,7 +106,7 @@ private fun DisclaimerDialog(onAccept: () -> Unit) {
                 onClick = onAccept,
                 colors = ButtonDefaults.buttonColors(containerColor = HalloweenOrange)
             ) {
-                Text("Aceptar y Continuar", fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.disclaimer_accept_btn), fontWeight = FontWeight.Bold)
             }
         },
         containerColor = com.rafel.spooktacular.ui.theme.CardBackground

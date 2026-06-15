@@ -1,39 +1,45 @@
 package com.rafel.spooktacular.ui.util
 
-import androidx.compose.foundation.Indication
-import androidx.compose.foundation.IndicationInstance
+import androidx.compose.foundation.IndicationNodeFactory
 import androidx.compose.foundation.interaction.InteractionSource
-import androidx.compose.foundation.interaction.collectIsPressedAsState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.graphics.drawscope.ContentDrawScope
+import androidx.compose.foundation.interaction.PressInteraction
+import androidx.compose.ui.node.DelegatableNode
+import androidx.compose.ui.node.DelegatingNode
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.launch
 
 /**
- * Wraps any Indication (e.g. the Material3 ripple) and plays a tap
- * sound on every press. Provide this via LocalIndication in the theme
- * and every clickable/button in the app gets the sound for free.
+ * Wraps any IndicationNodeFactory (e.g. Material3 ripple) and plays a tap
+ * sound on every press. Provided via LocalIndication in SpooktacularTheme so
+ * every Button/IconButton/clickable in the app gets the sound automatically.
  */
 class SoundIndication(
-    private val wrapped: Indication,
+    private val wrapped: IndicationNodeFactory,
     private val player: TapSoundPlayer
-) : Indication {
+) : IndicationNodeFactory {
 
-    private inner class SoundInstance(
-        private val wrappedInstance: IndicationInstance
-    ) : IndicationInstance {
-        override fun ContentDrawScope.drawIndication() {
-            with(wrappedInstance) { drawIndication() }
-        }
+    override fun create(interactionSource: InteractionSource): DelegatableNode =
+        SoundNode(wrapped.create(interactionSource), interactionSource, player)
+
+    override fun hashCode() = System.identityHashCode(this)
+    override fun equals(other: Any?) = this === other
+}
+
+private class SoundNode(
+    wrappedNode: DelegatableNode,
+    private val interactionSource: InteractionSource,
+    private val player: TapSoundPlayer
+) : DelegatingNode() {
+
+    init {
+        delegate(wrappedNode)
     }
 
-    @Composable
-    override fun rememberUpdatedInstance(interactionSource: InteractionSource): IndicationInstance {
-        val isPressed by interactionSource.collectIsPressedAsState()
-        LaunchedEffect(isPressed) {
-            if (isPressed) player.playTap()
+    override fun onAttach() {
+        coroutineScope.launch {
+            interactionSource.interactions
+                .filterIsInstance<PressInteraction.Press>()
+                .collect { player.playTap() }
         }
-        val wrappedInstance = wrapped.rememberUpdatedInstance(interactionSource)
-        return SoundInstance(wrappedInstance)
     }
 }

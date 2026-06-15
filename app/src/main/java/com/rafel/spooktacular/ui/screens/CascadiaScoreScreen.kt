@@ -16,8 +16,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.rafel.spooktacular.R
 import com.rafel.spooktacular.ui.theme.*
 
 private val CascGreen = Color(0xFF43A047)
@@ -131,9 +133,9 @@ fun CascadiaScoreScreen(onBack: () -> Unit = {}) {
             TopAppBar(
                 title = {
                     Column {
-                        Text("Cascadia", color = GhostWhite, fontWeight = FontWeight.Bold,
+                        Text(stringResource(R.string.casc_title), color = GhostWhite, fontWeight = FontWeight.Bold,
                             style = MaterialTheme.typography.titleLarge)
-                        Text("Calculadora de puntuación", color = CascGreen.copy(alpha = 0.85f),
+                        Text(stringResource(R.string.casc_subtitle), color = CascGreen.copy(alpha = 0.85f),
                             style = MaterialTheme.typography.labelMedium)
                     }
                 },
@@ -148,9 +150,9 @@ fun CascadiaScoreScreen(onBack: () -> Unit = {}) {
         bottomBar = {
             NavigationBar(containerColor = Color(0xFF0E0E1F), tonalElevation = 0.dp) {
                 listOf(
-                    Triple(0, Icons.Default.Settings, "Setup"),
-                    Triple(1, Icons.Default.EmojiEvents, "Puntuación"),
-                    Triple(2, Icons.Default.MenuBook, "Reglas")
+                    Triple(0, Icons.Default.Settings, stringResource(R.string.nav_setup)),
+                    Triple(1, Icons.Default.EmojiEvents, stringResource(R.string.nav_scoring)),
+                    Triple(2, Icons.Default.MenuBook, stringResource(R.string.nav_rules))
                 ).forEach { (idx, icon, label) ->
                     NavigationBarItem(
                         selected = selectedTab == idx, onClick = { selectedTab = idx },
@@ -195,7 +197,7 @@ private fun CascScoreTab(s: CascadiaScoreState, modifier: Modifier = Modifier) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("PUNTUACIÓN TOTAL", color = GhostWhite.copy(alpha = 0.7f),
+                Text(stringResource(R.string.casc_score_total), color = GhostWhite.copy(alpha = 0.7f),
                     style = MaterialTheme.typography.labelLarge, letterSpacing = 1.sp)
                 Text("${s.total} PV", color = CascGreen, fontWeight = FontWeight.Black,
                     style = MaterialTheme.typography.headlineMedium)
@@ -302,43 +304,43 @@ private fun CascHint(text: String) {
 // ─── Osos ─────────────────────────────────────────────────────────
 @Composable
 private fun CascBearCard(s: CascadiaScoreState) {
-    AnimalCard("🐻", "Osos", s.bearScore) {
+    AnimalCard("🐻", stringResource(R.string.casc_bears), s.bearScore) {
         VariantChips(s.bearVariant) { s.bearVariant = it }
         HorizontalDivider(color = CardBorder.copy(alpha = 0.5f))
         when (s.bearVariant) {
             0 -> {
-                CascHint("Grupos sin adyacentes · puntos crecientes por parejas")
-                CascCounter("Número de parejas", s.bearPairs,
+                CascHint(stringResource(R.string.casc_bear_a_hint))
+                CascCounter(stringResource(R.string.casc_bear_a_counter), s.bearPairs,
                     onInc = { s.bearPairs++ }, onDec = { if (s.bearPairs > 0) s.bearPairs-- },
                     pts = BEAR_A_PTS.getOrElse(s.bearPairs) { BEAR_A_PTS.last() })
                 Text("1=2 · 2=4 · 3=9 · 4=16 · 5=25", color = GhostWhite.copy(alpha = 0.35f),
                     style = MaterialTheme.typography.labelSmall)
             }
             1 -> {
-                CascHint("10 PV por cada grupo de exactamente 3 osos")
-                CascCounter("Grupos de 3 osos", s.bearG3b,
+                CascHint(stringResource(R.string.casc_bear_b_hint))
+                CascCounter(stringResource(R.string.casc_bear_b_counter), s.bearG3b,
                     onInc = { s.bearG3b++ }, onDec = { if (s.bearG3b > 0) s.bearG3b-- },
                     pts = s.bearG3b * 10)
             }
             2 -> {
-                CascHint("Grupos de 1–3 osos · bonus +3 si tienes los 3 tamaños")
-                CascCounter("Grupos de 1 (2 PV c/u)", s.bear1c,
+                CascHint(stringResource(R.string.casc_bear_c_hint))
+                CascCounter(stringResource(R.string.casc_groups_of_1), s.bear1c,
                     onInc = { s.bear1c++ }, onDec = { if (s.bear1c > 0) s.bear1c-- }, pts = s.bear1c * 2)
-                CascCounter("Grupos de 2 (5 PV c/u)", s.bear2c,
+                CascCounter(stringResource(R.string.casc_groups_of_2_5), s.bear2c,
                     onInc = { s.bear2c++ }, onDec = { if (s.bear2c > 0) s.bear2c-- }, pts = s.bear2c * 5)
-                CascCounter("Grupos de 3 (8 PV c/u)", s.bear3c,
+                CascCounter(stringResource(R.string.casc_groups_of_3_8), s.bear3c,
                     onInc = { s.bear3c++ }, onDec = { if (s.bear3c > 0) s.bear3c-- }, pts = s.bear3c * 8)
                 if (s.bear1c > 0 && s.bear2c > 0 && s.bear3c > 0)
-                    Text("✓ Bonus +3 PV (tienes los 3 tamaños)", color = CascGreen,
+                    Text(stringResource(R.string.casc_bear_c_bonus), color = CascGreen,
                         style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Medium)
             }
             3 -> {
-                CascHint("Grupos de 2–4 osos sin adyacentes")
-                CascCounter("Grupos de 2 (5 PV c/u)", s.bear2d,
+                CascHint(stringResource(R.string.casc_bear_d_hint))
+                CascCounter(stringResource(R.string.casc_groups_of_2_5), s.bear2d,
                     onInc = { s.bear2d++ }, onDec = { if (s.bear2d > 0) s.bear2d-- }, pts = s.bear2d * 5)
-                CascCounter("Grupos de 3 (8 PV c/u)", s.bear3d,
+                CascCounter(stringResource(R.string.casc_groups_of_3_8), s.bear3d,
                     onInc = { s.bear3d++ }, onDec = { if (s.bear3d > 0) s.bear3d-- }, pts = s.bear3d * 8)
-                CascCounter("Grupos de 4 (13 PV c/u)", s.bear4d,
+                CascCounter(stringResource(R.string.casc_groups_of_4_13), s.bear4d,
                     onInc = { s.bear4d++ }, onDec = { if (s.bear4d > 0) s.bear4d-- }, pts = s.bear4d * 13)
             }
         }
@@ -348,40 +350,40 @@ private fun CascBearCard(s: CascadiaScoreState) {
 // ─── Salmones ─────────────────────────────────────────────────────
 @Composable
 private fun CascSalmonCard(s: CascadiaScoreState) {
-    AnimalCard("🐟", "Salmones", s.salmonScore) {
+    AnimalCard("🐟", stringResource(R.string.casc_salmon), s.salmonScore) {
         VariantChips(s.salmonVariant) { s.salmonVariant = it }
         HorizontalDivider(color = CardBorder.copy(alpha = 0.5f))
         when (s.salmonVariant) {
             0 -> {
-                CascHint("Cadenas (máx. 2 adyacentes por salmón) · hasta tamaño 7")
+                CascHint(stringResource(R.string.casc_sal_a_hint))
                 for (sz in 1..7) {
-                    CascCounter("Cadenas de $sz (${SALMON_A_PTS[sz]} PV c/u)", s.salA[sz - 1].value,
+                    CascCounter("$sz (${SALMON_A_PTS[sz]} PV)", s.salA[sz - 1].value,
                         onInc = { s.salA[sz - 1].value++ },
                         onDec = { if (s.salA[sz - 1].value > 0) s.salA[sz - 1].value-- },
                         pts = s.salA[sz - 1].value * SALMON_A_PTS[sz])
                 }
             }
             1 -> {
-                CascHint("Cadenas hasta tamaño 5 (cadenas ≥6 no puntúan)")
+                CascHint(stringResource(R.string.casc_sal_b_hint))
                 for (sz in 1..5) {
-                    CascCounter("Cadenas de $sz (${SALMON_B_PTS[sz]} PV c/u)", s.salB[sz - 1].value,
+                    CascCounter("$sz (${SALMON_B_PTS[sz]} PV)", s.salB[sz - 1].value,
                         onInc = { s.salB[sz - 1].value++ },
                         onDec = { if (s.salB[sz - 1].value > 0) s.salB[sz - 1].value-- },
                         pts = s.salB[sz - 1].value * SALMON_B_PTS[sz])
                 }
             }
             2 -> {
-                CascHint("Solo cadenas de tamaño 3 a 5 puntúan")
+                CascHint(stringResource(R.string.casc_sal_c_hint))
                 for (sz in 3..5) {
-                    CascCounter("Cadenas de $sz (${SALMON_C_PTS[sz]} PV c/u)", s.salC[sz - 3].value,
+                    CascCounter("$sz (${SALMON_C_PTS[sz]} PV)", s.salC[sz - 3].value,
                         onInc = { s.salC[sz - 3].value++ },
                         onDec = { if (s.salC[sz - 3].value > 0) s.salC[sz - 3].value-- },
                         pts = s.salC[sz - 3].value * SALMON_C_PTS[sz])
                 }
             }
             3 -> {
-                CascHint("Cadenas ≥3: 1 PV/salmón + 1 PV/animal adyacente · introduce el total")
-                CascCounter("Total PV salmones", s.salDPts,
+                CascHint(stringResource(R.string.casc_sal_d_hint))
+                CascCounter(stringResource(R.string.casc_sal_total), s.salDPts,
                     onInc = { s.salDPts++ }, onDec = { if (s.salDPts > 0) s.salDPts-- })
             }
         }
@@ -391,36 +393,36 @@ private fun CascSalmonCard(s: CascadiaScoreState) {
 // ─── Alces ────────────────────────────────────────────────────────
 @Composable
 private fun CascElkCard(s: CascadiaScoreState) {
-    AnimalCard("🦌", "Alces", s.elkScore) {
+    AnimalCard("🦌", stringResource(R.string.casc_elk), s.elkScore) {
         VariantChips(s.elkVariant) { s.elkVariant = it }
         HorizontalDivider(color = CardBorder.copy(alpha = 0.5f))
         when (s.elkVariant) {
             0 -> {
-                CascHint("Líneas rectas conectadas por lados de hexágono")
-                CascCounter("Líneas de 2 (5 PV c/u)", s.elkL2,
+                CascHint(stringResource(R.string.casc_elk_a_hint))
+                CascCounter(stringResource(R.string.casc_elk_line_2), s.elkL2,
                     onInc = { s.elkL2++ }, onDec = { if (s.elkL2 > 0) s.elkL2-- }, pts = s.elkL2 * 5)
-                CascCounter("Líneas de 3 (9 PV c/u)", s.elkL3,
+                CascCounter(stringResource(R.string.casc_elk_line_3), s.elkL3,
                     onInc = { s.elkL3++ }, onDec = { if (s.elkL3 > 0) s.elkL3-- }, pts = s.elkL3 * 9)
-                CascCounter("Líneas de 4 (13 PV c/u)", s.elkL4,
+                CascCounter(stringResource(R.string.casc_elk_line_4), s.elkL4,
                     onInc = { s.elkL4++ }, onDec = { if (s.elkL4 > 0) s.elkL4-- }, pts = s.elkL4 * 13)
             }
             1 -> {
-                CascHint("Grupos con las formas exactas de la carta · introduce el total")
-                CascCounter("Total PV alces", s.elkBPts,
+                CascHint(stringResource(R.string.casc_elk_b_hint))
+                CascCounter(stringResource(R.string.casc_elk_total), s.elkBPts,
                     onInc = { s.elkBPts++ }, onDec = { if (s.elkBPts > 0) s.elkBPts-- })
             }
             2 -> {
-                CascHint("Grupos conectados de cualquier forma · puntos crecientes por tamaño")
+                CascHint(stringResource(R.string.casc_elk_c_hint))
                 for (sz in 1..7) {
-                    CascCounter("Grupos de $sz (${ELK_C_PTS[sz]} PV c/u)", s.elkC[sz - 1].value,
+                    CascCounter("$sz (${ELK_C_PTS[sz]} PV)", s.elkC[sz - 1].value,
                         onInc = { s.elkC[sz - 1].value++ },
                         onDec = { if (s.elkC[sz - 1].value > 0) s.elkC[sz - 1].value-- },
                         pts = s.elkC[sz - 1].value * ELK_C_PTS[sz])
                 }
             }
             3 -> {
-                CascHint("Formación circular de 7 alces · 23 PV por anillo completo")
-                CascCounter("Anillos completos (23 PV c/u)", s.elkRings,
+                CascHint(stringResource(R.string.casc_elk_d_hint))
+                CascCounter(stringResource(R.string.casc_elk_rings), s.elkRings,
                     onInc = { s.elkRings++ }, onDec = { if (s.elkRings > 0) s.elkRings-- },
                     pts = s.elkRings * 23)
             }
@@ -431,35 +433,35 @@ private fun CascElkCard(s: CascadiaScoreState) {
 // ─── Halcones ─────────────────────────────────────────────────────
 @Composable
 private fun CascHawkCard(s: CascadiaScoreState) {
-    AnimalCard("🦅", "Halcones", s.hawkScore) {
+    AnimalCard("🦅", stringResource(R.string.casc_hawks), s.hawkScore) {
         VariantChips(s.hawkVariant) { s.hawkVariant = it }
         HorizontalDivider(color = CardBorder.copy(alpha = 0.5f))
         when (s.hawkVariant) {
             0 -> {
-                CascHint("Halcones sin ningún halcón adyacente")
-                CascCounter("Halcones aislados", s.hawkIso,
+                CascHint(stringResource(R.string.casc_hawk_a_hint))
+                CascCounter(stringResource(R.string.casc_hawk_a_counter), s.hawkIso,
                     onInc = { s.hawkIso++ }, onDec = { if (s.hawkIso > 0) s.hawkIso-- },
                     pts = HAWK_A_PTS.getOrElse(s.hawkIso) { HAWK_A_PTS.last() })
                 Text("1=2 · 2=5 · 3=8 · 4=11 · 5=14 · 6=17", color = GhostWhite.copy(alpha = 0.35f),
                     style = MaterialTheme.typography.labelSmall)
             }
             1 -> {
-                CascHint("Halcones aislados con línea de visión directa a otro halcón")
-                CascCounter("Halcones (aislado + con LDV)", s.hawkBCount,
+                CascHint(stringResource(R.string.casc_hawk_b_hint))
+                CascCounter(stringResource(R.string.casc_hawk_b_counter), s.hawkBCount,
                     onInc = { s.hawkBCount++ }, onDec = { if (s.hawkBCount > 0) s.hawkBCount-- },
                     pts = HAWK_B_PTS.getOrElse(s.hawkBCount) { HAWK_B_PTS.last() })
                 Text("1=3 · 2=7 · 3=12 · 4=16", color = GhostWhite.copy(alpha = 0.35f),
                     style = MaterialTheme.typography.labelSmall)
             }
             2 -> {
-                CascHint("3 PV por cada línea de visión entre dos halcones")
-                CascCounter("Líneas de visión", s.hawkLOS,
+                CascHint(stringResource(R.string.casc_hawk_c_hint))
+                CascCounter(stringResource(R.string.casc_hawk_c_counter), s.hawkLOS,
                     onInc = { s.hawkLOS++ }, onDec = { if (s.hawkLOS > 0) s.hawkLOS-- },
                     pts = s.hawkLOS * 3)
             }
             3 -> {
-                CascHint("Parejas de halcones · puntos según tipos únicos entre ellos (0=1, 1=2, 2=3, 3=4, 4=5) · introduce el total")
-                CascCounter("Total PV halcones", s.hawkDPts,
+                CascHint(stringResource(R.string.casc_hawk_d_hint))
+                CascCounter(stringResource(R.string.casc_hawk_total), s.hawkDPts,
                     onInc = { s.hawkDPts++ }, onDec = { if (s.hawkDPts > 0) s.hawkDPts-- })
             }
         }
@@ -469,12 +471,12 @@ private fun CascHawkCard(s: CascadiaScoreState) {
 // ─── Zorros ───────────────────────────────────────────────────────
 @Composable
 private fun CascFoxCard(s: CascadiaScoreState) {
-    AnimalCard("🦊", "Zorros", s.foxScore) {
+    AnimalCard("🦊", stringResource(R.string.casc_foxes), s.foxScore) {
         VariantChips(s.foxVariant) { s.foxVariant = it }
         HorizontalDivider(color = CardBorder.copy(alpha = 0.5f))
         when (s.foxVariant) {
             0 -> {
-                CascHint("Por cada zorro · tipos únicos adyacentes (incluyendo zorros)")
+                CascHint(stringResource(R.string.casc_fox_a_hint))
                 for (i in 0..5) {
                     CascCounter("Zorros con $i tipo${if (i != 1) "s" else ""} adj. (${FOX_A_PTS[i]} PV c/u)",
                         s.foxA[i].value,
@@ -484,7 +486,7 @@ private fun CascFoxCard(s: CascadiaScoreState) {
                 }
             }
             1 -> {
-                CascHint("Por cada zorro · parejas únicas adyacentes (excluye parejas de zorros)")
+                CascHint(stringResource(R.string.casc_fox_b_hint))
                 for (i in 0..3) {
                     CascCounter("Zorros con $i pareja${if (i != 1) "s" else ""} adj. (${FOX_B_PTS[i]} PV c/u)",
                         s.foxB[i].value,
@@ -494,7 +496,7 @@ private fun CascFoxCard(s: CascadiaScoreState) {
                 }
             }
             2 -> {
-                CascHint("Por cada zorro · tipo más abundante adyacente (excluye zorros)")
+                CascHint(stringResource(R.string.casc_fox_c_hint))
                 for (i in 0..4) {
                     CascCounter("Zorros con máx. $i igual${if (i != 1) "es" else ""} adj. (${FOX_C_PTS[i]} PV c/u)",
                         s.foxC[i].value,
@@ -504,7 +506,7 @@ private fun CascFoxCard(s: CascadiaScoreState) {
                 }
             }
             3 -> {
-                CascHint("Por cada pareja de zorros · parejas únicas adyacentes")
+                CascHint(stringResource(R.string.casc_fox_d_hint))
                 for (i in 0..4) {
                     CascCounter("Parejas con $i par${if (i != 1) "es" else ""} únicos adj. (${FOX_D_PTS[i]} PV c/u)",
                         s.foxD[i].value,
@@ -531,26 +533,26 @@ private fun CascHabitatCard(s: CascadiaScoreState) {
                 Row(verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text("🌿", style = MaterialTheme.typography.titleLarge)
-                    Text("Hábitats", color = GhostWhite, fontWeight = FontWeight.Bold,
+                    Text(stringResource(R.string.casc_habitats), color = GhostWhite, fontWeight = FontWeight.Bold,
                         style = MaterialTheme.typography.titleMedium)
                 }
                 Text("${s.habitatScore} PV", color = CascGreen, fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.titleMedium)
             }
-            CascHint("1 PV por loseta en tu mayor superficie de cada hábitat · +2 PV por grupos ≥7 (solitario)")
+            CascHint(stringResource(R.string.casc_hab_hint))
             HorizontalDivider(color = CardBorder.copy(alpha = 0.5f))
-            CascCounter("⛰️ Montañas", s.hMtn,
+            CascCounter(stringResource(R.string.casc_hab_mtn), s.hMtn,
                 onInc = { s.hMtn++ }, onDec = { if (s.hMtn > 0) s.hMtn-- }, pts = s.hMtn)
-            CascCounter("🌲 Bosques", s.hFor,
+            CascCounter(stringResource(R.string.casc_hab_for), s.hFor,
                 onInc = { s.hFor++ }, onDec = { if (s.hFor > 0) s.hFor-- }, pts = s.hFor)
-            CascCounter("🌾 Praderas", s.hPra,
+            CascCounter(stringResource(R.string.casc_hab_pra), s.hPra,
                 onInc = { s.hPra++ }, onDec = { if (s.hPra > 0) s.hPra-- }, pts = s.hPra)
-            CascCounter("🌊 Humedales", s.hWet,
+            CascCounter(stringResource(R.string.casc_hab_wet), s.hWet,
                 onInc = { s.hWet++ }, onDec = { if (s.hWet > 0) s.hWet-- }, pts = s.hWet)
-            CascCounter("🏞️ Ríos", s.hRiv,
+            CascCounter(stringResource(R.string.casc_hab_riv), s.hRiv,
                 onInc = { s.hRiv++ }, onDec = { if (s.hRiv > 0) s.hRiv-- }, pts = s.hRiv)
             HorizontalDivider(color = CardBorder.copy(alpha = 0.3f))
-            CascCounter("Grupos ≥7 losetas (+2 PV c/u, solo solitario)", s.hBonus,
+            CascCounter(stringResource(R.string.casc_hab_bonus), s.hBonus,
                 onInc = { s.hBonus++ }, onDec = { if (s.hBonus > 0) s.hBonus-- }, pts = s.hBonus * 2)
         }
     }
@@ -570,13 +572,13 @@ private fun CascNatureCard(s: CascadiaScoreState) {
                 Row(verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text("🍄", style = MaterialTheme.typography.titleLarge)
-                    Text("Fichas de naturaleza", color = GhostWhite, fontWeight = FontWeight.Bold,
+                    Text(stringResource(R.string.casc_nature_tokens), color = GhostWhite, fontWeight = FontWeight.Bold,
                         style = MaterialTheme.typography.titleMedium)
                 }
                 Text("${s.nature} PV", color = CascGreen, fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.titleMedium)
             }
-            CascCounter("Fichas no utilizadas (1 PV c/u)", s.nature,
+            CascCounter(stringResource(R.string.casc_nature_counter), s.nature,
                 onInc = { s.nature++ }, onDec = { if (s.nature > 0) s.nature-- }, pts = s.nature)
         }
     }
@@ -590,41 +592,15 @@ private fun CascRulesTab(modifier: Modifier = Modifier) {
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        Text("Resumen de Reglas", color = GhostWhite, fontWeight = FontWeight.Bold,
+        Text(stringResource(R.string.casc_rules_title), color = GhostWhite, fontWeight = FontWeight.Bold,
             style = MaterialTheme.typography.titleLarge)
-        CascRuleCard("🐻 Osos",
-            "Grupos sin adyacentes entre sí.\n" +
-            "A: Puntos crecientes por nº de parejas (1p=2, 2p=4, 3p=9, 4p=16, 5p=25).\n" +
-            "B: 10 PV por cada grupo de exactamente 3.\n" +
-            "C: Grupos 1-3 osos (2/5/8 PV c/u) · +3 bonus si tienes los 3 tamaños.\n" +
-            "D: Grupos de 2-4 osos (5/8/13 PV c/u).")
-        CascRuleCard("🐟 Salmones",
-            "Cadenas: cada salmón adyacente a máx. 2 (sin otros salmones aparte de la cadena).\n" +
-            "A: Por cadena según tamaño (máx. 7): 2/4/6/9/11/13/15.\n" +
-            "B: Por cadena según tamaño (máx. 5): 2/4/6/9/11.\n" +
-            "C: Solo cadenas de tamaño 3-5: 3/5/7 PV.\n" +
-            "D: Cadenas ≥3 · 1 PV por salmón + 1 PV por animal adyacente.")
-        CascRuleCard("🦌 Alces",
-            "Pueden estar adyacentes entre grupos. Cada alce puntúa solo una vez.\n" +
-            "A: Líneas rectas · 2 alces=5, 3=9, 4=13 PV.\n" +
-            "B: Formas exactas de la carta.\n" +
-            "C: Grupos de cualquier forma · 1/3/5/7/9/11/13 PV por tamaño 1-7.\n" +
-            "D: Formación circular de 7 alces · 23 PV por anillo.")
-        CascRuleCard("🦅 Halcones",
-            "A: Halcones aislados (sin adyacentes) · 2/5/8/11/14/17 PV por 1-6.\n" +
-            "B: Aislados con línea de visión directa a otro halcón · 3/7/12/16 PV.\n" +
-            "C: 3 PV por cada línea de visión (no interrumpida por otro halcón).\n" +
-            "D: Parejas · puntos según tipos únicos entre ellos (0=1, 1=2, 2=3, 3=4, 4=5).")
-        CascRuleCard("🦊 Zorros",
-            "A: Por zorro · tipos únicos adyacentes (incl. zorros) · 0/1/2/3/4/5 PV.\n" +
-            "B: Por zorro · parejas únicas adyacentes (excl. zorros) · 0/1/2/3 PV.\n" +
-            "C: Por zorro · tipo más abundante adyacente (excl. zorros) · 0/1/2/3/4 PV.\n" +
-            "D: Por pareja de zorros · parejas únicas adyacentes · 0/1/2/3/4 PV.")
-        CascRuleCard("🌿 Hábitats",
-            "1 PV por loseta en la mayor superficie conectada de cada tipo (Montañas, Bosques, Praderas, Humedales, Ríos).\n" +
-            "Bonus solitario: +2 PV por cada superficie de ≥7 losetas.")
-        CascRuleCard("🍄 Fichas de naturaleza",
-            "1 PV por cada ficha de naturaleza no utilizada al final de la partida.")
+        CascRuleCard(stringResource(R.string.casc_rules_bears_title), stringResource(R.string.casc_rules_bears_body))
+        CascRuleCard(stringResource(R.string.casc_rules_salmon_title), stringResource(R.string.casc_rules_salmon_body))
+        CascRuleCard(stringResource(R.string.casc_rules_elk_title), stringResource(R.string.casc_rules_elk_body))
+        CascRuleCard(stringResource(R.string.casc_rules_hawk_title), stringResource(R.string.casc_rules_hawk_body))
+        CascRuleCard(stringResource(R.string.casc_rules_fox_title), stringResource(R.string.casc_rules_fox_body))
+        CascRuleCard(stringResource(R.string.casc_rules_hab_title), stringResource(R.string.casc_rules_hab_body))
+        CascRuleCard(stringResource(R.string.casc_rules_nature_title), stringResource(R.string.casc_rules_nature_body))
         Spacer(Modifier.height(8.dp))
     }
 }
@@ -653,28 +629,15 @@ private fun CascSetupTab(modifier: Modifier = Modifier) {
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Text("Preparación · Cascadia", color = GhostWhite, fontWeight = FontWeight.Bold,
+        Text(stringResource(R.string.casc_setup_title), color = GhostWhite, fontWeight = FontWeight.Bold,
             style = MaterialTheme.typography.titleLarge)
-        Text("Juego de colocación de losetas — 1 a 4 jugadores",
+        Text(stringResource(R.string.casc_setup_subtitle),
             color = GhostWhite.copy(alpha = 0.4f), style = MaterialTheme.typography.bodySmall)
 
-        CascSetupBlock("🗺️ Tablero general",
-            "• Mezcla todas las losetas de hábitat en una pila bocabajo.\n" +
-            "• Mezcla todas las fichas de vida salvaje en una bolsa o pila bocabajo.\n" +
-            "• Saca 5 pares loseta+ficha y colócalos bocarriba formando el mercado central.\n" +
-            "• Elige 1 carta de puntuación por cada animal (5 animales) y colócalas visibles.\n" +
-            "  → Modo estándar: usa el lado A. Modo familiar: usa las cartas marcadas con ★.")
-        CascSetupBlock("👤 Cada jugador recibe",
-            "• 1 loseta inicial de hábitat (3 hexágonos: 1 sencillo + 2 dobles). Colócala bocarriba frente a ti.\n" +
-            "• Fichas de Naturaleza: van al centro, compartidas por todos.\n" +
-            "• No hay recursos individuales ni tablero personal.")
-        CascSetupBlock("🦅 Fichas de vida salvaje",
-            "• Las fichas de cada animal (osos, alces, salmones, halcones, zorros) se mezclan por separado.\n" +
-            "• Salen del mazo/bolsa para rellenar el mercado central cada turno.")
-        CascSetupBlock("🏆 Inicio de partida",
-            "• El jugador que haya visitado más recientemente un parque nacional empieza.\n" +
-            "• Cada turno: elige 1 par (loseta + ficha) del mercado y añádelos a tu área.\n" +
-            "• Puedes gastar 1 Ficha de Naturaleza para rellenar o limpiar el mercado.")
+        CascSetupBlock(stringResource(R.string.casc_setup_board_title), stringResource(R.string.casc_setup_board_body))
+        CascSetupBlock(stringResource(R.string.casc_setup_player_title), stringResource(R.string.casc_setup_player_body))
+        CascSetupBlock(stringResource(R.string.casc_setup_wildlife_title), stringResource(R.string.casc_setup_wildlife_body))
+        CascSetupBlock(stringResource(R.string.casc_setup_start_title), stringResource(R.string.casc_setup_start_body))
     }
 }
 

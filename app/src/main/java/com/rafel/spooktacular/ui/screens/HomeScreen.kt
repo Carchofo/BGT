@@ -23,7 +23,9 @@ import androidx.compose.ui.graphics.*
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.annotation.StringRes
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
@@ -35,6 +37,12 @@ import com.rafel.spooktacular.ui.util.SoundSettings
 
 enum class ViewMode { LIST, GRID }
 
+enum class GameFeature(val emoji: String, @StringRes val labelRes: Int) {
+    SOLO("🤖", R.string.feature_solo),
+    SCORING("🏆", R.string.feature_scoring),
+    RULES("📖", R.string.feature_rules)
+}
+
 data class GameItem(
     val id: String,
     val title: String,
@@ -43,7 +51,8 @@ data class GameItem(
     val bannerRes: Int? = null,
     val available: Boolean = false,
     val route: String = "",
-    val tag: String? = null
+    val tag: String? = null,
+    val features: Set<GameFeature> = emptySet()
 )
 
 private val GAMES = listOf(
@@ -51,43 +60,50 @@ private val GAMES = listOf(
         id = "spooktacular", title = "Spooktacular",
         subtitle = "Terror en el Silver Cinema • 1-5 jugadores",
         hasBanner = true, available = true, route = "solo_mode", tag = "DISPONIBLE",
-        bannerRes = R.drawable.banner_spooktacular_new
+        bannerRes = R.drawable.banner_spooktacular_new,
+        features = setOf(GameFeature.SOLO, GameFeature.SCORING)
     ),
     GameItem(
         id = "cm", title = "Criaturas Maravillosas",
         subtitle = "Exploración de isla • Modo solitario vs Tingent",
         hasBanner = true, available = true, route = "cm_solo", tag = "DISPONIBLE",
-        bannerRes = R.drawable.banner_cm_new
+        bannerRes = R.drawable.banner_cm_new,
+        features = setOf(GameFeature.SOLO, GameFeature.SCORING, GameFeature.RULES)
     ),
     GameItem(
         id = "tiletum", title = "Tiletum",
         subtitle = "Mercaderes del Renacimiento • Modo solitario vs Titus",
         hasBanner = true, available = true, route = "tiletum_solo", tag = "DISPONIBLE",
-        bannerRes = R.drawable.banner_tiletum_img
+        bannerRes = R.drawable.banner_tiletum_img,
+        features = setOf(GameFeature.SOLO, GameFeature.SCORING, GameFeature.RULES)
     ),
     GameItem(
         id = "maracaibo", title = "Piratas de Maracaibo",
         subtitle = "El Caribe, s. XVII • Modo solitario vs Jordán",
         hasBanner = true, available = true, route = "maracaibo_solo", tag = "DISPONIBLE",
-        bannerRes = R.drawable.banner_maracaibo
+        bannerRes = R.drawable.banner_maracaibo,
+        features = setOf(GameFeature.SOLO, GameFeature.SCORING, GameFeature.RULES)
     ),
     GameItem(
         id = "castle_combo", title = "Castle Combo",
         subtitle = "Fiesta de los Combos • Modo solitario vs Anton",
         hasBanner = true, available = true, route = "castle_combo_solo", tag = "DISPONIBLE",
-        bannerRes = R.drawable.banner_castle_combo
+        bannerRes = R.drawable.banner_castle_combo,
+        features = setOf(GameFeature.SOLO, GameFeature.SCORING, GameFeature.RULES)
     ),
     GameItem(
         id = "cascadia", title = "Cascadia",
         subtitle = "Noroeste del Pacífico • Calculadora de puntuación",
         hasBanner = true, available = true, route = "cascadia_score", tag = "DISPONIBLE",
-        bannerRes = R.drawable.banner_cascadia
+        bannerRes = R.drawable.banner_cascadia,
+        features = setOf(GameFeature.SCORING)
     ),
     GameItem(
         id = "coimbra", title = "Coimbra",
         subtitle = "Portugal medieval • Modo solitario Bot Interferencia",
         hasBanner = true, available = true, route = "coimbra_solo", tag = "DISPONIBLE",
-        bannerRes = R.drawable.banner_coimbra
+        bannerRes = R.drawable.banner_coimbra,
+        features = setOf(GameFeature.SOLO, GameFeature.RULES)
     ),
     GameItem(id = "g4", title = "Próximamente", subtitle = ""),
     GameItem(id = "g5", title = "Próximamente", subtitle = ""),
@@ -109,12 +125,18 @@ fun HomeScreen(
     var viewMode by remember { mutableStateOf(ViewMode.LIST) }
     var searchQuery by remember { mutableStateOf("") }
     var showFavoritesOnly by remember { mutableStateOf(false) }
+    var activeFeatures by remember { mutableStateOf(emptySet<GameFeature>()) }
     val keyboard = LocalSoftwareKeyboardController.current
 
+    val isFiltering = searchQuery.isNotBlank() || showFavoritesOnly || activeFeatures.isNotEmpty()
+
     // Filter logic
-    val filteredGames = remember(searchQuery, showFavoritesOnly, favoriteIds) {
+    val filteredGames = remember(searchQuery, showFavoritesOnly, favoriteIds, activeFeatures) {
         var result = GAMES_SORTED.filter { it.available }
         if (showFavoritesOnly) result = result.filter { it.id in favoriteIds }
+        if (activeFeatures.isNotEmpty()) result = result.filter { game ->
+            activeFeatures.all { it in game.features }
+        }
         if (searchQuery.isNotBlank()) {
             val q = searchQuery.trim()
             result = result.filter { game ->
@@ -122,48 +144,68 @@ fun HomeScreen(
                 game.subtitle.contains(q, ignoreCase = true)
             }
         }
-        // Show "Próximamente" slots only when not filtering
-        if (searchQuery.isBlank() && !showFavoritesOnly) {
+        if (!isFiltering) {
             result + GAMES_SORTED.filter { !it.available }
         } else {
             result
         }
     }
 
+    val context = LocalContext.current
+    val isMuted by SoundSettings.isMuted
+
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(
-                        "🎮  Juegos",
-                        style = MaterialTheme.typography.titleLarge,
-                        color = GhostWhite,
-                        fontWeight = FontWeight.Bold
-                    )
+                    // Chips de feature en lugar del título
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        GameFeature.entries.forEach { feature ->
+                            val selected = feature in activeFeatures
+                            FilterChip(
+                                selected = selected,
+                                onClick = {
+                                    activeFeatures = if (selected) activeFeatures - feature else activeFeatures + feature
+                                },
+                                label = { Text("${feature.emoji} ${stringResource(feature.labelRes)}", style = MaterialTheme.typography.labelSmall, maxLines = 1) },
+                                colors = FilterChipDefaults.filterChipColors(
+                                    selectedContainerColor = HalloweenOrange.copy(alpha = 0.18f),
+                                    selectedLabelColor = HalloweenOrange,
+                                    containerColor = CardBackground,
+                                    labelColor = GhostWhite.copy(alpha = 0.55f)
+                                ),
+                                border = FilterChipDefaults.filterChipBorder(
+                                    enabled = true,
+                                    selected = selected,
+                                    borderColor = CardBorder,
+                                    selectedBorderColor = HalloweenOrange.copy(alpha = 0.5f)
+                                )
+                            )
+                        }
+                    }
                 },
                 actions = {
-                    // Toggle favoritos
                     IconButton(onClick = { showFavoritesOnly = !showFavoritesOnly }) {
                         Icon(
                             imageVector = if (showFavoritesOnly) Icons.Default.Star else Icons.Default.StarBorder,
-                            contentDescription = if (showFavoritesOnly) "Ver todos" else "Ver favoritos",
+                            contentDescription = if (showFavoritesOnly) stringResource(R.string.cd_show_all) else stringResource(R.string.cd_show_favorites),
                             tint = if (showFavoritesOnly) HalloweenOrange else GhostWhite.copy(alpha = 0.5f),
                             modifier = Modifier.size(24.dp)
                         )
                     }
-                    // Toggle sonido
-                    val context = LocalContext.current
-                    val isMuted by SoundSettings.isMuted
                     IconButton(onClick = { SoundSettings.toggle(context) }) {
                         Icon(
                             imageVector = if (isMuted) Icons.Default.VolumeOff else Icons.Default.VolumeUp,
-                            contentDescription = if (isMuted) "Activar sonido" else "Silenciar",
+                            contentDescription = if (isMuted) stringResource(R.string.cd_unmute) else stringResource(R.string.cd_mute),
                             tint = if (isMuted) GhostWhite.copy(alpha = 0.35f) else GhostWhite.copy(alpha = 0.6f),
                             modifier = Modifier.size(22.dp)
                         )
                     }
                     ViewToggle(current = viewMode, onToggle = { viewMode = it })
-                    Spacer(Modifier.width(8.dp))
+                    Spacer(Modifier.width(4.dp))
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = MidnightBlue)
             )
@@ -185,7 +227,7 @@ fun HomeScreen(
                     .padding(horizontal = 16.dp, vertical = 10.dp),
                 placeholder = {
                     Text(
-                        "Buscar juego...",
+                        stringResource(R.string.search_placeholder),
                         color = GhostWhite.copy(alpha = 0.35f),
                         style = MaterialTheme.typography.bodyMedium
                     )
@@ -203,7 +245,7 @@ fun HomeScreen(
                         IconButton(onClick = { searchQuery = ""; keyboard?.hide() }) {
                             Icon(
                                 Icons.Default.Close,
-                                contentDescription = "Limpiar",
+                                contentDescription = stringResource(R.string.cd_clear_search),
                                 tint = GhostWhite.copy(alpha = 0.5f),
                                 modifier = Modifier.size(18.dp)
                             )
@@ -224,7 +266,6 @@ fun HomeScreen(
                     unfocusedTextColor = GhostWhite
                 )
             )
-
 
             // ── Lista / Grid / Empty ───────────────────────────────
             if (filteredGames.isEmpty()) {
@@ -256,16 +297,16 @@ private fun EmptyState(isFavoritesFilter: Boolean) {
         )
         Spacer(Modifier.height(16.dp))
         Text(
-            text = if (isFavoritesFilter) "No tienes favoritos aún" else "Sin resultados",
+            text = if (isFavoritesFilter) stringResource(R.string.empty_no_favorites_title) else stringResource(R.string.empty_no_results_title),
             style = MaterialTheme.typography.titleMedium,
             color = GhostWhite.copy(alpha = 0.35f)
         )
         Spacer(Modifier.height(6.dp))
         Text(
             text = if (isFavoritesFilter)
-                "Pulsa la ★ en cualquier juego para guardarlo aquí"
+                stringResource(R.string.empty_no_favorites_body)
             else
-                "Prueba con otro término de búsqueda",
+                stringResource(R.string.empty_no_results_body),
             style = MaterialTheme.typography.bodySmall,
             color = GhostWhite.copy(alpha = 0.22f)
         )
@@ -407,15 +448,17 @@ private fun GameCardList(
             ) {
                 Column(Modifier.weight(1f)) {
                     if (game.available) {
-                        game.tag?.let {
-                            Text(
-                                it,
-                                style = MaterialTheme.typography.labelLarge.copy(fontSize = 10.sp),
-                                color = HalloweenOrange,
-                                fontWeight = FontWeight.Bold,
-                                letterSpacing = 1.5.sp
-                            )
-                            Spacer(Modifier.height(3.dp))
+                        if (game.features.isNotEmpty()) {
+                            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                                game.features.forEach { feature ->
+                                    Text(
+                                        "${feature.emoji} ${stringResource(feature.labelRes)}",
+                                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp),
+                                        color = HalloweenOrange.copy(alpha = 0.75f)
+                                    )
+                                }
+                            }
+                            Spacer(Modifier.height(4.dp))
                         }
                         Text(
                             game.title,
@@ -423,16 +466,6 @@ private fun GameCardList(
                             color = GhostWhite,
                             fontWeight = FontWeight.Black
                         )
-                        if (game.subtitle.isNotEmpty()) {
-                            Spacer(Modifier.height(3.dp))
-                            Text(
-                                game.subtitle,
-                                style = MaterialTheme.typography.bodySmall,
-                                color = GhostWhite.copy(alpha = 0.65f),
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
-                            )
-                        }
                     } else {
                         Icon(
                             Icons.Default.Lock, null,
@@ -441,7 +474,7 @@ private fun GameCardList(
                         )
                         Spacer(Modifier.height(4.dp))
                         Text(
-                            "Próximamente",
+                            stringResource(R.string.label_coming_soon),
                             style = MaterialTheme.typography.bodyMedium,
                             color = GhostWhite.copy(alpha = 0.25f)
                         )
@@ -454,7 +487,7 @@ private fun GameCardList(
                     ) {
                         Icon(
                             imageVector = if (isFavorite) Icons.Default.Star else Icons.Default.StarBorder,
-                            contentDescription = if (isFavorite) "Quitar favorito" else "Añadir favorito",
+                            contentDescription = if (isFavorite) stringResource(R.string.cd_remove_favorite) else stringResource(R.string.cd_add_favorite),
                             tint = if (isFavorite) HalloweenOrange else GhostWhite.copy(alpha = 0.4f),
                             modifier = Modifier.size(22.dp)
                         )
@@ -533,36 +566,36 @@ private fun GameCardGrid(
                 ) {
                     Icon(
                         imageVector = if (isFavorite) Icons.Default.Star else Icons.Default.StarBorder,
-                        contentDescription = if (isFavorite) "Quitar favorito" else "Añadir favorito",
+                        contentDescription = if (isFavorite) stringResource(R.string.cd_remove_favorite) else stringResource(R.string.cd_add_favorite),
                         tint = if (isFavorite) HalloweenOrange else GhostWhite.copy(alpha = 0.55f),
                         modifier = Modifier.size(18.dp)
                     )
                 }
-                Column(
-                    Modifier
-                        .fillMaxWidth()
+                // Feature emojis — esquina superior izquierda
+                if (game.features.isNotEmpty()) {
+                    Row(
+                        Modifier
+                            .align(Alignment.TopStart)
+                            .padding(8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        game.features.forEach { feature ->
+                            Text(feature.emoji, fontSize = 13.sp)
+                        }
+                    }
+                }
+                // Título — parte inferior
+                Text(
+                    game.title,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = GhostWhite,
+                    fontWeight = FontWeight.Black,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier
                         .align(Alignment.BottomStart)
                         .padding(12.dp)
-                ) {
-                    game.tag?.let {
-                        Text(
-                            it,
-                            style = MaterialTheme.typography.labelLarge.copy(fontSize = 8.sp),
-                            color = HalloweenOrange,
-                            fontWeight = FontWeight.Bold,
-                            letterSpacing = 1.sp
-                        )
-                        Spacer(Modifier.height(2.dp))
-                    }
-                    Text(
-                        game.title,
-                        style = MaterialTheme.typography.titleMedium,
-                        color = GhostWhite,
-                        fontWeight = FontWeight.Black,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
+                )
             } else {
                 Column(
                     Modifier.fillMaxSize(),
@@ -576,7 +609,7 @@ private fun GameCardGrid(
                     )
                     Spacer(Modifier.height(4.dp))
                     Text(
-                        "Próximamente",
+                        stringResource(R.string.label_coming_soon),
                         style = MaterialTheme.typography.labelLarge,
                         color = GhostWhite.copy(alpha = 0.25f)
                     )

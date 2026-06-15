@@ -15,28 +15,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.rafel.spooktacular.R
 import com.rafel.spooktacular.ui.theme.*
 
 private val CoiAmber  = Color(0xFFD4900A)
 private val CoiGold   = Color(0xFFF5B800)
 
-// ─── Tablas de dados ─────────────────────────────────────────────
-private val DICE_TABLE = listOf(
-    Triple("1", "🟣", "Morado"),
-    Triple("2", "🟢", "Verde"),
-    Triple("3", "🟠", "Naranja bajo"),
-    Triple("4", "⬜", "Gris bajo"),
-    Triple("5", "🔴", "Naranja alto"),
-    Triple("6", "⬜", "Gris alto"),
-)
-
-private val CITY_TABLE = listOf(
-    Triple("1–2", "🏰", "Ciudad Alta"),
-    Triple("3–4", "🏛️", "Ciudad Central"),
-    Triple("5–6", "🏠", "Ciudad Baja"),
-)
+// ─── Tablas de dados (built inside composable for localization) ───
 
 // ─── Estado ───────────────────────────────────────────────────────
 private class CoimbraState {
@@ -52,12 +40,12 @@ private class CoimbraState {
 
     val total get() = ptCartas + ptPeregrin + ptInfluencia + ptMonedas + ptFavores + ptOtros
 
-    val ratingLabel get() = when {
-        total < 130 -> "Mal resultado 😬"
-        total < 160 -> "Aceptable 👍"
-        total < 190 -> "Bueno 🌟"
-        total < 220 -> "Excelente ⭐"
-        else        -> "¡Increíble! 🏆"
+    val ratingIndex get() = when {
+        total < 130 -> 0
+        total < 160 -> 1
+        total < 190 -> 2
+        total < 220 -> 3
+        else        -> 4
     }
 
     val ratingColor get() = when {
@@ -81,9 +69,9 @@ fun CoimbraSoloScreen(onBack: () -> Unit = {}) {
             TopAppBar(
                 title = {
                     Column {
-                        Text("Coimbra", color = GhostWhite, fontWeight = FontWeight.Bold,
+                        Text(stringResource(R.string.coi_title), color = GhostWhite, fontWeight = FontWeight.Bold,
                             style = MaterialTheme.typography.titleLarge)
-                        Text("Modo solitario · Bot de interferencia",
+                        Text(stringResource(R.string.coi_subtitle),
                             color = CoiAmber.copy(alpha = 0.85f),
                             style = MaterialTheme.typography.labelMedium)
                     }
@@ -101,10 +89,10 @@ fun CoimbraSoloScreen(onBack: () -> Unit = {}) {
         bottomBar = {
             NavigationBar(containerColor = Color(0xFF0E0E1F), tonalElevation = 0.dp) {
                 listOf(
-                    Triple(0, Icons.Default.Settings, "Setup"),
-                    Triple(1, Icons.Default.SmartToy, "Solitario"),
-                    Triple(2, Icons.Default.EmojiEvents, "Puntuación"),
-                    Triple(3, Icons.Default.MenuBook, "Reglas")
+                    Triple(0, Icons.Default.Settings, stringResource(R.string.nav_setup)),
+                    Triple(1, Icons.Default.SmartToy, stringResource(R.string.nav_solo)),
+                    Triple(2, Icons.Default.EmojiEvents, stringResource(R.string.nav_scoring)),
+                    Triple(3, Icons.Default.MenuBook, stringResource(R.string.nav_rules))
                 ).forEach { (idx, icon, label) ->
                     NavigationBarItem(
                         selected = selectedTab == idx, onClick = { selectedTab = idx },
@@ -196,6 +184,19 @@ private fun CoiCounter(
 // ─── Tab Solitario ────────────────────────────────────────────────
 @Composable
 private fun CoiSoloTab(s: CoimbraState, modifier: Modifier = Modifier) {
+    val diceTable = listOf(
+        Triple("1", "🟣", "Morado"),
+        Triple("2", "🟢", "Verde"),
+        Triple("3", "🟠", "Naranja bajo"),
+        Triple("4", "⬜", "Gris bajo"),
+        Triple("5", "🔴", "Naranja alto"),
+        Triple("6", "⬜", "Gris alto"),
+    )
+    val cityTable = listOf(
+        Triple("1–2", "🏰", "Ciudad Alta"),
+        Triple("3–4", "🏛️", "Ciudad Central"),
+        Triple("5–6", "🏠", "Ciudad Baja"),
+    )
     Column(
         modifier = modifier.fillMaxSize().verticalScroll(rememberScrollState())
             .padding(horizontal = 16.dp, vertical = 12.dp),
@@ -203,7 +204,7 @@ private fun CoiSoloTab(s: CoimbraState, modifier: Modifier = Modifier) {
     ) {
         // Ronda
         CoiCard {
-            CoiSectionHeader("Ronda actual")
+            CoiSectionHeader(stringResource(R.string.coi_solo_tab_title))
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center) {
                 IconButton(onClick = { if (s.round > 1) s.round-- }, modifier = Modifier.size(44.dp),
@@ -216,7 +217,7 @@ private fun CoiSoloTab(s: CoimbraState, modifier: Modifier = Modifier) {
                     modifier = Modifier.padding(horizontal = 20.dp)) {
                     Text("${s.round}", color = CoiAmber, fontWeight = FontWeight.Black,
                         style = MaterialTheme.typography.displaySmall)
-                    Text("de 4", color = GhostWhite.copy(alpha = 0.5f),
+                    Text(stringResource(R.string.coi_of_four), color = GhostWhite.copy(alpha = 0.5f),
                         style = MaterialTheme.typography.bodySmall)
                 }
                 IconButton(onClick = { if (s.round < 4) s.round++ }, modifier = Modifier.size(44.dp),
@@ -226,17 +227,17 @@ private fun CoiSoloTab(s: CoimbraState, modifier: Modifier = Modifier) {
                         modifier = Modifier.size(24.dp))
                 }
             }
-            Text("⚠️ El Bot siempre va primero en todos los turnos.",
+            Text(stringResource(R.string.coi_bot_warning),
                 color = CoiAmber.copy(alpha = 0.8f), fontWeight = FontWeight.Medium,
                 style = MaterialTheme.typography.bodySmall)
         }
 
         // Tabla de dados del Bot
         CoiCard {
-            CoiSectionHeader("Dados del Bot",
-                "Tira 1d6 por cada dado que coge el Bot (3 dados por ronda)")
+            CoiSectionHeader(stringResource(R.string.coi_dice_title),
+                stringResource(R.string.coi_dice_subtitle))
             HorizontalDivider(color = CardBorder.copy(alpha = 0.5f))
-            DICE_TABLE.forEach { (num, emoji, name) ->
+            diceTable.forEach { (num, emoji, name) ->
                 Row(Modifier.fillMaxWidth().padding(vertical = 2.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -249,18 +250,18 @@ private fun CoiSoloTab(s: CoimbraState, modifier: Modifier = Modifier) {
                 }
             }
             HorizontalDivider(color = CardBorder.copy(alpha = 0.3f))
-            Text("Si el color indicado no está disponible → prueba el dado blanco → sigue bajando en número hasta encontrar uno disponible.",
+            Text(stringResource(R.string.coi_dice_fallback),
                 color = GhostWhite.copy(alpha = 0.5f), style = MaterialTheme.typography.bodySmall)
-            Text("Gris/Naranja «bajo» = el de menor valor de los dos disponibles · «alto» = el de mayor valor. Si solo queda uno, coge ese.",
+            Text(stringResource(R.string.coi_dice_lowhi),
                 color = GhostWhite.copy(alpha = 0.5f), style = MaterialTheme.typography.bodySmall)
         }
 
         // Colocación en ciudad
         CoiCard {
-            CoiSectionHeader("Colocación en Ciudad",
-                "Tira 1d6 por cada dado del Bot para saber la zona")
+            CoiSectionHeader(stringResource(R.string.coi_city_title),
+                stringResource(R.string.coi_city_subtitle))
             HorizontalDivider(color = CardBorder.copy(alpha = 0.5f))
-            CITY_TABLE.forEach { (rango, emoji, name) ->
+            cityTable.forEach { (rango, emoji, name) ->
                 Row(Modifier.fillMaxWidth().padding(vertical = 2.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -274,25 +275,25 @@ private fun CoiSoloTab(s: CoimbraState, modifier: Modifier = Modifier) {
             }
             HorizontalDivider(color = CardBorder.copy(alpha = 0.3f))
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                Text("Restricciones de colocación:", color = CoiAmber.copy(alpha = 0.8f),
+                Text(stringResource(R.string.coi_city_restrictions), color = CoiAmber.copy(alpha = 0.8f),
                     style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
-                Text("• Máximo 2 dados del Bot en la misma zona.",
+                Text(stringResource(R.string.coi_city_r1),
                     color = GhostWhite.copy(alpha = 0.65f), style = MaterialTheme.typography.bodySmall)
-                Text("• No colocar donde ya haya 4+ elementos (dados + fichas) a menos que el dado garantice una carta al Bot.",
+                Text(stringResource(R.string.coi_city_r2),
                     color = GhostWhite.copy(alpha = 0.65f), style = MaterialTheme.typography.bodySmall)
-                Text("• Si la zona resultante ya tiene 2 dados Bot o está llena → reasignar: 1-3 Ciudad Alta, 4-6 Ciudad Central.",
+                Text(stringResource(R.string.coi_city_r3),
                     color = GhostWhite.copy(alpha = 0.65f), style = MaterialTheme.typography.bodySmall)
             }
         }
 
         // Castillo
         CoiCard {
-            CoiSectionHeader("Castillo")
-            Text("Solo aplica si el jugador ha colocado un dado en el Castillo este turno.",
+            CoiSectionHeader(stringResource(R.string.coi_castle_title))
+            Text(stringResource(R.string.coi_castle_hint),
                 color = GhostWhite.copy(alpha = 0.5f), style = MaterialTheme.typography.bodySmall)
             HorizontalDivider(color = CardBorder.copy(alpha = 0.5f))
             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text("Mira el valor del 7º dado sobrante (el que no se usa):",
+                Text(stringResource(R.string.coi_castle_check),
                     color = GhostWhite.copy(alpha = 0.75f), style = MaterialTheme.typography.bodyMedium)
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Surface(shape = RoundedCornerShape(8.dp),
@@ -302,10 +303,10 @@ private fun CoiSoloTab(s: CoimbraState, modifier: Modifier = Modifier) {
                         Column(Modifier.padding(10.dp),
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                            Text("7º dado ≥ tu dado", color = GhostWhite.copy(alpha = 0.6f),
+                            Text(stringResource(R.string.coi_castle_ge), color = GhostWhite.copy(alpha = 0.6f),
                                 style = MaterialTheme.typography.labelMedium,
                                 textAlign = TextAlign.Center)
-                            Text("✅ Ignorar", color = CoiAmber, fontWeight = FontWeight.Bold,
+                            Text(stringResource(R.string.coi_castle_ge_result), color = CoiAmber, fontWeight = FontWeight.Bold,
                                 style = MaterialTheme.typography.bodyMedium,
                                 textAlign = TextAlign.Center)
                         }
@@ -317,72 +318,77 @@ private fun CoiSoloTab(s: CoimbraState, modifier: Modifier = Modifier) {
                         Column(Modifier.padding(10.dp),
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                            Text("7º dado < tu dado", color = GhostWhite.copy(alpha = 0.6f),
+                            Text(stringResource(R.string.coi_castle_lt), color = GhostWhite.copy(alpha = 0.6f),
                                 style = MaterialTheme.typography.labelMedium,
                                 textAlign = TextAlign.Center)
-                            Text("❌ Bot roba 1 ficha", color = BloodRed, fontWeight = FontWeight.Bold,
+                            Text(stringResource(R.string.coi_castle_lt_result), color = BloodRed, fontWeight = FontWeight.Bold,
                                 style = MaterialTheme.typography.bodyMedium,
                                 textAlign = TextAlign.Center)
                         }
                     }
                 }
-                Text("Si el Bot roba: tira 1d4 para ver cuál de las 4 fichas de favor coge antes que tú (el Bot usa 4 dados ese turno).",
+                Text(stringResource(R.string.coi_castle_steal_note),
                     color = GhostWhite.copy(alpha = 0.55f), style = MaterialTheme.typography.bodySmall)
             }
         }
 
         // Cartas
         CoiCard {
-            CoiSectionHeader("Cartas")
+            CoiSectionHeader(stringResource(R.string.coi_cards_title))
             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text("Las 5 fichas de dado toman cartas normalmente (mayor influencia, empate al más a la izquierda).",
+                Text(stringResource(R.string.coi_cards_body1),
                     color = GhostWhite.copy(alpha = 0.75f), style = MaterialTheme.typography.bodySmall)
-                Text("Cuando le toca al Bot, tira un dado para elegir aleatoriamente entre las cartas disponibles:",
+                Text(stringResource(R.string.coi_cards_body2),
                     color = GhostWhite.copy(alpha = 0.75f), style = MaterialTheme.typography.bodySmall)
                 HorizontalDivider(color = CardBorder.copy(alpha = 0.4f))
-                val cardRolls = listOf("4 cartas → 1-4", "3 cartas → 1-3", "2 cartas → 1-2", "1 carta → la toma")
+                val cardRolls = listOf(
+                    stringResource(R.string.coi_cards_roll_4),
+                    stringResource(R.string.coi_cards_roll_3),
+                    stringResource(R.string.coi_cards_roll_2),
+                    stringResource(R.string.coi_cards_roll_1)
+                )
                 cardRolls.forEach { txt ->
                     Text("• $txt", color = GhostWhite.copy(alpha = 0.65f),
                         style = MaterialTheme.typography.bodySmall)
                 }
                 HorizontalDivider(color = CardBorder.copy(alpha = 0.4f))
-                Text("🎯 Influencia Bot = valor de influencia de la carta + 1 (rango 2–5).",
+                Text(stringResource(R.string.coi_cards_influence),
                     color = CoiAmber, fontWeight = FontWeight.Medium,
                     style = MaterialTheme.typography.bodySmall)
-                Text("El Bot no activa ningún otro efecto de las cartas salvo ganar la influencia +1.",
+                Text(stringResource(R.string.coi_cards_no_effect),
                     color = GhostWhite.copy(alpha = 0.5f), style = MaterialTheme.typography.bodySmall)
             }
         }
 
         // Coronas
         CoiCard {
-            CoiSectionHeader("Coronas")
+            CoiSectionHeader(stringResource(R.string.coi_crowns_title))
             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text("El jugador solo cuenta 1 corona por ir 2º en orden de turno (el Bot siempre es 1º).",
+                Text(stringResource(R.string.coi_crowns_body1),
                     color = GhostWhite.copy(alpha = 0.75f), style = MaterialTheme.typography.bodySmall)
-                Text("Más las coronas obtenidas de fichas de favor en el turno actual de puntuación.",
+                Text(stringResource(R.string.coi_crowns_body2),
                     color = GhostWhite.copy(alpha = 0.75f), style = MaterialTheme.typography.bodySmall)
-                Text("No usar fichas de corona durante la partida (o solo en la última ronda si se quiere).",
+                Text(stringResource(R.string.coi_crowns_body3),
                     color = GhostWhite.copy(alpha = 0.5f), style = MaterialTheme.typography.bodySmall)
             }
         }
 
         // Peregrinaciones
         CoiCard {
-            CoiSectionHeader("Peregrinaciones")
-            Text("El jugador puede elegir cualquiera de los 4 puntos de salida desde Coimbra. El Bot no hace peregrinaciones.",
+            CoiSectionHeader(stringResource(R.string.coi_pilgrimages_title))
+            Text(stringResource(R.string.coi_pilgrimages_body),
                 color = GhostWhite.copy(alpha = 0.75f), style = MaterialTheme.typography.bodySmall)
         }
 
         // Cartas de personaje
         CoiCard {
-            CoiSectionHeader("Cartas de personaje I")
+            CoiSectionHeader(stringResource(R.string.coi_char_cards_title))
             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text("El Bot recibe 2 cartas I aleatorias al inicio. Su influencia = valor de la carta + 1.",
+                Text(stringResource(R.string.coi_char_cards_body1),
                     color = GhostWhite.copy(alpha = 0.75f), style = MaterialTheme.typography.bodySmall)
-                Text("El jugador recibe 2 cartas I aleatorias de las 8 disponibles (sin elección).",
+                Text(stringResource(R.string.coi_char_cards_body2),
                     color = GhostWhite.copy(alpha = 0.75f), style = MaterialTheme.typography.bodySmall)
-                Text("Cuando una carta del jugador implicaría robar recursos o PV a otro jugador → siempre recibe la opción sin PV.",
+                Text(stringResource(R.string.coi_char_cards_body3),
                     color = GhostWhite.copy(alpha = 0.75f), style = MaterialTheme.typography.bodySmall)
             }
         }
@@ -405,14 +411,21 @@ private fun CoiScoreTab(s: CoimbraState, modifier: Modifier = Modifier) {
             colors = CardDefaults.cardColors(containerColor = CoiAmber.copy(alpha = 0.1f)),
             border = BorderStroke(1.dp, CoiAmber.copy(alpha = 0.4f))
         ) {
+            val ratingLabels = listOf(
+                stringResource(R.string.coi_rank_bad),
+                stringResource(R.string.coi_rank_ok),
+                stringResource(R.string.coi_rank_good),
+                stringResource(R.string.coi_rank_great),
+                stringResource(R.string.coi_rank_amazing)
+            )
             Column(Modifier.fillMaxWidth().padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                Text("PUNTUACIÓN TOTAL", color = GhostWhite.copy(alpha = 0.6f),
+                Text(stringResource(R.string.coi_score_total), color = GhostWhite.copy(alpha = 0.6f),
                     style = MaterialTheme.typography.labelLarge, letterSpacing = 1.sp)
                 Text("${s.total}", color = CoiGold, fontWeight = FontWeight.Black,
                     style = MaterialTheme.typography.displaySmall)
-                Text(s.ratingLabel, color = s.ratingColor, fontWeight = FontWeight.Bold,
+                Text(ratingLabels[s.ratingIndex], color = s.ratingColor, fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.titleMedium)
                 Spacer(Modifier.height(4.dp))
                 // Escala visual
@@ -422,47 +435,47 @@ private fun CoiScoreTab(s: CoimbraState, modifier: Modifier = Modifier) {
 
         // Categorías de puntuación
         CoiCard {
-            Text("Desglose de puntuación", color = CoiAmber, fontWeight = FontWeight.Bold,
+            Text(stringResource(R.string.coi_score_breakdown), color = CoiAmber, fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.titleMedium)
             HorizontalDivider(color = CardBorder.copy(alpha = 0.5f))
 
-            CoiCounter("🃏 Cartas de guilda", s.ptCartas,
+            CoiCounter(stringResource(R.string.coi_score_cards), s.ptCartas,
                 onInc = { s.ptCartas++ }, onDec = { if (s.ptCartas > 0) s.ptCartas-- },
                 pts = "${s.ptCartas} PV",
-                subtitle = "PV de pergaminos de puntuación al final")
-            CoiCounter("⛪ Peregrinaciones", s.ptPeregrin,
+                subtitle = stringResource(R.string.coi_score_cards_sub))
+            CoiCounter(stringResource(R.string.coi_score_pilgrimages), s.ptPeregrin,
                 onInc = { s.ptPeregrin++ }, onDec = { if (s.ptPeregrin > 0) s.ptPeregrin-- },
                 pts = "${s.ptPeregrin} PV",
-                subtitle = "Monasterios visitados")
-            CoiCounter("📊 Pistas de influencia", s.ptInfluencia,
+                subtitle = stringResource(R.string.coi_score_pilgrimages_sub))
+            CoiCounter(stringResource(R.string.coi_score_influence), s.ptInfluencia,
                 onInc = { s.ptInfluencia++ }, onDec = { if (s.ptInfluencia > 0) s.ptInfluencia-- },
                 pts = "${s.ptInfluencia} PV",
-                subtitle = "PV de rondas intermedias + final de partida")
-            CoiCounter("🪙 Monedas", s.ptMonedas,
+                subtitle = stringResource(R.string.coi_score_influence_sub))
+            CoiCounter(stringResource(R.string.coi_score_coins), s.ptMonedas,
                 onInc = { s.ptMonedas++ }, onDec = { if (s.ptMonedas > 0) s.ptMonedas-- },
                 pts = "${s.ptMonedas} PV",
-                subtitle = "Monedas convertidas a PV")
-            CoiCounter("⭐ Fichas de favor", s.ptFavores,
+                subtitle = stringResource(R.string.coi_score_coins_sub))
+            CoiCounter(stringResource(R.string.coi_score_favors), s.ptFavores,
                 onInc = { s.ptFavores++ }, onDec = { if (s.ptFavores > 0) s.ptFavores-- },
                 pts = "${s.ptFavores} PV",
-                subtitle = "Bonificaciones de fichas de favor")
-            CoiCounter("➕ Otros", s.ptOtros,
+                subtitle = stringResource(R.string.coi_score_favors_sub))
+            CoiCounter(stringResource(R.string.coi_score_others), s.ptOtros,
                 onInc = { s.ptOtros++ }, onDec = { if (s.ptOtros > 0) s.ptOtros-- },
                 pts = "${s.ptOtros} PV",
-                subtitle = "Cartas de inicio, coronas, etc.")
+                subtitle = stringResource(R.string.coi_score_others_sub))
         }
 
         // Tabla de clasificación
         CoiCard {
-            Text("Tabla de clasificación", color = CoiAmber, fontWeight = FontWeight.Bold,
+            Text(stringResource(R.string.coi_ranking_title), color = CoiAmber, fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.titleMedium)
             HorizontalDivider(color = CardBorder.copy(alpha = 0.5f))
             listOf(
-                Triple("< 130",   "Mal resultado 😬",  BloodRed),
-                Triple("130–160", "Aceptable 👍",       GhostWhite),
-                Triple("160–190", "Bueno 🌟",           CoiAmber),
-                Triple("190–220", "Excelente ⭐",       CoiGold),
-                Triple("> 220",   "¡Increíble! 🏆",    HalloweenOrange),
+                Triple("< 130",   stringResource(R.string.coi_rank_bad),     BloodRed),
+                Triple("130–160", stringResource(R.string.coi_rank_ok),      GhostWhite),
+                Triple("160–190", stringResource(R.string.coi_rank_good),    CoiAmber),
+                Triple("190–220", stringResource(R.string.coi_rank_great),   CoiGold),
+                Triple("> 220",   stringResource(R.string.coi_rank_amazing), HalloweenOrange),
             ).forEach { (range, label, color) ->
                 val isCurrent = when (range) {
                     "< 130"   -> s.total < 130
@@ -529,56 +542,19 @@ private fun CoiRulesTab(modifier: Modifier = Modifier) {
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        Text("Coimbra · Modo solitario", color = GhostWhite, fontWeight = FontWeight.Bold,
+        Text(stringResource(R.string.coi_rules_title), color = GhostWhite, fontWeight = FontWeight.Bold,
             style = MaterialTheme.typography.titleLarge)
-        Text("Bot de Interferencia — fan-made por Dave Smith (skybowl, BGG).",
+        Text(stringResource(R.string.coi_rules_subtitle),
             color = GhostWhite.copy(alpha = 0.4f), style = MaterialTheme.typography.bodySmall)
 
-        CoiRuleBlock("⚙️ Preparación",
-            "Partida de 2 jugadores (tú vs. Bot) con estas excepciones:\n" +
-            "• El Bot siempre va primero (todos los turnos, todas las rondas).\n" +
-            "• El Bot recibe 2 cartas I aleatorias; su influencia = valor de cada carta + 1.\n" +
-            "• El jugador recibe también 2 cartas I aleatorias de las 8 (sin elegir).\n" +
-            "• El jugador puede elegir cualquiera de los 4 puntos de salida de Coimbra.\n" +
-            "• El Bot no hace peregrinaciones.")
-
-        CoiRuleBlock("🎲 Dados del Bot (nemotecnia: M-V-N-G-N-G)",
-            "Tira 1d6 por cada dado que coja el Bot:\n" +
-            "1 = Morado · 2 = Verde · 3 = Naranja bajo · 4 = Gris bajo · 5 = Naranja alto · 6 = Gris alto\n\n" +
-            "Si el color no está: prueba dado blanco → sigue bajando en número.\n" +
-            "«Bajo/Alto» en Gris y Naranja = menor/mayor valor entre los dos disponibles. Si solo hay uno, coge ese.")
-
-        CoiRuleBlock("🏙️ Colocación en Ciudad",
-            "Tira 1d6 por cada dado del Bot:\n" +
-            "1-2 = Ciudad Alta · 3-4 = Ciudad Central · 5-6 = Ciudad Baja\n\n" +
-            "Restricciones: máx. 2 dados del Bot por zona · no colocar donde haya 4+ elementos totales (salvo que el dado garantice carta al Bot).\n" +
-            "Si la zona está bloqueada → reasignar: 1-3 Ciudad Alta, 4-6 Ciudad Central.")
-
-        CoiRuleBlock("🏰 Castillo",
-            "Solo si el jugador colocó un dado en el Castillo este turno:\n\n" +
-            "Compara el 7º dado sobrante con tu dado del Castillo.\n" +
-            "• 7º dado ≥ tu dado → ignorar, no pasa nada.\n" +
-            "• 7º dado < tu dado → el Bot roba una ficha de favor antes que tú (tira 1d4 para saber cuál). El Bot usa 4 dados ese turno.")
-
-        CoiRuleBlock("🃏 Cartas",
-            "Las 5 fichas de dado toman cartas normalmente (mayor influencia, empate al más a la izquierda).\n\n" +
-            "Cuando le toca al Bot: tira un dado entre las cartas disponibles (1-4, 1-3, 1-2, o la última).\n\n" +
-            "Influencia Bot = valor influencia de la carta + 1 (rango 2–5).\n" +
-            "El Bot no activa ningún otro efecto de las cartas.")
-
-        CoiRuleBlock("👑 Coronas",
-            "El jugador solo tiene 1 corona por ir 2º en orden de turno + las coronas obtenidas de fichas de favor del turno actual de puntuación.\n" +
-            "No usar fichas de corona durante la partida (opcional: usarlas en la última ronda).")
-
-        CoiRuleBlock("🧍 Cartas de personaje con robo",
-            "Si una carta del jugador permite robar recursos o PV de otro jugador → siempre recibe la opción sin PV.")
-
-        CoiRuleBlock("🏆 Tabla de resultados",
-            "< 130 → Mal resultado\n" +
-            "130–160 → Aceptable\n" +
-            "160–190 → Bueno\n" +
-            "190–220 → Excelente\n" +
-            "> 220 → ¡Increíble!")
+        CoiRuleBlock(stringResource(R.string.coi_rules_prep_title), stringResource(R.string.coi_rules_prep_body))
+        CoiRuleBlock(stringResource(R.string.coi_rules_dice_title), stringResource(R.string.coi_rules_dice_body))
+        CoiRuleBlock(stringResource(R.string.coi_rules_city_title), stringResource(R.string.coi_rules_city_body))
+        CoiRuleBlock(stringResource(R.string.coi_rules_castle_title), stringResource(R.string.coi_rules_castle_body))
+        CoiRuleBlock(stringResource(R.string.coi_rules_cards_title), stringResource(R.string.coi_rules_cards_body))
+        CoiRuleBlock(stringResource(R.string.coi_rules_crowns_title), stringResource(R.string.coi_rules_crowns_body))
+        CoiRuleBlock(stringResource(R.string.coi_rules_steal_title), stringResource(R.string.coi_rules_steal_body))
+        CoiRuleBlock(stringResource(R.string.coi_rules_results_title), stringResource(R.string.coi_rules_results_body))
 
         Spacer(Modifier.height(8.dp))
     }
@@ -608,33 +584,14 @@ private fun CoiSetupTab(modifier: Modifier = Modifier) {
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Text("Preparación · Coimbra", color = GhostWhite, fontWeight = FontWeight.Bold,
+        Text(stringResource(R.string.coi_setup_title), color = GhostWhite, fontWeight = FontWeight.Bold,
             style = MaterialTheme.typography.titleLarge)
-        Text("2 a 4 jugadores · Portugal s. XV",
+        Text(stringResource(R.string.coi_setup_subtitle),
             color = GhostWhite.copy(alpha = 0.4f), style = MaterialTheme.typography.bodySmall)
 
-        CoiRuleBlock("🗺️ Tablero general",
-            "• Despliega el tablero principal y el tablero de suministro.\n" +
-            "• Coloca los 6 dados del color correspondiente en el espacio central.\n" +
-            "• Reparte las cartas de personaje I del mazo inicial.\n" +
-            "• Coloca las fichas de favor en sus espacios.\n" +
-            "• Rellena el mercado de cartas con las cartas de los 4 monasterios.\n" +
-            "• Marca la ronda 1 en el track de rondas.")
-        CoiRuleBlock("👤 Cada jugador recibe",
-            "• 1 tablero personal de doble capa.\n" +
-            "• 3 portadados → en los espacios de persiana del tablero.\n" +
-            "• 2 marcadores de cubo → posición 7 del track de guardias y track de monedas.\n" +
-            "• 1 disco → casilla 0 del track de PV del tablero principal.\n" +
-            "• 4 discos → casilla 0 de cada uno de los 4 tracks de influencia.\n" +
-            "• 7 monedas + 7 guardias (sobre el tablero personal).\n" +
-            "• 2 cartas de personaje I del mazo inicial (aleatorias).")
-        CoiRuleBlock("⚙️ Solo mode — ajustes adicionales",
-            "• El Bot recibe 2 cartas I aleatorias. Su influencia = valor de carta + 1.\n" +
-            "• El jugador recibe también 2 cartas I aleatorias (sin elección).\n" +
-            "• El Bot NO coloca portadados — usa el dado sobrante (7º) para el Castillo.\n" +
-            "• El jugador elige cualquiera de los 4 puntos de salida desde Coimbra.")
-        CoiRuleBlock("🎲 Orden de turno",
-            "• El Bot siempre va PRIMERO en todos los turnos de todas las rondas.\n" +
-            "• El jugador va segundo, con 1 corona fija por ser 2º en orden de turno.")
+        CoiRuleBlock(stringResource(R.string.coi_setup_board_title), stringResource(R.string.coi_setup_board_body))
+        CoiRuleBlock(stringResource(R.string.coi_setup_player_title), stringResource(R.string.coi_setup_player_body))
+        CoiRuleBlock(stringResource(R.string.coi_setup_solo_title), stringResource(R.string.coi_setup_solo_body))
+        CoiRuleBlock(stringResource(R.string.coi_setup_turn_title), stringResource(R.string.coi_setup_turn_body))
     }
 }

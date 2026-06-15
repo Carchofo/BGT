@@ -23,6 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import com.rafel.spooktacular.R
 import com.rafel.spooktacular.ui.theme.*
 import com.rafel.spooktacular.ui.util.CardSoundPlayer
@@ -340,11 +341,11 @@ fun TiletumSoloScreen(onBack: () -> Unit = {}) {
             TopAppBar(
                 title = {
                     Column {
-                        Text("🏛️  Tiletum · Titus",
+                        Text(stringResource(R.string.til_title),
                             style = MaterialTheme.typography.titleMedium,
                             color = TilGold, fontWeight = FontWeight.Bold)
                         if (selectedTab == 0 && phase == TilPhase.PLAYING)
-                            Text("Ronda $round/4 · Turno $turn/3",
+                            Text(stringResource(R.string.til_round_turn, round, turn),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = GhostWhite.copy(alpha = 0.5f))
                     }
@@ -369,10 +370,10 @@ fun TiletumSoloScreen(onBack: () -> Unit = {}) {
         bottomBar = {
             NavigationBar(containerColor = TilBg, tonalElevation = 0.dp) {
                 listOf(
-                    Triple("Setup",      Icons.Default.Settings,  0),
-                    Triple("Solitario",  Icons.Default.SmartToy,    1),
-                    Triple("Puntuación", Icons.Default.EmojiEvents, 2),
-                    Triple("Reglas",     Icons.Default.MenuBook,    3)
+                    Triple(stringResource(R.string.nav_setup),   Icons.Default.Settings,    0),
+                    Triple(stringResource(R.string.nav_solo),    Icons.Default.SmartToy,    1),
+                    Triple(stringResource(R.string.nav_scoring), Icons.Default.EmojiEvents, 2),
+                    Triple(stringResource(R.string.nav_rules),   Icons.Default.MenuBook,    3)
                 ).forEach { (label, icon, idx) ->
                     NavigationBarItem(
                         selected = selectedTab == idx,
@@ -477,25 +478,25 @@ private fun TilSetupScreen(
                 .border(2.dp, TilGold, RoundedCornerShape(14.dp))
         )
         Spacer(Modifier.height(14.dp))
-        Text("Tiletum · Modo Solitario",
+        Text(stringResource(R.string.til_solo_title),
             style = MaterialTheme.typography.headlineMedium,
             color = TilGold, fontWeight = FontWeight.Black, textAlign = TextAlign.Center)
-        Text("vs. Cardenal Titus",
+        Text(stringResource(R.string.til_vs_titus),
             style = MaterialTheme.typography.bodyLarge,
             color = GhostWhite.copy(alpha = 0.5f))
         Spacer(Modifier.height(20.dp))
 
         TilCard {
             Column(Modifier.padding(14.dp)) {
-                Text("Setup rápido",
+                Text(stringResource(R.string.til_quick_setup),
                     style = MaterialTheme.typography.titleSmall,
                     color = TilGold, fontWeight = FontWeight.Bold)
                 Spacer(Modifier.height(8.dp))
                 listOf(
-                    "⚙️ Configura como partida a 2 jugadores",
-                    "🚫 Quita la loseta de feria especial del track del Rey",
-                    "🎒 Tú empiezas: 1 lana, 1 piedra, 1 hierro, 1 comida, 1 oro",
-                    "🤖 Titus no paga ni recoge recursos"
+                    stringResource(R.string.til_quick_setup_1),
+                    stringResource(R.string.til_quick_setup_2),
+                    stringResource(R.string.til_quick_setup_3),
+                    stringResource(R.string.til_quick_setup_4)
                 ).forEach {
                     Text("• $it", style = MaterialTheme.typography.bodySmall,
                         color = GhostWhite.copy(alpha = 0.7f),
@@ -507,11 +508,11 @@ private fun TilSetupScreen(
 
         TilCard {
             Column(Modifier.padding(14.dp)) {
-                Text("Cartas de desafío (dificultad)",
+                Text(stringResource(R.string.til_challenge_cards_title),
                     style = MaterialTheme.typography.titleSmall,
                     color = TilGold, fontWeight = FontWeight.Bold)
                 Spacer(Modifier.height(4.dp))
-                Text("Añade cartas de desafío al mazo base de 13 cartas.",
+                Text(stringResource(R.string.til_challenge_cards_subtitle),
                     style = MaterialTheme.typography.bodySmall,
                     color = GhostWhite.copy(alpha = 0.5f))
                 Spacer(Modifier.height(12.dp))
@@ -520,7 +521,7 @@ private fun TilSetupScreen(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    listOf(0 to "Fácil\n(0)", 2 to "Normal\n(2)", 5 to "Difícil\n(5)").forEach { (n, label) ->
+                    listOf(0 to stringResource(R.string.til_difficulty_easy), 2 to stringResource(R.string.til_difficulty_normal), 5 to stringResource(R.string.til_difficulty_hard)).forEach { (n, label) ->
                         val sel = n == challengeCount
                         Box(
                             Modifier.weight(1f).clip(RoundedCornerShape(10.dp))
@@ -540,7 +541,7 @@ private fun TilSetupScreen(
                     }
                 }
                 Spacer(Modifier.height(8.dp))
-                Text("Mazo total: ${13 + challengeCount} cartas",
+                Text(stringResource(R.string.til_deck_total, 13 + challengeCount),
                     style = MaterialTheme.typography.bodySmall,
                     color = TilGold.copy(alpha = 0.7f))
             }
@@ -552,7 +553,7 @@ private fun TilSetupScreen(
             shape = RoundedCornerShape(14.dp),
             colors = ButtonDefaults.buttonColors(containerColor = TilGold)
         ) {
-            Text("▶  Comenzar partida", color = TilBg, fontWeight = FontWeight.Black)
+            Text(stringResource(R.string.btn_start_game_til), color = TilBg, fontWeight = FontWeight.Black)
         }
     }
 }
@@ -573,8 +574,8 @@ private fun TilPlayingScreen(
     ) {
         // Marcadores
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            TilScoreChip("Tú", playerScore, Color(0xFF2A6B3A), Modifier.weight(1f))
-            TilScoreChip("Titus", titusScore, TilRed, Modifier.weight(1f))
+            TilScoreChip(stringResource(R.string.til_score_you), playerScore, Color(0xFF2A6B3A), Modifier.weight(1f))
+            TilScoreChip(stringResource(R.string.til_score_titus), titusScore, TilRed, Modifier.weight(1f))
         }
         Spacer(Modifier.height(12.dp))
 
@@ -606,7 +607,7 @@ private fun TilPlayingScreen(
                                     .padding(vertical = 2.dp),
                                 contentAlignment = Alignment.Center
                             ) {
-                                Text("DESAFÍO", fontSize = 9.sp,
+                                Text(stringResource(R.string.til_challenge_badge), fontSize = 9.sp,
                                     color = GhostWhite, fontWeight = FontWeight.Bold)
                             }
                         }
@@ -628,7 +629,7 @@ private fun TilPlayingScreen(
                         }
                         Spacer(Modifier.height(8.dp))
                         // Dados preferidos
-                        Text("Dados preferidos:",
+                        Text(stringResource(R.string.til_preferred_dice),
                             style = MaterialTheme.typography.labelLarge.copy(fontSize = 10.sp),
                             color = GhostWhite.copy(alpha = 0.5f))
                         Spacer(Modifier.height(4.dp))
@@ -653,7 +654,7 @@ private fun TilPlayingScreen(
                 // Prioridades
                 TilCard {
                     Column(Modifier.padding(12.dp)) {
-                        Text("Prioridades de Titus",
+                        Text(stringResource(R.string.til_titus_priorities),
                             style = MaterialTheme.typography.labelLarge.copy(fontSize = 11.sp),
                             color = TilGold, fontWeight = FontWeight.Bold, letterSpacing = 1.sp)
                         HorizontalDivider(Modifier.padding(vertical = 6.dp), color = TilBorder)
@@ -680,13 +681,13 @@ private fun TilPlayingScreen(
                 // Selector de dado
                 TilCard {
                     Column(Modifier.padding(12.dp)) {
-                        Text("Dado seleccionado por Titus",
+                        Text(stringResource(R.string.til_selected_die),
                             style = MaterialTheme.typography.labelLarge.copy(fontSize = 11.sp),
                             color = TilGold, fontWeight = FontWeight.Bold, letterSpacing = 1.sp)
                         Spacer(Modifier.height(8.dp))
                         // Valor
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text("Valor:", style = MaterialTheme.typography.bodySmall,
+                            Text(stringResource(R.string.til_die_value), style = MaterialTheme.typography.bodySmall,
                                 color = GhostWhite.copy(alpha = 0.6f))
                             Spacer(Modifier.width(8.dp))
                             (1..6).forEach { v ->
@@ -707,7 +708,7 @@ private fun TilPlayingScreen(
                         Spacer(Modifier.height(8.dp))
                         // Color
                         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                            Text("Color:", style = MaterialTheme.typography.bodySmall,
+                            Text(stringResource(R.string.til_die_color), style = MaterialTheme.typography.bodySmall,
                                 color = GhostWhite.copy(alpha = 0.6f))
                             DiceColor.ALL.forEach { dc ->
                                 val sel = dc == dieColor
@@ -721,8 +722,11 @@ private fun TilPlayingScreen(
                             }
                         }
                         Spacer(Modifier.height(8.dp))
-                        val ptText = if (dieColor == DiceColor.YELLOW) "$dieValue pts (dado amarillo)" else "${dieValue * 2} pts ($dieValue ×2)"
-                        Text("→ Titus anota $ptText",
+                        val ptText = if (dieColor == DiceColor.YELLOW)
+                            stringResource(R.string.til_yellow_die_pts, dieValue)
+                        else
+                            stringResource(R.string.til_die_pts_x2, dieValue * 2, dieValue)
+                        Text(stringResource(R.string.til_titus_scores_detail, ptText),
                             style = MaterialTheme.typography.bodySmall, color = TilGold)
                     }
                 }
@@ -739,7 +743,7 @@ private fun TilPlayingScreen(
                 Row(Modifier.fillMaxWidth().padding(12.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically) {
-                    Text("Titus anota", color = GhostWhite.copy(alpha = 0.6f))
+                    Text(stringResource(R.string.til_titus_scores), color = GhostWhite.copy(alpha = 0.6f))
                     Text("$scored PV", style = MaterialTheme.typography.headlineMedium,
                         color = TilRed, fontWeight = FontWeight.Black)
                 }
@@ -751,7 +755,7 @@ private fun TilPlayingScreen(
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = TilGold)
             ) {
-                Text("Confirmar turno →", color = TilBg, fontWeight = FontWeight.Black)
+                Text(stringResource(R.string.btn_confirm_turn), color = TilBg, fontWeight = FontWeight.Black)
             }
         }
     }
@@ -770,16 +774,16 @@ private fun TilKingScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text("👑 Fase del Rey", style = MaterialTheme.typography.headlineMedium,
+        Text(stringResource(R.string.til_king_phase), style = MaterialTheme.typography.headlineMedium,
             color = TilGold, fontWeight = FontWeight.Black)
         Spacer(Modifier.height(20.dp))
         TilCard {
             Column(Modifier.padding(16.dp)) {
-                Text("¿Está Titus por delante en el track del Rey?",
+                Text(stringResource(R.string.til_king_question),
                     style = MaterialTheme.typography.bodyLarge, color = GhostWhite)
                 Spacer(Modifier.height(12.dp))
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    listOf(true to "Sí", false to "No").forEach { (v, l) ->
+                    listOf(true to stringResource(R.string.til_king_yes), false to stringResource(R.string.til_king_no)).forEach { (v, l) ->
                         val sel = v == ahead
                         Box(Modifier.weight(1f).clip(RoundedCornerShape(10.dp))
                             .background(if (sel) TilGold.copy(alpha = 0.2f) else TilCard)
@@ -793,11 +797,11 @@ private fun TilKingScreen(
                 }
                 if (ahead) {
                     Spacer(Modifier.height(12.dp))
-                    Text("• Descarta la ficha de bonificación del track del Rey\n• Titus gana 4 PV base\n• Ajusta PV según su posición en el medidor del Rey",
+                    Text(stringResource(R.string.til_king_rules),
                         style = MaterialTheme.typography.bodySmall,
                         color = GhostWhite.copy(alpha = 0.7f), lineHeight = 18.sp)
                     Spacer(Modifier.height(12.dp))
-                    TilStepCounter("PV adicionales por el medidor del Rey", extra,
+                    TilStepCounter(stringResource(R.string.til_king_extra_vp), extra,
                         onInc = { extra++ }, onDec = { if (extra > -10) extra-- })
                 }
             }
@@ -808,7 +812,7 @@ private fun TilKingScreen(
             shape = RoundedCornerShape(14.dp),
             colors = ButtonDefaults.buttonColors(containerColor = TilGold)
         ) {
-            Text("Continuar → Fase de Feria", color = TilBg, fontWeight = FontWeight.Black)
+            Text(stringResource(R.string.btn_continue_fair), color = TilBg, fontWeight = FontWeight.Black)
         }
     }
 }
@@ -831,29 +835,30 @@ private fun TilFairScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text("🏪 Fase de Feria", style = MaterialTheme.typography.headlineMedium,
+        Text(stringResource(R.string.til_fair_phase), style = MaterialTheme.typography.headlineMedium,
             color = TilGold, fontWeight = FontWeight.Black)
-        Text("Ronda $round/4", style = MaterialTheme.typography.bodyMedium,
+        Text(stringResource(R.string.til_fair_round, round), style = MaterialTheme.typography.bodyMedium,
             color = GhostWhite.copy(alpha = 0.5f))
         Spacer(Modifier.height(20.dp))
         TilCard {
             Column(Modifier.padding(16.dp)) {
-                Text("Titus puntúa sin necesitar presencia en el mapa.",
+                Text(stringResource(R.string.til_fair_no_map),
                     style = MaterialTheme.typography.bodySmall, color = GhostWhite.copy(alpha = 0.6f))
                 Spacer(Modifier.height(10.dp))
-                Text(if (hard) "(a+b) × (ronda+1) = ($a+$b) × ${round+1}" else "(a+b) × ronda = ($a+$b) × $round",
+                Text(if (hard) stringResource(R.string.til_fair_formula_hard, a, b, round + 1)
+                     else stringResource(R.string.til_fair_formula_normal, a, b, round),
                     style = MaterialTheme.typography.bodyMedium, color = TilGold, fontWeight = FontWeight.Bold)
                 Spacer(Modifier.height(12.dp))
-                TilStepCounter("Valor a (feria)", a, onInc = { a++ }, onDec = { if (a > 0) a-- })
+                TilStepCounter(stringResource(R.string.til_fair_a), a, onInc = { a++ }, onDec = { if (a > 0) a-- })
                 Spacer(Modifier.height(8.dp))
-                TilStepCounter("Valor b (feria)", b, onInc = { b++ }, onDec = { if (b > 0) b-- })
+                TilStepCounter(stringResource(R.string.til_fair_b), b, onInc = { b++ }, onDec = { if (b > 0) b-- })
                 Spacer(Modifier.height(12.dp))
                 Card(colors = CardDefaults.cardColors(containerColor = TilRed.copy(alpha = 0.15f)),
                     border = BorderStroke(1.5.dp, TilRed), shape = RoundedCornerShape(10.dp)) {
                     Row(Modifier.fillMaxWidth().padding(12.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically) {
-                        Text("Titus anota", color = GhostWhite.copy(alpha = 0.6f))
+                        Text(stringResource(R.string.til_titus_scores), color = GhostWhite.copy(alpha = 0.6f))
                         Text("$pts PV", style = MaterialTheme.typography.headlineMedium,
                             color = TilRed, fontWeight = FontWeight.Black)
                     }
@@ -864,7 +869,7 @@ private fun TilFairScreen(
         Button(onClick = { onConfirm(pts) }, modifier = Modifier.fillMaxWidth().height(52.dp),
             shape = RoundedCornerShape(14.dp),
             colors = ButtonDefaults.buttonColors(containerColor = TilGold)) {
-            Text(if (round < 4) "Siguiente ronda →" else "Puntuación final →",
+            Text(if (round < 4) stringResource(R.string.btn_next_round) else stringResource(R.string.btn_final_score),
                 color = TilBg, fontWeight = FontWeight.Black)
         }
     }
@@ -886,17 +891,17 @@ private fun TilFinalScreen(titusScore: Int, playerScore: Int, onRestart: () -> U
 
     Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally) {
-        Text("🏆 Puntuación Final", style = MaterialTheme.typography.headlineLarge,
+        Text(stringResource(R.string.til_final_score_title), style = MaterialTheme.typography.headlineLarge,
             color = TilGold, fontWeight = FontWeight.Black)
         Spacer(Modifier.height(16.dp))
         TilCard {
             Column(Modifier.padding(14.dp)) {
-                Text("Tu puntuación", style = MaterialTheme.typography.titleSmall,
+                Text(stringResource(R.string.til_your_score), style = MaterialTheme.typography.titleSmall,
                     color = Color(0xFF2A6B3A), fontWeight = FontWeight.Bold)
                 Spacer(Modifier.height(8.dp))
-                TilStepCounter("Tus casas en el mapa", yourH, onInc = { yourH++ }, onDec = { if (yourH > 0) yourH-- })
+                TilStepCounter(stringResource(R.string.til_your_houses), yourH, onInc = { yourH++ }, onDec = { if (yourH > 0) yourH-- })
                 Spacer(Modifier.height(6.dp))
-                TilStepCounter("Tus pilares en el mapa", yourP, onInc = { yourP++ }, onDec = { if (yourP > 0) yourP-- })
+                TilStepCounter(stringResource(R.string.til_your_pillars), yourP, onInc = { yourP++ }, onDec = { if (yourP > 0) yourP-- })
                 Spacer(Modifier.height(8.dp))
                 Text("$playerScore + ${yourH}×${yourP} = $playerFinal PV",
                     style = MaterialTheme.typography.titleMedium, color = GhostWhite, fontWeight = FontWeight.Bold)
@@ -905,14 +910,14 @@ private fun TilFinalScreen(titusScore: Int, playerScore: Int, onRestart: () -> U
         Spacer(Modifier.height(10.dp))
         TilCard {
             Column(Modifier.padding(14.dp)) {
-                Text("Puntuación de Titus", style = MaterialTheme.typography.titleSmall,
+                Text(stringResource(R.string.til_titus_score_title), style = MaterialTheme.typography.titleSmall,
                     color = TilRed, fontWeight = FontWeight.Bold)
                 Spacer(Modifier.height(8.dp))
-                Text("Acumulado: $titusScore PV", style = MaterialTheme.typography.bodyMedium, color = GhostWhite)
+                Text(stringResource(R.string.til_accumulated, titusScore), style = MaterialTheme.typography.bodyMedium, color = GhostWhite)
                 Spacer(Modifier.height(6.dp))
-                TilStepCounter("Contratos de Titus", titusC, onInc = { titusC++ }, onDec = { if (titusC > 0) titusC-- })
+                TilStepCounter(stringResource(R.string.til_titus_contracts), titusC, onInc = { titusC++ }, onDec = { if (titusC > 0) titusC-- })
                 Spacer(Modifier.height(6.dp))
-                TilStepCounter("Catedrales de Titus", tilusCat, onInc = { tilusCat++ }, onDec = { if (tilusCat > 0) tilusCat-- })
+                TilStepCounter(stringResource(R.string.til_titus_cathedrals), tilusCat, onInc = { tilusCat++ }, onDec = { if (tilusCat > 0) tilusCat-- })
                 Spacer(Modifier.height(8.dp))
                 Text("$titusScore + ${titusC}×${tilusCat} = $titusFinal PV",
                     style = MaterialTheme.typography.titleMedium, color = TilRed, fontWeight = FontWeight.Bold)
@@ -925,17 +930,17 @@ private fun TilFinalScreen(titusScore: Int, playerScore: Int, onRestart: () -> U
             shape = RoundedCornerShape(16.dp), modifier = Modifier.fillMaxWidth()
         ) {
             Column(Modifier.padding(20.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(if (win) "🎉 ¡HAS GANADO!" else "💀 TITUS GANA",
+                Text(if (win) stringResource(R.string.til_result_win) else stringResource(R.string.til_result_lose),
                     style = MaterialTheme.typography.headlineMedium,
                     color = if (win) Color(0xFF4AEE7A) else TilRed, fontWeight = FontWeight.Black)
-                Text("Tú: $playerFinal PV  ·  Titus: $titusFinal PV",
+                Text(stringResource(R.string.til_you_vs_titus, playerFinal, titusFinal),
                     style = MaterialTheme.typography.bodyLarge, color = GhostWhite)
             }
         }
         Spacer(Modifier.height(20.dp))
         OutlinedButton(onClick = onRestart, modifier = Modifier.fillMaxWidth().height(52.dp),
             shape = RoundedCornerShape(14.dp), border = BorderStroke(1.dp, TilGold)) {
-            Text("↺ Nueva partida", color = TilGold)
+            Text(stringResource(R.string.btn_new_game), color = TilGold)
         }
     }
 }
@@ -998,7 +1003,7 @@ private fun TilScoringContent(s: TilScoringState) {
         Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Text("Conteo de Puntuación",
+        Text(stringResource(R.string.til_score_tab_title),
             style = MaterialTheme.typography.titleMedium,
             color = TilGold, fontWeight = FontWeight.Black)
 
@@ -1008,23 +1013,23 @@ private fun TilScoringContent(s: TilScoringState) {
                 Row(Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically) {
-                    Text("🧑 Tú", style = MaterialTheme.typography.titleSmall,
+                    Text(stringResource(R.string.til_you_score_section), style = MaterialTheme.typography.titleSmall,
                         color = Color(0xFF4AEE7A), fontWeight = FontWeight.Bold)
                     Text("$yourTotal PV", style = MaterialTheme.typography.titleMedium,
                         color = Color(0xFF4AEE7A), fontWeight = FontWeight.Black)
                 }
                 HorizontalDivider(Modifier.padding(vertical = 8.dp), color = Color(0xFF4AEE7A).copy(0.25f))
 
-                TilStepCounter("PV acumulados en partida", s.yourInGame,
+                TilStepCounter(stringResource(R.string.til_vp_in_game), s.yourInGame,
                     onInc = { s.yourInGame++ }, onDec = { if (s.yourInGame > 0) s.yourInGame-- })
 
                 Spacer(Modifier.height(6.dp))
-                Text("Casas × Pilares en el mapa",
+                Text(stringResource(R.string.til_houses_x_pillars),
                     style = MaterialTheme.typography.labelLarge.copy(fontSize = 11.sp),
                     color = GhostWhite.copy(0.5f))
-                TilStepCounter("Casas", s.yourHouses,
+                TilStepCounter(stringResource(R.string.til_houses), s.yourHouses,
                     onInc = { s.yourHouses++ }, onDec = { if (s.yourHouses > 0) s.yourHouses-- })
-                TilStepCounter("Pilares", s.yourPillars,
+                TilStepCounter(stringResource(R.string.til_pillars), s.yourPillars,
                     onInc = { s.yourPillars++ }, onDec = { if (s.yourPillars > 0) s.yourPillars-- })
                 Text("${s.yourHouses} × ${s.yourPillars} = $housePillar PV",
                     style = MaterialTheme.typography.bodySmall, color = TilGold,
@@ -1032,7 +1037,7 @@ private fun TilScoringContent(s: TilScoringState) {
                     modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.End)
 
                 Spacer(Modifier.height(6.dp))
-                TilStepCounter("Edificios terminados (máx. 6)", bld,
+                TilStepCounter(stringResource(R.string.til_buildings), bld,
                     onInc = { if (s.yourBuildings < 6) s.yourBuildings++ },
                     onDec = { if (s.yourBuildings > 0) s.yourBuildings-- })
                 Text("Tabla: 0·0·0·5·10·20·30 PV  →  $buildVP PV",
@@ -1041,7 +1046,7 @@ private fun TilScoringContent(s: TilScoringState) {
                     modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.End)
 
                 Spacer(Modifier.height(6.dp))
-                TilStepCounter("Recursos finales  (÷4)", s.yourResources,
+                TilStepCounter(stringResource(R.string.til_resources_div4), s.yourResources,
                     onInc = { s.yourResources++ }, onDec = { if (s.yourResources > 0) s.yourResources-- })
                 Text("${s.yourResources} ÷ 4 = $resVP PV",
                     style = MaterialTheme.typography.bodySmall, color = TilGold,
@@ -1056,23 +1061,23 @@ private fun TilScoringContent(s: TilScoringState) {
                 Row(Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically) {
-                    Text("🤖 Titus", style = MaterialTheme.typography.titleSmall,
+                    Text("🤖 ${stringResource(R.string.til_score_titus)}", style = MaterialTheme.typography.titleSmall,
                         color = TilRed, fontWeight = FontWeight.Bold)
                     Text("$titusTotal PV", style = MaterialTheme.typography.titleMedium,
                         color = TilRed, fontWeight = FontWeight.Black)
                 }
                 HorizontalDivider(Modifier.padding(vertical = 8.dp), color = TilRed.copy(0.25f))
 
-                TilStepCounter("PV acumulados en partida", s.titusInGame,
+                TilStepCounter(stringResource(R.string.til_vp_in_game), s.titusInGame,
                     onInc = { s.titusInGame++ }, onDec = { if (s.titusInGame > 0) s.titusInGame-- })
 
                 Spacer(Modifier.height(6.dp))
-                Text("Contratos × Catedrales",
+                Text(stringResource(R.string.til_contracts_x_cathedrals),
                     style = MaterialTheme.typography.labelLarge.copy(fontSize = 11.sp),
                     color = GhostWhite.copy(0.5f))
-                TilStepCounter("Contratos de Titus", s.titusContracts,
+                TilStepCounter(stringResource(R.string.til_titus_contracts), s.titusContracts,
                     onInc = { s.titusContracts++ }, onDec = { if (s.titusContracts > 0) s.titusContracts-- })
-                TilStepCounter("Catedrales de Titus", s.titusCathedrals,
+                TilStepCounter(stringResource(R.string.til_titus_cathedrals), s.titusCathedrals,
                     onInc = { s.titusCathedrals++ }, onDec = { if (s.titusCathedrals > 0) s.titusCathedrals-- })
                 Text("${s.titusContracts} × ${s.titusCathedrals} = ${s.titusContracts * s.titusCathedrals} PV",
                     style = MaterialTheme.typography.bodySmall, color = TilRed,
@@ -1093,13 +1098,13 @@ private fun TilScoringContent(s: TilScoringState) {
         ) {
             Column(Modifier.padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    if (win) "🎉 ¡GANASTE!" else if (tie) "🤝 EMPATE" else "💀 TITUS GANA",
+                    if (win) stringResource(R.string.til_result_win) else if (tie) stringResource(R.string.til_result_tie) else stringResource(R.string.til_result_lose),
                     style = MaterialTheme.typography.titleLarge,
                     color = if (win) Color(0xFF4AEE7A) else if (tie) TilGold else TilRed,
                     fontWeight = FontWeight.Black
                 )
                 Spacer(Modifier.height(6.dp))
-                Text("Tú: $yourTotal PV  ·  Titus: $titusTotal PV",
+                Text(stringResource(R.string.til_you_vs_titus, yourTotal, titusTotal),
                     style = MaterialTheme.typography.bodyMedium, color = GhostWhite)
             }
         }
@@ -1115,53 +1120,53 @@ private fun TilRulesContent() {
         Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        Text("Referencia Rápida", style = MaterialTheme.typography.titleMedium,
+        Text(stringResource(R.string.til_rules_title), style = MaterialTheme.typography.titleMedium,
             color = TilGold, fontWeight = FontWeight.Black)
 
-        TilRuleCard("🎲 Turno de Titus") {
+        TilRuleCard(stringResource(R.string.til_rules_turn_title)) {
             listOf(
-                "1. Roba la carta superior del mazo de Titus",
-                "2. Titus toma el dado según el orden de la carta (colores de prioridad)",
-                "3. Aplica las prioridades de acción en orden (primera que se pueda ejecutar)",
-                "4. Puntúa: dado Amarillo = valor del dado; resto = valor × 2",
-                "5. Pasa al siguiente turno (3 turnos por ronda)"
+                stringResource(R.string.til_rules_turn_1),
+                stringResource(R.string.til_rules_turn_2),
+                stringResource(R.string.til_rules_turn_3),
+                stringResource(R.string.til_rules_turn_4),
+                stringResource(R.string.til_rules_turn_5)
             ).forEach { Text("• $it", style = MaterialTheme.typography.bodySmall,
                 color = GhostWhite.copy(alpha = 0.75f), modifier = Modifier.padding(vertical = 1.dp)) }
         }
 
-        TilRuleCard("🎲 Puntuación del dado de Titus") {
+        TilRuleCard(stringResource(R.string.til_rules_dice_title)) {
             listOf(
-                "Dado Amarillo → puntúa el valor exacto del dado (no multiplica)",
-                "Cualquier otro color → puntúa valor del dado × 2",
-                "Ejemplo: dado Azul con valor 4 → 8 PV para Titus"
+                stringResource(R.string.til_rules_dice_1),
+                stringResource(R.string.til_rules_dice_2),
+                stringResource(R.string.til_rules_dice_3)
             ).forEach { Text("• $it", style = MaterialTheme.typography.bodySmall,
                 color = GhostWhite.copy(alpha = 0.75f), modifier = Modifier.padding(vertical = 1.dp)) }
         }
 
-        TilRuleCard("🔄 Fases por Ronda (×4 rondas)") {
+        TilRuleCard(stringResource(R.string.til_rules_phases_title)) {
             listOf(
-                "1. Fase de Juego: 3 turnos alternos (tú / Titus / tú o variante 2j)",
-                "2. Fase del Rey: puntúa el track del Rey; Titus actúa según prioridades",
-                "3. Fase de Feria: puntúa en la Ciudad de Feria activa",
-                "Tras la Ronda 4 → Puntuación Final"
+                stringResource(R.string.til_rules_phases_1),
+                stringResource(R.string.til_rules_phases_2),
+                stringResource(R.string.til_rules_phases_3),
+                stringResource(R.string.til_rules_phases_4)
             ).forEach { Text("• $it", style = MaterialTheme.typography.bodySmall,
                 color = GhostWhite.copy(alpha = 0.75f), modifier = Modifier.padding(vertical = 1.dp)) }
         }
 
-        TilRuleCard("🏆 Puntuación Final del Jugador") {
+        TilRuleCard(stringResource(R.string.til_rules_player_score_title)) {
             listOf(
-                "PV acumulados durante la partida",
-                "Casas en mapa × Pilares en mapa",
-                "Edificios terminados: 1-2 → 0 PV, 3 → 5, 4 → 10, 5 → 20, 6 → 30 PV",
-                "Recursos al final ÷ 4 (redondea abajo)"
+                stringResource(R.string.til_rules_player_score_1),
+                stringResource(R.string.til_rules_player_score_2),
+                stringResource(R.string.til_rules_player_score_3),
+                stringResource(R.string.til_rules_player_score_4)
             ).forEach { Text("• $it", style = MaterialTheme.typography.bodySmall,
                 color = GhostWhite.copy(alpha = 0.75f), modifier = Modifier.padding(vertical = 1.dp)) }
         }
 
-        TilRuleCard("🤖 Puntuación Final de Titus") {
+        TilRuleCard(stringResource(R.string.til_rules_titus_score_title)) {
             listOf(
-                "PV acumulados durante la partida (dados)",
-                "Contratos de Titus × Catedrales de Titus"
+                stringResource(R.string.til_rules_titus_score_1),
+                stringResource(R.string.til_rules_titus_score_2)
             ).forEach { Text("• $it", style = MaterialTheme.typography.bodySmall,
                 color = GhostWhite.copy(alpha = 0.75f), modifier = Modifier.padding(vertical = 1.dp)) }
         }
@@ -1189,35 +1194,15 @@ internal fun TilSetupTab(modifier: Modifier = Modifier) {
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Text("Preparación · Tiletum", color = GhostWhite, fontWeight = FontWeight.Bold,
+        Text(stringResource(R.string.til_setup_title), color = GhostWhite, fontWeight = FontWeight.Bold,
             style = MaterialTheme.typography.titleLarge)
-        Text("2 a 4 jugadores · Europa s. XV",
+        Text(stringResource(R.string.til_setup_subtitle),
             color = GhostWhite.copy(alpha = 0.4f), style = MaterialTheme.typography.bodySmall)
 
-        TilSetupBlock("🗺️ Tablero general",
-            "• Despliega el tablero principal del mapa de Europa.\n" +
-            "• Coloca los azulejos de edificios en las ciudades según el modo de juego.\n" +
-            "• Coloca las fichas de contratos visibles en sus espacios.\n" +
-            "• Mezcla y reparte las cartas de objetivo según las instrucciones.\n" +
-            "• Prepara la bolsa de tela con 1 dado de cada color por cada jugador.")
-        TilSetupBlock("👤 Cada jugador recibe",
-            "• 1 tablero personal.\n" +
-            "• Arquitecto + Mercader → colócalos ambos en la ciudad de Tiletum (inicio del mapa).\n" +
-            "• 1 casa → en Tiletum del tablero principal.\n" +
-            "• 5 casas → en los 5 espacios izquierdos del tablero personal. 2 casas a un lado.\n" +
-            "• 5 columnas → en los 5 espacios derechos del tablero personal. 2 columnas a un lado.\n" +
-            "• 1 marcador de PV → casilla 0 del track de puntos.\n" +
-            "• 1 unidad de cada recurso: piedra 🪨, madera 🪵, vidrio 🔵, tejido 🟤.")
-        TilSetupBlock("🪙 Monedas de inicio (según orden de turno)",
-            "• 1º jugador → 1 moneda de oro\n" +
-            "• 2º jugador → 3 monedas de oro\n" +
-            "• 3º jugador → 5 monedas de oro\n" +
-            "• 4º jugador → 6 monedas de oro")
-        TilSetupBlock("🤖 Solo mode — Titus",
-            "• Titus no recibe tablero ni recursos propios.\n" +
-            "• Antes de empezar configura el número de cartas de desafío (0–3).\n" +
-            "• Titus acumula PV según su tracker interno (ver tab Solitario).\n" +
-            "• El jugador empieza con 10 PV como ventaja inicial.")
+        TilSetupBlock(stringResource(R.string.til_setup_board_title), stringResource(R.string.til_setup_board_body))
+        TilSetupBlock(stringResource(R.string.til_setup_player_title), stringResource(R.string.til_setup_player_body))
+        TilSetupBlock(stringResource(R.string.til_setup_coins_title), stringResource(R.string.til_setup_coins_body))
+        TilSetupBlock(stringResource(R.string.til_setup_solo_title), stringResource(R.string.til_setup_solo_body))
     }
 }
 

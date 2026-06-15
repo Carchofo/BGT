@@ -15,8 +15,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.rafel.spooktacular.R
 import com.rafel.spooktacular.ui.theme.*
 
 private val CCGold   = Color(0xFFDAA520)
@@ -60,9 +62,9 @@ fun CastleComboSoloScreen(onBack: () -> Unit = {}) {
             TopAppBar(
                 title = {
                     Column {
-                        Text("Castle Combo", color = GhostWhite, fontWeight = FontWeight.Bold,
+                        Text(stringResource(R.string.cc_title), color = GhostWhite, fontWeight = FontWeight.Bold,
                             style = MaterialTheme.typography.titleLarge)
-                        Text("Modo solitario · Oponente: Anton",
+                        Text(stringResource(R.string.cc_subtitle),
                             color = CCGold.copy(alpha = 0.85f),
                             style = MaterialTheme.typography.labelMedium)
                     }
@@ -80,10 +82,10 @@ fun CastleComboSoloScreen(onBack: () -> Unit = {}) {
         bottomBar = {
             NavigationBar(containerColor = Color(0xFF0E0E1F), tonalElevation = 0.dp) {
                 listOf(
-                    Triple(0, Icons.Default.Settings, "Setup"),
-                    Triple(1, Icons.Default.SmartToy, "Solitario"),
-                    Triple(2, Icons.Default.EmojiEvents, "Puntuación"),
-                    Triple(3, Icons.Default.MenuBook, "Reglas")
+                    Triple(0, Icons.Default.Settings, stringResource(R.string.nav_setup)),
+                    Triple(1, Icons.Default.SmartToy, stringResource(R.string.nav_solo)),
+                    Triple(2, Icons.Default.EmojiEvents, stringResource(R.string.nav_scoring)),
+                    Triple(3, Icons.Default.MenuBook, stringResource(R.string.nav_rules))
                 ).forEach { (idx, icon, label) ->
                     NavigationBarItem(
                         selected = selectedTab == idx, onClick = { selectedTab = idx },
@@ -185,9 +187,13 @@ private fun CCSoloTab(s: CastleComboState, modifier: Modifier = Modifier) {
     ) {
         // Dificultad
         CCCard {
-            CCSectionHeader("Dificultad")
+            CCSectionHeader(stringResource(R.string.cc_difficulty))
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                listOf("Fácil", "Normal", "Difícil").forEachIndexed { i, label ->
+                listOf(
+                    stringResource(R.string.cc_difficulty_easy),
+                    stringResource(R.string.cc_difficulty_normal),
+                    stringResource(R.string.cc_difficulty_hard)
+                ).forEachIndexed { i, label ->
                     val sel = s.difficulty == i
                     Surface(
                         onClick = { s.difficulty = i }, shape = RoundedCornerShape(8.dp),
@@ -210,7 +216,7 @@ private fun CCSoloTab(s: CastleComboState, modifier: Modifier = Modifier) {
 
         // Turno
         CCCard {
-            CCSectionHeader("Turno de juego")
+            CCSectionHeader(stringResource(R.string.cc_turn_label))
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center) {
                 IconButton(onClick = { if (s.turn > 1) s.turn-- }, modifier = Modifier.size(44.dp),
@@ -223,7 +229,7 @@ private fun CCSoloTab(s: CastleComboState, modifier: Modifier = Modifier) {
                     modifier = Modifier.padding(horizontal = 16.dp)) {
                     Text("${s.turn}", color = CCGold, fontWeight = FontWeight.Black,
                         style = MaterialTheme.typography.displaySmall)
-                    Text("de 9", color = GhostWhite.copy(alpha = 0.5f),
+                    Text(stringResource(R.string.cc_of_nine), color = GhostWhite.copy(alpha = 0.5f),
                         style = MaterialTheme.typography.bodySmall)
                 }
                 IconButton(onClick = { if (s.turn < 9) s.turn++ }, modifier = Modifier.size(44.dp),
@@ -235,7 +241,7 @@ private fun CCSoloTab(s: CastleComboState, modifier: Modifier = Modifier) {
             }
             if (s.turn <= 9) {
                 val isAntonTurn = s.turn % 2 == 0
-                val label = if (isAntonTurn) "Turno de Anton 🤖" else "Tu turno 👤"
+                val label = if (isAntonTurn) stringResource(R.string.cc_anton_turn) else stringResource(R.string.cc_your_turn)
                 val color = if (isAntonTurn) CCGold else GhostWhite
                 Text(label, color = color, fontWeight = FontWeight.Medium,
                     style = MaterialTheme.typography.bodyMedium,
@@ -245,24 +251,24 @@ private fun CCSoloTab(s: CastleComboState, modifier: Modifier = Modifier) {
 
         // Recursos de Anton
         CCCard {
-            CCSectionHeader("Recursos de Anton (acumulados)")
-            Text("Registra los recursos que Anton gana por sus habilidades de carta durante la partida.",
+            CCSectionHeader(stringResource(R.string.cc_anton_resources_title))
+            Text(stringResource(R.string.cc_anton_resources_hint),
                 color = GhostWhite.copy(alpha = 0.5f), style = MaterialTheme.typography.bodySmall)
             HorizontalDivider(color = CardBorder.copy(alpha = 0.5f))
-            CCCounter("🪙 Monedas", s.antonCoins,
+            CCCounter(stringResource(R.string.cc_diff_row_coins), s.antonCoins,
                 onInc = { s.antonCoins++ }, onDec = { if (s.antonCoins > 0) s.antonCoins-- },
                 subtitle = antonCoinRule(s.difficulty))
-            CCCounter("🗝️ Llaves", s.antonKeys,
+            CCCounter(stringResource(R.string.cc_diff_row_keys), s.antonKeys,
                 onInc = { s.antonKeys++ }, onDec = { if (s.antonKeys > 0) s.antonKeys-- },
-                subtitle = if (s.difficulty < 2) "1 PV cada una" else "2 PV cada una")
-            CCCounter("⚡ Descuentos", s.antonDiscounts,
+                subtitle = if (s.difficulty < 2) stringResource(R.string.cc_coin_rule_normal) else stringResource(R.string.cc_coin_rule_hard))
+            CCCounter(stringResource(R.string.cc_diff_row_discounts), s.antonDiscounts,
                 onInc = { s.antonDiscounts++ }, onDec = { if (s.antonDiscounts > 0) s.antonDiscounts-- },
                 subtitle = "${antonDiscountRate(s.difficulty)} PV cada uno · descuento doble = 2 descuentos")
         }
 
         // Guía del turno de Anton
         CCCard {
-            CCSectionHeader("Turno de Anton · Guía rápida")
+            CCSectionHeader(stringResource(R.string.cc_anton_guide_title))
             AntonTurnGuide()
         }
 
@@ -272,12 +278,12 @@ private fun CCSoloTab(s: CastleComboState, modifier: Modifier = Modifier) {
 
 @Composable
 private fun DifficultyTable(difficulty: Int) {
-    val headers = listOf("", "Fácil", "Normal", "Difícil")
+    val headers = listOf("", stringResource(R.string.cc_difficulty_easy), stringResource(R.string.cc_difficulty_normal), stringResource(R.string.cc_difficulty_hard))
     val rows = listOf(
-        listOf("Llaves", "1 PV/c", "1 PV/c", "2 PV/c"),
-        listOf("Monedas", "1 PV/2", "1 PV/c", "2 PV/c"),
-        listOf("Descuentos", "1 PV/c", "2 PV/c", "3 PV/c"),
-        listOf("«Si falta»", "Solo si falta", "Siempre", "Siempre"),
+        listOf(stringResource(R.string.cc_diff_row_keys), stringResource(R.string.cc_diff_keys_easy), stringResource(R.string.cc_diff_keys_normal), stringResource(R.string.cc_diff_keys_hard)),
+        listOf(stringResource(R.string.cc_diff_row_coins), stringResource(R.string.cc_diff_coins_easy), stringResource(R.string.cc_diff_coins_normal), stringResource(R.string.cc_diff_coins_hard)),
+        listOf(stringResource(R.string.cc_diff_row_discounts), stringResource(R.string.cc_diff_discounts_easy), stringResource(R.string.cc_diff_discounts_normal), stringResource(R.string.cc_diff_discounts_hard)),
+        listOf(stringResource(R.string.cc_diff_row_if_missing), stringResource(R.string.cc_diff_if_missing_easy), stringResource(R.string.cc_diff_if_missing_normal), stringResource(R.string.cc_diff_if_missing_hard)),
     )
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         Row(Modifier.fillMaxWidth()) {
@@ -309,13 +315,13 @@ private fun DifficultyTable(difficulty: Int) {
 @Composable
 private fun AntonTurnGuide() {
     val steps = listOf(
-        "Revela la carta de decisión superior del mazo.",
-        "Anton toma la primera carta de la fila actual que coincida con la prioridad indicada.",
-        "Si no hay coincidencia, revisa las otras dos prioridades de la carta. Si sigue sin haber, usa las prioridades 4ª, 5ª y 6ª (cartas de prioridad encima del tablero).",
-        "Anton no paga coste. Obtiene TODOS los beneficios de la habilidad ('o' → 'y').",
-        "Anton coloca cartas de izquierda a derecha, arriba a abajo. Excepto si la carta puntúa por posición específica.",
-        "Mueve el Mensajero si la carta lo indica.",
-        "Aplica efectos adicionales de la carta de decisión si los hay."
+        stringResource(R.string.cc_guide_step_1),
+        stringResource(R.string.cc_guide_step_2),
+        stringResource(R.string.cc_guide_step_3),
+        stringResource(R.string.cc_guide_step_4),
+        stringResource(R.string.cc_guide_step_5),
+        stringResource(R.string.cc_guide_step_6),
+        stringResource(R.string.cc_guide_step_7)
     )
     steps.forEachIndexed { i, step ->
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -327,8 +333,14 @@ private fun AntonTurnGuide() {
     }
 }
 
-private fun antonCoinRule(d: Int) = when (d) { 0 -> "1 PV cada 2 monedas"; 1 -> "1 PV cada una"; else -> "2 PV cada una" }
 private fun antonDiscountRate(d: Int) = when (d) { 0 -> 1; 1 -> 2; else -> 3 }
+
+@Composable
+private fun antonCoinRule(d: Int) = when (d) {
+    0 -> stringResource(R.string.cc_coin_rule_easy)
+    1 -> stringResource(R.string.cc_coin_rule_normal)
+    else -> stringResource(R.string.cc_coin_rule_hard)
+}
 
 // ─── Tab Puntuación ───────────────────────────────────────────────
 @Composable
@@ -361,9 +373,9 @@ private fun CCScoreTab(s: CastleComboState, modifier: Modifier = Modifier) {
                 verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Text(
                     when {
-                        tie        -> "¡Empate!"
-                        playerWins -> "¡Has ganado! 🏆"
-                        else       -> "Anton gana 🤖"
+                        tie        -> stringResource(R.string.cc_result_tie)
+                        playerWins -> stringResource(R.string.cc_result_win)
+                        else       -> stringResource(R.string.cc_result_anton_wins)
                     },
                     color = when {
                         tie        -> GhostWhite
@@ -393,38 +405,42 @@ private fun CCScoreTab(s: CastleComboState, modifier: Modifier = Modifier) {
 
         // Tu puntuación
         CCCard {
-            CCSectionHeader("Tu puntuación", "${s.playerTotal} PV")
+            CCSectionHeader(stringResource(R.string.cc_score_title), "${s.playerTotal} PV")
             HorizontalDivider(color = CardBorder.copy(alpha = 0.5f))
-            CCCounter("📜 Pergaminos (suma de todas las cartas)", s.playerCards,
+            CCCounter(stringResource(R.string.cc_scrolls_player), s.playerCards,
                 onInc = { s.playerCards++ }, onDec = { if (s.playerCards > 0) s.playerCards-- },
                 pts = "${s.playerCards} PV")
-            CCCounter("🗝️ Llaves (1 PV cada una)", s.playerKeys,
+            CCCounter(stringResource(R.string.cc_keys_player), s.playerKeys,
                 onInc = { s.playerKeys++ }, onDec = { if (s.playerKeys > 0) s.playerKeys-- },
                 pts = "${s.playerKeys} PV")
         }
 
         // Puntuación de Anton
         CCCard {
-            CCSectionHeader("Anton", "${s.antonTotal} PV")
-            Text("Dificultad: ${listOf("Fácil", "Normal", "Difícil")[s.difficulty]}",
+            CCSectionHeader(stringResource(R.string.cc_score_anton_title), "${s.antonTotal} PV")
+            Text(stringResource(R.string.cc_difficulty_display, listOf(
+                stringResource(R.string.cc_difficulty_easy),
+                stringResource(R.string.cc_difficulty_normal),
+                stringResource(R.string.cc_difficulty_hard)
+            )[s.difficulty]),
                 color = CCGold.copy(alpha = 0.7f), style = MaterialTheme.typography.labelMedium)
             HorizontalDivider(color = CardBorder.copy(alpha = 0.5f))
-            CCCounter("📜 Pergaminos de cartas", s.antonCards,
+            CCCounter(stringResource(R.string.cc_scrolls_anton), s.antonCards,
                 onInc = { s.antonCards++ }, onDec = { if (s.antonCards > 0) s.antonCards-- },
                 pts = "${s.antonCards} PV")
-            CCCounter("🗝️ Llaves (${if (s.difficulty < 2) "1" else "2"} PV c/u)", s.antonKeys,
+            CCCounter(if (s.difficulty < 2) stringResource(R.string.cc_keys_anton_normal) else stringResource(R.string.cc_keys_anton_hard), s.antonKeys,
                 onInc = { s.antonKeys++ }, onDec = { if (s.antonKeys > 0) s.antonKeys-- },
                 pts = "${s.antonKeyVP()} PV")
-            CCCounter("🪙 Monedas (${antonCoinRule(s.difficulty)})", s.antonCoins,
+            CCCounter(stringResource(R.string.cc_coins_anton, antonCoinRule(s.difficulty)), s.antonCoins,
                 onInc = { s.antonCoins++ }, onDec = { if (s.antonCoins > 0) s.antonCoins-- },
                 pts = "${s.antonCoinVP()} PV")
-            CCCounter("⚡ Descuentos (${antonDiscountRate(s.difficulty)} PV c/u)", s.antonDiscounts,
+            CCCounter(stringResource(R.string.cc_discounts_anton, antonDiscountRate(s.difficulty)), s.antonDiscounts,
                 onInc = { s.antonDiscounts++ }, onDec = { if (s.antonDiscounts > 0) s.antonDiscounts-- },
                 pts = "${s.antonDiscountVP()} PV")
             HorizontalDivider(color = CardBorder.copy(alpha = 0.3f))
-            Text("Nota: las cartas de «si X falta» puntúan ${
-                if (s.difficulty == 0) "solo si la condición se cumple" else "siempre (independientemente de la condición)"
-            }.", color = GhostWhite.copy(alpha = 0.45f), style = MaterialTheme.typography.bodySmall)
+            Text(stringResource(R.string.cc_notes_if_missing,
+                if (s.difficulty == 0) stringResource(R.string.cc_notes_if_missing_easy) else stringResource(R.string.cc_notes_if_missing_hard)
+            ), color = GhostWhite.copy(alpha = 0.45f), style = MaterialTheme.typography.bodySmall)
         }
 
         Spacer(Modifier.height(8.dp))
@@ -439,45 +455,16 @@ private fun CCRulesTab(modifier: Modifier = Modifier) {
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        Text("Castle Combo · Modo Solitario", color = GhostWhite, fontWeight = FontWeight.Bold,
+        Text(stringResource(R.string.cc_rules_title), color = GhostWhite, fontWeight = FontWeight.Bold,
             style = MaterialTheme.typography.titleLarge)
-        Text("Modo solitario fan-made (ben_uez, BGG) · Requiere las cartas de decisión y prioridad impresas.",
+        Text(stringResource(R.string.cc_rules_subtitle),
             color = GhostWhite.copy(alpha = 0.45f), style = MaterialTheme.typography.bodySmall)
 
-        CCRuleBlock("⚙️ Preparación",
-            "Configura el juego normalmente. Añade el tablero de Anton.\n" +
-            "Baraja las 6 cartas de prioridad (colores = tipos de escudo) y colócalas encima del tablero de Anton (una por columna).\n" +
-            "Baraja las 12 cartas de decisión y colócalas bocabajo. Anton empieza sin monedas ni llaves.\n" +
-            "Elige la dificultad. Tú eres el jugador inicial.")
-
-        CCRuleBlock("🎮 Turno de Anton",
-            "Anton NO usa llaves y SIEMPRE toma cartas de la fila actual (donde está el Mensajero). Solo realiza los pasos 2-4.\n\n" +
-            "1. Revela la carta de decisión superior.\n" +
-            "2. Anton toma la primera carta de la fila que coincida con la prioridad indicada (izq. o der. según la flecha).\n" +
-            "3. Sin coincidencia: prueba las otras dos prioridades de la carta; luego las prioridades 4ª, 5ª y 6ª (cartas encima del tablero).\n" +
-            "4. Anton no paga costes. Obtiene TODOS los beneficios ('o' → 'y').\n" +
-            "5. Colocación: izquierda→derecha, arriba→abajo. Excepción: cartas que puntúan por posición van al primer hueco válido.\n" +
-            "6. Mueve el Mensajero si la carta lo indica.\n" +
-            "7. Aplica efectos adicionales de la carta de decisión.")
-
-        CCRuleBlock("🃏 Efectos adicionales (cartas de decisión)",
-            "Icono de descarte: descarta las 3 cartas de la fila actual.\n" +
-            "Icono de barajado: baraja todas las cartas de decisión de nuevo en el mazo.")
-
-        CCRuleBlock("🏆 Puntuación de Anton",
-            "Anton puntúa sus cartas igual que en el multijugador (pergaminos).\n" +
-            "Recursos adicionales según dificultad:\n\n" +
-            "FÁCIL · Llaves: 1PV/c · Monedas: 1PV/2 · Descuentos: 1PV/c · «Si falta»: solo si se cumple\n" +
-            "NORMAL · Llaves: 1PV/c · Monedas: 1PV/c · Descuentos: 2PV/c · «Si falta»: siempre\n" +
-            "DIFÍCIL · Llaves: 2PV/c · Monedas: 2PV/c · Descuentos: 3PV/c · «Si falta»: siempre\n\n" +
-            "Un descuento que aplica a ambas filas cuenta como 2 descuentos.")
-
-        CCRuleBlock("📜 Resumen de puntuación del juego base",
-            "Cada carta tiene un pergamino de puntuación que se evalúa al final.\n" +
-            "Las 6 tipos de escudo son: Nobleza (👑), Militar (⚔️), Fe (✝️), Artesanía (🔨), Estudiante (📚), Campesino (🌾).\n" +
-            "Las llaves otorgan 1 PV cada una.\n" +
-            "El oro solo puntúa si está almacenado en cartas con Bolsa.\n" +
-            "Las cartas bocabajo no otorgan puntos (pero dan 6 monedas + 2 llaves al cogerlas).")
+        CCRuleBlock(stringResource(R.string.cc_rules_prep_title), stringResource(R.string.cc_rules_prep_body))
+        CCRuleBlock(stringResource(R.string.cc_rules_anton_turn_title), stringResource(R.string.cc_rules_anton_turn_body))
+        CCRuleBlock(stringResource(R.string.cc_rules_effects_title), stringResource(R.string.cc_rules_effects_body))
+        CCRuleBlock(stringResource(R.string.cc_rules_scoring_title), stringResource(R.string.cc_rules_scoring_body))
+        CCRuleBlock(stringResource(R.string.cc_rules_summary_title), stringResource(R.string.cc_rules_summary_body))
 
         Spacer(Modifier.height(8.dp))
     }
@@ -507,31 +494,15 @@ private fun CCSetupTab(modifier: Modifier = Modifier) {
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Text("Preparación · Castle Combo", color = GhostWhite, fontWeight = FontWeight.Bold,
+        Text(stringResource(R.string.cc_setup_title), color = GhostWhite, fontWeight = FontWeight.Bold,
             style = MaterialTheme.typography.titleLarge)
-        Text("1 a 4 jugadores · Juego de combinaciones",
+        Text(stringResource(R.string.cc_setup_subtitle),
             color = GhostWhite.copy(alpha = 0.4f), style = MaterialTheme.typography.bodySmall)
 
-        CCSetupBlock("🗺️ Tablero central",
-            "• Coloca el tablero central con el mercado inferior (Ciudad Baja) y superior (Ciudad Alta).\n" +
-            "• Reparte cartas en 2 filas según el número de jugadores:\n" +
-            "  → 1-2 jugadores: 2 columnas. 3-4 jugadores: 3 columnas.\n" +
-            "• Coloca el suministro de monedas (oro) y llaves accesibles a todos.")
-        CCSetupBlock("👤 Cada jugador recibe",
-            "• 15 monedas de oro.\n" +
-            "• 2 llaves.\n" +
-            "• Sin cartas al inicio — las cartas se compran durante la partida.\n" +
-            "• Sin tablero individual (el 3×3 se forma en tu área de juego).")
-        CCSetupBlock("🤖 Solo mode — Anton",
-            "• Anton no recibe componentes al inicio de la partida.\n" +
-            "• Lleva la cuenta de: monedas, llaves y descuentos que Anton acumula durante la partida.\n" +
-            "• Al final Anton convierte sus recursos en PV según la dificultad elegida:\n" +
-            "  Fácil → llaves ×1, monedas ÷2, descuentos ×1\n" +
-            "  Normal → llaves ×1, monedas ×1, descuentos ×2\n" +
-            "  Difícil → llaves ×2, monedas ×2, descuentos ×3")
-        CCSetupBlock("🃏 Turno de Anton",
-            "• Cada vez que el jugador compra una carta, Anton también roba o actúa según las reglas del modo solitario.\n" +
-            "• Consulta la pestaña Solitario para ver el tracker de turno.")
+        CCSetupBlock(stringResource(R.string.cc_setup_board_title), stringResource(R.string.cc_setup_board_body))
+        CCSetupBlock(stringResource(R.string.cc_setup_player_title), stringResource(R.string.cc_setup_player_body))
+        CCSetupBlock(stringResource(R.string.cc_setup_solo_title), stringResource(R.string.cc_setup_solo_body))
+        CCSetupBlock(stringResource(R.string.cc_setup_turn_title), stringResource(R.string.cc_setup_turn_body))
     }
 }
 

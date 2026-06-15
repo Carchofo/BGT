@@ -1,6 +1,7 @@
 package com.rafel.spooktacular.ui.theme
 
 import android.app.Activity
+import androidx.compose.foundation.IndicationNodeFactory
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -51,8 +52,7 @@ fun SpooktacularTheme(content: @Composable () -> Unit) {
     val tapPlayer = remember { TapSoundPlayer(context) }
     DisposableEffect(Unit) { onDispose { tapPlayer.release() } }
 
-    @Suppress("DEPRECATION")
-    val baseRipple = ripple()
+    val baseRipple = ripple() as IndicationNodeFactory
     val soundIndication = remember(baseRipple, tapPlayer) {
         SoundIndication(baseRipple, tapPlayer)
     }

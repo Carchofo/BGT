@@ -1,0 +1,627 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Spooktacular</string>
+
+    <!-- ── Disclaimer ── -->
+    <string name="disclaimer_title">TBG – Tools Board Games</string>
+    <string name="disclaimer_accept_btn">Akzeptieren &amp; Weiter</string>
+    <string name="disclaimer_section1_title">🎮  Unabhängige Anwendung</string>
+    <string name="disclaimer_section1_body">TBG – Tools Board Games ist nicht mit Board&amp;Dice, AEG, Capstone Games, Samaruc Games, Bad Comet, Plan B Games oder Blue Orange Games verbunden oder von diesen unterstützt.</string>
+    <string name="disclaimer_section2_title">©  Geistiges Eigentum</string>
+    <string name="disclaimer_section2_body">Spielnamen und Logos sind Eigentum der jeweiligen Verlage. Ihre Erwähnung dient ausschließlich der Identifikation.</string>
+    <string name="disclaimer_section3_title">🃏  Setzt das physische Spiel voraus</string>
+    <string name="disclaimer_section3_body">Diese App ist ein Begleittool. Du benötigst das physische Spiel, um sie zu nutzen. Sie enthält keine vollständigen Regeln oder urheberrechtlich geschützte Inhalte.</string>
+    <string name="disclaimer_section4_title">👥  Fan-erstellte Solimodi</string>
+    <string name="disclaimer_section4_body">Die Solimodi basieren auf Varianten, die von der Community frei auf BoardGameGeek veröffentlicht wurden. Das Verdienst liegt bei den ursprünglichen Autoren.</string>
+
+    <!-- ── HomeScreen ── -->
+    <string name="cd_show_all">Alle anzeigen</string>
+    <string name="cd_show_favorites">Favoriten anzeigen</string>
+    <string name="cd_mute">Stumm schalten</string>
+    <string name="cd_unmute">Ton einschalten</string>
+    <string name="search_placeholder">Spiel suchen…</string>
+    <string name="cd_clear_search">Löschen</string>
+    <string name="empty_no_favorites_title">Noch keine Favoriten</string>
+    <string name="empty_no_favorites_body">Tippe auf ★ bei einem Spiel, um es hier zu speichern</string>
+    <string name="empty_no_results_title">Keine Ergebnisse</string>
+    <string name="empty_no_results_body">Versuche einen anderen Suchbegriff</string>
+    <string name="feature_solo">Solo</string>
+    <string name="feature_scoring">Punkte</string>
+    <string name="feature_rules">Regeln</string>
+    <string name="cd_remove_favorite">Aus Favoriten entfernen</string>
+    <string name="cd_add_favorite">Zu Favoriten hinzufügen</string>
+    <string name="label_coming_soon">Demnächst verfügbar</string>
+
+    <!-- ── Navigation tab labels (shared) ── -->
+    <string name="nav_setup">Aufbau</string>
+    <string name="nav_solo">Solo</string>
+    <string name="nav_scoring">Punkte</string>
+    <string name="nav_rules">Regeln</string>
+    <string name="nav_game">Spiel</string>
+    <string name="nav_scoreboard">Rangliste</string>
+
+    <!-- ── SoloModeScreen (Spooktacular / Killtron) ── -->
+    <string name="killtron_title">🤖  Killtron</string>
+    <string name="killtron_turn_card">Runde %1$d · Karte %2$d/3</string>
+    <string name="killtron_turn_label">Runde %1$d</string>
+    <string name="killtron_executing">Killtron führt sein Programm aus</string>
+    <string name="killtron_start_hint">Tippe auf die Karte, um die Runde zu beginnen</string>
+    <string name="killtron_name">KILLTRON-3000</string>
+    <string name="btn_start_game">▶  SPIEL STARTEN</string>
+    <string name="btn_turn_n">▶  RUNDE %1$d</string>
+    <string name="cd_start_turn">Runde starten</string>
+    <string name="card_how_killtron_executes">So führt Killtron es aus</string>
+    <string name="btn_prev">Zurück</string>
+    <string name="btn_next">Weiter</string>
+    <string name="btn_end_turn">Runde beenden</string>
+    <string name="spooky_setup_title">Aufbau · Spooktacular</string>
+    <string name="spooky_setup_subtitle">Horror im Silberkino · 1 bis 5 Spieler</string>
+    <string name="spooky_setup_board_title">🎬 Spielplan</string>
+    <string name="spooky_setup_board_body">• Lege den Silberkino-Spielplan aus, dessen Räume durch Türen verbunden sind.\n• Setze den Rundenmarker auf Position 1.\n• Bereite den Beutel mit Zuschauern aller Farben vor.\n• Verteile die Startzuschauer: 2–3 pro Raum, wie auf der Karte gezeigt.</string>
+    <string name="spooky_setup_player_title">👤 Jeder Spieler erhält</string>
+    <string name="spooky_setup_player_body">• 1 Meeple in seiner Farbe.\n• Stelle deinen Meeple in den zugewiesenen (oder gewählten) Startraum.\n• Punktemarker → Feld 0 auf der Punkteleiste.\n• Keine Karten oder Ressourcen zu Beginn.</string>
+    <string name="spooky_setup_killtron_title">🤖 Killtron-3000</string>
+    <string name="spooky_setup_killtron_body">• Stelle Killtron in den zentralen Kinoraum (den am stärksten verbundenen).\n• Mische Deck A 🟠 separat (Forcejeo, Despliegue, Sobresalto…).\n• Mische Deck B 🟣 separat (Avalancha, Buscar, Arco Voltaico…).\n• Mische Deck C 🟢 separat (Acosar, Comer…).\n• Jede Runde spielt Killtron je 1 Karte aus jedem Deck (A → B → C).</string>
+    <string name="spooky_setup_objective_title">🎯 Ziel und Spielende</string>
+    <string name="spooky_setup_objective_body">• Das Spiel endet, wenn Killtron seine Siegbedingung erfüllt oder die Zeit abläuft.\n• Der Spieler mit den meisten Punkten am Ende gewinnt.\n• Solomodus: Versuche, deinen eigenen Rekord zu übertreffen.</string>
+    <string name="spooky_setup_soloai_title">🃏 Solomodus — Killtron KI</string>
+    <string name="spooky_setup_soloai_body">• Der Spieler handelt zuerst jede Runde.\n• Tippe dann auf die Karte, um Killtrons Zug aufzudecken (3 Karten nacheinander).\n• Überprüfe den Spiel-Tab, um Killtrons Zug auszuführen.</string>
+
+    <!-- ── CMSoloModeScreen (Criaturas Maravillosas) ── -->
+    <string name="cm_title">🦋  Criaturas Maravillosas</string>
+    <string name="cm_solo_mode_title">Solomodus</string>
+    <string name="cm_vs_tingent">vs. Tingent</string>
+    <string name="cm_difficulty_label">Schwierigkeitsgrad</string>
+    <string name="cm_tracker_unverified">Die Tracker-Aktionen für diesen Schwierigkeitsgrad wurden noch nicht überprüft. Das Spiel funktioniert, aber Tracker-Aktionen werden nicht angezeigt.</string>
+    <string name="btn_start_game_cm">▶  Spiel starten</string>
+    <string name="cm_tracker_title">Tingent-Tracker</string>
+    <string name="cm_tracker_pos">Pos. %1$d / %2$d</string>
+    <string name="cm_turn_label">· Runde %1$d</string>
+    <string name="cm_draw_first_card">Tippen, um die erste Karte zu ziehen</string>
+    <string name="cm_action_label">Aktion</string>
+    <string name="cm_tracker_action_label">⚙️ Tracker-Aktion</string>
+    <string name="cm_tracker_advances">Marker rückt vor</string>
+    <string name="cm_tracker_stays">Marker bleibt</string>
+    <string name="btn_draw_first">Tingents erste Karte ziehen</string>
+    <string name="btn_next_turn_draw">Nächste Runde · Karte ziehen</string>
+    <string name="cm_zone_yellow">Gelbe Zone</string>
+    <string name="cm_zone_brown">Braune Zone</string>
+    <string name="cm_legend_yellow">Gelbe Zone</string>
+    <string name="cm_legend_brown">Braune Zone</string>
+    <string name="cm_score_title">Punktestand</string>
+    <string name="cm_score_subtitle">Werte eingeben, wenn das Spiel endet</string>
+    <string name="cm_score_you">🧑 Du</string>
+    <string name="cm_score_tingent">🤖 Tingent · %1$s</string>
+    <string name="cm_result_win">🎉 DU GEWINNST!</string>
+    <string name="cm_result_tie">🤝 UNENTSCHIEDEN</string>
+    <string name="cm_result_lose">💀 TINGENT GEWINNT</string>
+    <string name="cm_score_you_vs_tingent">Du: %1$d SP  ·  Tingent: %2$d SP</string>
+    <string name="cm_rules_title">Schnellübersicht</string>
+    <string name="cm_rules_turn_title">🦋 Tingents Zug</string>
+    <string name="cm_rules_turn_1">1. Eine Karte von Tingents Deck ziehen</string>
+    <string name="cm_rules_turn_2">2. Die Aktion für die aktuelle Zone anwenden (gelb oder braun)</string>
+    <string name="cm_rules_turn_3">3. Hat die Karte ein rotes ⚙️ → Tracker vorziehen</string>
+    <string name="cm_rules_turn_4">4. Erreicht der Tracker den Schwellenwert → Braune Zone betreten und neu mischen</string>
+    <string name="cm_rules_turn_5">5. Landet der Tracker auf einem Sonderfeld → auch diese Aktion ausführen</string>
+    <string name="cm_rules_zone_title">🟡→🟤 Zonenwechsel</string>
+    <string name="cm_rules_zone_body">Wenn der Tracker den Schwellenwert des Schwierigkeitsgrads erreicht, betritt Tingent die Braune Zone. Ab diesem Punkt verwenden alle Karten die braune Seite. Das Deck wird neu gemischt.</string>
+    <string name="cm_rules_tracker_title">📋 Besondere Tracker-Aktionen</string>
+    <string name="cm_rules_tracker_1">📋 Karte offen → nimm die Zielart mit den meisten SP aus dem Territorium + 1 Ei</string>
+    <string name="cm_rules_tracker_2">📥 Karte verdeckt → vom Deck verdeckt ziehen (Endwertung nach Schwierigkeitsgrad)</string>
+    <string name="cm_rules_tracker_3">🗺️ Entdeckung → lege ein Habitatplättchen auf einen See mit einem Ei; Tingent nimmt das Ei</string>
+    <string name="cm_rules_tracker_4">⏱️ Zeitvorrücken → Zeitleistenmarker vorziehen; Effekt sofort anwenden</string>
+    <string name="cm_rules_tingent_score_title">🏆 Tingents Punkte</string>
+    <string name="cm_rules_tingent_score_1">Endrundenspielkarten offen × 5 SP</string>
+    <string name="cm_rules_tingent_score_2">Kreaturkarten offen: Summe der aufgedruckten SP</string>
+    <string name="cm_rules_tingent_score_3">Erfüllte Errungenschaften: Summe der SP</string>
+    <string name="cm_rules_tingent_score_4">Trophäen × 3 SP</string>
+    <string name="cm_rules_tingent_score_5">Eier × 1 SP</string>
+    <string name="cm_rules_tingent_score_6">Verdeckte Karten × [1 / 2 / 3 SP je nach Schwierigkeitsgrad]</string>
+    <string name="cm_rules_player_score_title">🧑 Spielerpunkte</string>
+    <string name="cm_rules_player_score_1">Endrundenspielkarten: aufgedruckte SP</string>
+    <string name="cm_rules_player_score_2">Kreaturkarten: Summe der roten Siegel</string>
+    <string name="cm_rules_player_score_3">Errungenschaften: 6 / 12 / 15 SP je</string>
+    <string name="cm_rules_player_score_4">Trophäen × 3 SP</string>
+    <string name="cm_rules_player_score_5">Ressourcen + Schmetterlingsjäger ÷ 4 (abrunden)</string>
+    <string name="cm_setup_title">Aufbau · Criaturas Maravillosas</string>
+    <string name="cm_setup_subtitle">2 bis 4 Spieler · Arbeiterplatzierung + Tableau</string>
+    <string name="cm_setup_board_title">🗺️ Hauptspielplan</string>
+    <string name="cm_setup_board_body">• Stelle den sechseckigen Inselspielplan zusammen und lege Habitatmarker auf ihre Felder.\n• Mische die Kreaturkarten und bilde den sichtbaren Markt (Karten offen).\n• Ziehe zufällig 7 Zielplättchen und lege sie für alle sichtbar aus.\n• Stelle das Vorratsbrett mit den Startressourcen bereit.</string>
+    <string name="cm_setup_player_title">👤 Jeder Spieler erhält</string>
+    <string name="cm_setup_player_body">• 1 doppellagiges persönliches Tableau.\n• Wähle 1 Kapitän aus den verfügbaren → lege sein Kapitänsbrett neben dein persönliches Tableau.\n• 3 Besatzungsmitglieder in deiner Farbe.\n• Wähle 4 Startkarten aus den 8 verfügbaren.\n• Startressourcen nach Zugreihenfolge:\n  1. Spieler → kein Bonus\n  2. Spieler → +1 Ressource\n  3. Spieler → +2 Ressourcen\n  4. Spieler → +3 Ressourcen</string>
+    <string name="cm_setup_solo_title">🎯 Solomodus — Tingent</string>
+    <string name="cm_setup_solo_body">• Setze Tingents Marker auf Position 1 des Trackers.\n• Mische das Tingent-Kartendeck (12 Karten).\n• Tingent hat KEIN persönliches Tableau oder Ressourcen — nur den Tracker und sein Deck.\n• Der Spieler konfiguriert den Schwierigkeitsgrad vor dem Start (siehe Solo-Tab).</string>
+    <string name="cm_setup_turnorder_title">🔄 Zugreihenfolge</string>
+    <string name="cm_setup_turnorder_body">• Der Spieler mit der niedrigsten Kreatur handelt zuerst.\n• Tingent handelt nach jedem Spielerzug basierend auf der aufgedeckten Karte.</string>
+
+    <!-- ── TiletumSoloScreen ── -->
+    <string name="til_title">🏛️  Tiletum · Titus</string>
+    <string name="til_round_turn">Runde %1$d/4 · Zug %2$d/3</string>
+    <string name="til_solo_title">Tiletum · Solomodus</string>
+    <string name="til_vs_titus">vs. Kardinal Titus</string>
+    <string name="til_quick_setup">Schnellaufbau</string>
+    <string name="til_challenge_cards_title">Herausforderungskarten (Schwierigkeit)</string>
+    <string name="til_challenge_cards_subtitle">Füge Herausforderungskarten zum Basisdeck mit 13 Karten hinzu.</string>
+    <string name="til_deck_total">Deck gesamt: %1$d Karten</string>
+    <string name="btn_start_game_til">▶  Spiel starten</string>
+    <string name="til_difficulty_easy">Leicht\n(0)</string>
+    <string name="til_difficulty_normal">Normal\n(2)</string>
+    <string name="til_difficulty_hard">Schwer\n(5)</string>
+    <string name="til_score_you">Du</string>
+    <string name="til_score_titus">Titus</string>
+    <string name="til_preferred_dice">Bevorzugte Würfel:</string>
+    <string name="til_titus_priorities">Titus-Prioritäten</string>
+    <string name="til_selected_die">Von Titus gewählter Würfel</string>
+    <string name="til_die_value">Wert:</string>
+    <string name="til_die_color">Farbe:</string>
+    <string name="til_titus_scores">Titus wertet</string>
+    <string name="til_yellow_die_pts">%1$d Pkt. (gelber Würfel)</string>
+    <string name="til_die_pts_x2">%1$d Pkt. (%2$d ×2)</string>
+    <string name="til_titus_scores_detail">→ Titus erzielt %1$s</string>
+    <string name="btn_confirm_turn">Zug bestätigen →</string>
+    <string name="til_king_phase">👑 Königsphase</string>
+    <string name="til_king_question">Liegt Titus auf der Königsleiste vorne?</string>
+    <string name="til_king_yes">Ja</string>
+    <string name="til_king_no">Nein</string>
+    <string name="til_king_rules">• Bonusplättchen von der Königsleiste abwerfen\n• Titus erhält 4 SP Grundwert\n• SP je nach Position auf der Königsmesser anpassen</string>
+    <string name="til_king_extra_vp">Zusätzliche SP vom Königsmesser</string>
+    <string name="btn_continue_fair">Weiter → Marktphase</string>
+    <string name="til_fair_phase">🏪 Marktphase</string>
+    <string name="til_fair_round">Runde %1$d/4</string>
+    <string name="til_fair_no_map">Titus wertet ohne Kartenanwesenheit.</string>
+    <string name="til_fair_formula_hard">(a+b) × (Runde+1) = (%1$d+%2$d) × %3$d</string>
+    <string name="til_fair_formula_normal">(a+b) × Runde = (%1$d+%2$d) × %3$d</string>
+    <string name="til_fair_a">Wert a (Markt)</string>
+    <string name="til_fair_b">Wert b (Markt)</string>
+    <string name="btn_next_round">Nächste Runde →</string>
+    <string name="btn_final_score">Endwertung →</string>
+    <string name="til_final_score_title">🏆 Endwertung</string>
+    <string name="til_your_score">Deine Punkte</string>
+    <string name="til_your_houses">Deine Häuser auf der Karte</string>
+    <string name="til_your_pillars">Deine Säulen auf der Karte</string>
+    <string name="til_accumulated">Angesammelt: %1$d SP</string>
+    <string name="til_titus_contracts">Titus-Verträge</string>
+    <string name="til_titus_cathedrals">Titus-Kathedralen</string>
+    <string name="til_titus_score_title">Titus-Punkte</string>
+    <string name="til_result_win">🎉 DU GEWINNST!</string>
+    <string name="til_result_lose">💀 TITUS GEWINNT</string>
+    <string name="til_result_tie">🤝 UNENTSCHIEDEN</string>
+    <string name="til_you_vs_titus">Du: %1$d SP  ·  Titus: %2$d SP</string>
+    <string name="btn_new_game">↺ Neues Spiel</string>
+    <string name="til_challenge_badge">HERAUSFORDERUNG</string>
+    <string name="til_score_tab_title">Punktestand</string>
+    <string name="til_you_score_section">🧑 Du</string>
+    <string name="til_vp_in_game">Im Spiel angesammelte SP</string>
+    <string name="til_houses_x_pillars">Häuser × Säulen auf der Karte</string>
+    <string name="til_houses">Häuser</string>
+    <string name="til_pillars">Säulen</string>
+    <string name="til_buildings">Fertiggestellte Gebäude (max. 6)</string>
+    <string name="til_resources_div4">Endressourcen (÷4)</string>
+    <string name="til_contracts_x_cathedrals">Verträge × Kathedralen</string>
+    <string name="til_quick_setup_1">⚙️ Als 2-Spieler-Partie aufbauen</string>
+    <string name="til_quick_setup_2">🚫 Das Sondermarktplättchen von der Königsleiste entfernen</string>
+    <string name="til_quick_setup_3">🎒 Du startest: 1 Wolle, 1 Stein, 1 Eisen, 1 Nahrung, 1 Gold</string>
+    <string name="til_quick_setup_4">🤖 Titus zahlt keine Ressourcen und nimmt keine an</string>
+    <string name="til_rules_title">Schnellübersicht</string>
+    <string name="til_rules_turn_title">🎲 Titus\' Zug</string>
+    <string name="til_rules_turn_1">1. Oberste Karte von Titus\' Deck ziehen</string>
+    <string name="til_rules_turn_2">2. Titus nimmt den Würfel gemäß der Kartenreihenfolge (Prioritätsfarben)</string>
+    <string name="til_rules_turn_3">3. Aktionsprioritäten der Reihe nach anwenden (erste ausführbare)</string>
+    <string name="til_rules_turn_4">4. Wertung: Gelber Würfel = Würfelwert; andere = Wert × 2</string>
+    <string name="til_rules_turn_5">5. Zum nächsten Zug wechseln (3 Züge pro Runde)</string>
+    <string name="til_rules_dice_title">🎲 Titus\' Würfelwertung</string>
+    <string name="til_rules_dice_1">Gelber Würfel → wertet den genauen Würfelwert (kein Multiplikator)</string>
+    <string name="til_rules_dice_2">Jede andere Farbe → wertet Würfelwert × 2</string>
+    <string name="til_rules_dice_3">Beispiel: Blauer Würfel mit Wert 4 → 8 SP für Titus</string>
+    <string name="til_rules_phases_title">🔄 Phasen pro Runde (×4 Runden)</string>
+    <string name="til_rules_phases_1">1. Spielphase: 3 abwechselnde Züge (du / Titus / du, 2-Spieler-Variante)</string>
+    <string name="til_rules_phases_2">2. Königsphase: Königsleiste werten; Titus handelt nach Prioritäten</string>
+    <string name="til_rules_phases_3">3. Marktphase: in der aktiven Marktstadt werten</string>
+    <string name="til_rules_phases_4">Nach Runde 4 → Endwertung</string>
+    <string name="til_rules_player_score_title">🏆 Endwertung Spieler</string>
+    <string name="til_rules_player_score_1">Im Spielverlauf angesammelte SP</string>
+    <string name="til_rules_player_score_2">Häuser auf Karte × Säulen auf Karte</string>
+    <string name="til_rules_player_score_3">Fertiggestellte Gebäude: 1–2 → 0 SP, 3 → 5, 4 → 10, 5 → 20, 6 → 30 SP</string>
+    <string name="til_rules_player_score_4">Ressourcen am Ende ÷ 4 (abrunden)</string>
+    <string name="til_rules_titus_score_title">🤖 Titus\' Endwertung</string>
+    <string name="til_rules_titus_score_1">Im Spielverlauf angesammelte SP (Würfel)</string>
+    <string name="til_rules_titus_score_2">Titus-Verträge × Titus-Kathedralen</string>
+    <string name="til_setup_title">Aufbau · Tiletum</string>
+    <string name="til_setup_subtitle">2 bis 4 Spieler · Europa, 15. Jahrhundert</string>
+    <string name="til_setup_board_title">🗺️ Hauptspielplan</string>
+    <string name="til_setup_board_body">• Lege den Haupteuropa-Kartenspielpan aus.\n• Platziere die Gebäudeplättchen in den Städten gemäß dem Spielmodus.\n• Lege die Vertragsplättchen offen auf ihre Felder.\n• Mische und teile die Zielkarten wie angegeben aus.\n• Bereite den Beutel mit 1 Würfel jeder Farbe pro Spieler vor.</string>
+    <string name="til_setup_player_title">👤 Jeder Spieler erhält</string>
+    <string name="til_setup_player_body">• 1 persönliches Tableau.\n• Architekt + Händler → beide in die Stadt Tiletum stellen (Kartenstart).\n• 1 Haus → auf Tiletum auf dem Hauptspielplan.\n• 5 Häuser → auf die 5 linken Felder des persönlichen Tableaus. 2 Häuser beiseitelegen.\n• 5 Säulen → auf die 5 rechten Felder des persönlichen Tableaus. 2 Säulen beiseitelegen.\n• 1 SP-Marker → Feld 0 auf der Punkteleiste.\n• 1 Einheit jeder Ressource: Stein 🪨, Holz 🪵, Glas 🔵, Stoff 🟤.</string>
+    <string name="til_setup_coins_title">🪙 Startgoldmünzen (nach Zugreihenfolge)</string>
+    <string name="til_setup_coins_body">• 1. Spieler → 1 Goldmünze\n• 2. Spieler → 3 Goldmünzen\n• 3. Spieler → 5 Goldmünzen\n• 4. Spieler → 6 Goldmünzen</string>
+    <string name="til_setup_solo_title">🤖 Solomodus — Titus</string>
+    <string name="til_setup_solo_body">• Titus erhält kein Tableau und keine Ressourcen.\n• Konfiguriere vor dem Start die Anzahl der Herausforderungskarten (0–3).\n• Titus sammelt SP über einen internen Tracker (siehe Solo-Tab).\n• Der Spieler startet mit 10 SP Vorsprung.</string>
+
+    <!-- ── MaracaiboSoloScreen ── -->
+    <string name="mr_title">⚓  Piraten von Maracaibo</string>
+    <string name="mr_round">Runde %1$d / 3</string>
+    <string name="mr_solo_title">Piraten von Maracaibo</string>
+    <string name="mr_solo_subtitle">Solomodus vs. Jordán</string>
+    <string name="mr_difficulty_label">Schwierigkeit</string>
+    <string name="mr_b_cards_count">B-Karten in Jordáns Deck: %1$d von 6</string>
+    <string name="mr_expansion_title">⚔️  Piraten-Erweiterung</string>
+    <string name="mr_expansion_subtitle">Festungen und Kapitänsregeln für Jordán</string>
+    <string name="mr_prep_title">📋 Aufbau</string>
+    <string name="btn_set_sail">⚓  Leinen los!</string>
+    <string name="mr_jordan_in_gulf_title">Jordán ist im Golf</string>
+    <string name="mr_jordan_in_gulf_active">Nächster Zug: bewegt sich nach Maracaibo → +1 Aufrüstung → +6 SP</string>
+    <string name="mr_jordan_in_gulf_inactive">Aktivieren, wenn Jordán seinen Zug im Golf beendet</string>
+    <string name="mr_jordan_title">Jordán</string>
+    <string name="mr_jordan_vp">%1$d SP angesammelt</string>
+    <string name="mr_hideout_marker">Versteckmarker (Überfall/Erkundung)</string>
+    <string name="mr_current_raid">🗡️  Aktueller Überfall</string>
+    <string name="mr_current_explore">🧭  Aktuelle Erkundung</string>
+    <string name="mr_verify_treasures">(prüfen, ob Schätze überschritten werden)</string>
+    <string name="mr_jordan_turn">Jordáns Zug</string>
+    <string name="mr_jordan_in_gulf_note">⚡ Jordán war im Golf</string>
+    <string name="mr_gulf_detail">Es wird keine Karte aufgedeckt.\n→ Jordán bewegt sich nach Maracaibo\n→ +1 Schiffsaufrüstung\n→ +6 SP</string>
+    <string name="btn_execute_maracaibo">✓  Ausführen — Maracaibo</string>
+    <string name="mr_is_b_card">Ist es eine B-Karte?</string>
+    <string name="mr_bonus_action_title">⭐ Bonusaktion (zuerst)</string>
+    <string name="mr_bonus_action_body">Die B-Karten-Bonusaktion ausführen und die entsprechende Schaltfläche antippen:</string>
+    <string name="mr_main_actions_hint">Jordán versucht jede Aktion der Reihe nach. Führe die erste mögliche aus:</string>
+    <string name="btn_jordan_action">✓  Jordán führt diese Aktion aus</string>
+    <string name="mr_upgrade_title">⚓  Schiffsaufrüstungseffekt</string>
+    <string name="mr_upgrade_hint">Jordáns Tableau prüfen und den soeben gefüllten Slot auswählen:</string>
+    <string name="mr_rules_reference">📋  Jordáns Regeln</string>
+    <string name="mr_btn_close_turn">Zug schließen</string>
+    <string name="mr_btn_jordan_turn">⚡ Jordáns Zug</string>
+    <string name="mr_btn_end_round">→ Runde %1$d beenden</string>
+    <string name="mr_btn_final_score">🏆 Endwertung</string>
+    <string name="mr_btn_calc_vp">📊 SP berechnen</string>
+    <string name="mr_final_score_title">🏆  Endwertung</string>
+    <string name="mr_jordan_score_title">Jordáns Punkte</string>
+    <string name="mr_your_score_reminder">Deine Punkte (Erinnerung)</string>
+    <string name="btn_back_to_game">← Zurück zum Spiel</string>
+    <string name="mr_score_title">Punktestand</string>
+    <string name="mr_score_jordan">🤖 Jordán</string>
+    <string name="mr_score_you">🧑 Du</string>
+    <string name="mr_result_win">🎉 DU GEWINNST!</string>
+    <string name="mr_result_tie">🤝 UNENTSCHIEDEN</string>
+    <string name="mr_result_lose">💀 JORDÁN GEWINNT</string>
+    <string name="mr_you_vs_jordan">Du: %1$d SP  ·  Jordán: %2$d SP</string>
+    <string name="mr_mission_bonus_label">Bonus ≥6 Missionen (+10 SP)</string>
+    <string name="mr_rules_title">Schnellübersicht</string>
+    <string name="mr_setup_title">Aufbau · Piraten von Maracaibo</string>
+    <string name="mr_setup_subtitle">1 bis 4 Spieler · Die Karibik, 17. Jahrhundert</string>
+    <string name="mr_setup_board_title">🗺️ Hauptspielplan</string>
+    <string name="mr_setup_board_body">• Lege den Karibik-Spielplan mit Häfen und Orten aus.\n• Setze den Rundenmarker auf Feld 1.\n• Teile Hafenkarten an ihre Orte aus, wie angegeben.\n• Lege Missionen und verfügbare Schiffsaufrüstungen bereit.</string>
+    <string name="mr_setup_player_title">👤 Jeder Spieler erhält</string>
+    <string name="mr_setup_player_body">• 1 Schiffstableau.\n• 24 Scheiben → 2 auf jedes kreisförmige Feld des Schiffstableaus.\n• Schiff → Havanna-Feld auf dem Hauptspielplan.\n• Erkunder → Startfeld auf der Erkundungsleiste.\n• 1 Marker auf der Kampfleiste → Feld 1.\n• 1 Marker auf der Dublonen-Einkommensleiste → Feld 8.\n• 1 Marker auf der SP-Einkommensleiste → Feld 0.\n• 1 Scheibe auf Feld 0 der SP-Hauptleiste.\n• 1 Einflussmarker auf Feld 0 jeder Nation (3 Marker).\n• 8 Karten aus Deck A (verdeckt ziehen).</string>
+    <string name="mr_setup_doubloons_title">🪙 Startdublonen</string>
+    <string name="mr_setup_doubloons_body">• 1. Spieler → 8 Dublonen.\n• 2. Spieler → 9 Dublonen.\n• 3. Spieler → 10 Dublonen.\n• 4. Spieler → 11 Dublonen.</string>
+    <string name="mr_setup_solo_title">🤖 Solomodus — Jordán</string>
+    <string name="mr_setup_solo_body">• Jordán hat kein persönliches Tableau.\n• Verfolge: erkundete Flüsse, Aufrüstungen, Missionen und Residenzen.\n• Der Spieler konfiguriert den Modus (Standard / Erweiterung) auf dem Aufbaubildschirm.\n• Jordáns Zug-Tracker siehe Solo-Tab.</string>
+
+    <!-- ── CastleComboSoloScreen ── -->
+    <string name="cc_title">Castle Combo</string>
+    <string name="cc_subtitle">Solomodus · Gegner: Anton</string>
+    <string name="cc_difficulty">Schwierigkeit</string>
+    <string name="cc_difficulty_easy">Leicht</string>
+    <string name="cc_difficulty_normal">Normal</string>
+    <string name="cc_difficulty_hard">Schwer</string>
+    <string name="cc_turn_label">Spielzug</string>
+    <string name="cc_of_nine">von 9</string>
+    <string name="cc_anton_turn">Antons Zug 🤖</string>
+    <string name="cc_your_turn">Dein Zug 👤</string>
+    <string name="cc_anton_resources_title">Antons Ressourcen (angesammelt)</string>
+    <string name="cc_anton_resources_hint">Trage die Ressourcen ein, die Anton im Spielverlauf durch Karteneffekte erhält.</string>
+    <string name="cc_anton_guide_title">Antons Zug · Kurzanleitung</string>
+    <string name="cc_score_title">Deine Punkte</string>
+    <string name="cc_result_tie">Unentschieden!</string>
+    <string name="cc_result_win">Du gewinnst! 🏆</string>
+    <string name="cc_result_anton_wins">Anton gewinnt 🤖</string>
+    <string name="cc_difficulty_display">Schwierigkeit: %1$s</string>
+    <string name="cc_notes_if_missing_easy">nur wenn Bedingung erfüllt</string>
+    <string name="cc_notes_if_missing_hard">immer (unabhängig von der Bedingung)</string>
+    <string name="cc_rules_title">Castle Combo · Solomodus</string>
+    <string name="cc_rules_subtitle">Fan-erstellter Solomodus (ben_uez, BGG) · Erfordert gedruckte Entscheidungs- und Prioritätskarten.</string>
+    <string name="cc_setup_title">Aufbau · Castle Combo</string>
+    <string name="cc_setup_subtitle">1 bis 4 Spieler · Kombispiel</string>
+    <string name="cc_setup_board_title">🗺️ Zentrales Spielfeld</string>
+    <string name="cc_setup_board_body">• Lege das zentrale Spielfeld mit dem unteren Markt (Unterstadt) und oberen Markt (Oberstadt) aus.\n• Teile Karten in 2 Reihen je nach Spielerzahl aus:\n  → 1–2 Spieler: 2 Spalten. 3–4 Spieler: 3 Spalten.\n• Lege Münzen (Gold) und Schlüssel für alle zugänglich bereit.</string>
+    <string name="cc_setup_player_title">👤 Jeder Spieler erhält</string>
+    <string name="cc_setup_player_body">• 15 Goldmünzen.\n• 2 Schlüssel.\n• Keine Karten zu Beginn — Karten werden im Spielverlauf gekauft.\n• Kein persönliches Tableau (das 3×3-Raster bildet sich in deinem Spielbereich).</string>
+    <string name="cc_setup_solo_title">🤖 Solomodus — Anton</string>
+    <string name="cc_setup_solo_body">• Anton erhält zu Spielbeginn keine Komponenten.\n• Verfolge: Münzen, Schlüssel und Rabatte, die Anton im Spielverlauf ansammelt.\n• Am Ende wandelt Anton Ressourcen nach gewähltem Schwierigkeitsgrad in SP um:\n  Leicht → Schlüssel ×1, Münzen ÷2, Rabatte ×1\n  Normal → Schlüssel ×1, Münzen ×1, Rabatte ×2\n  Schwer → Schlüssel ×2, Münzen ×2, Rabatte ×3</string>
+    <string name="cc_setup_turn_title">🃏 Antons Zug</string>
+    <string name="cc_setup_turn_body">• Jedes Mal, wenn der Spieler eine Karte kauft, zieht oder handelt auch Anton gemäß den Soloregeln.\n• Antons Zug-Tracker siehe Solo-Tab.</string>
+    <!-- DifficultyTable rows -->
+    <string name="cc_diff_row_keys">Schlüssel</string>
+    <string name="cc_diff_row_coins">Münzen</string>
+    <string name="cc_diff_row_discounts">Rabatte</string>
+    <string name="cc_diff_row_if_missing">«Falls fehlend»</string>
+    <string name="cc_diff_keys_easy">1 SP/Stk.</string>
+    <string name="cc_diff_keys_normal">1 SP/Stk.</string>
+    <string name="cc_diff_keys_hard">2 SP/Stk.</string>
+    <string name="cc_diff_coins_easy">1 SP/2</string>
+    <string name="cc_diff_coins_normal">1 SP/Stk.</string>
+    <string name="cc_diff_coins_hard">2 SP/Stk.</string>
+    <string name="cc_diff_discounts_easy">1 SP/Stk.</string>
+    <string name="cc_diff_discounts_normal">2 SP/Stk.</string>
+    <string name="cc_diff_discounts_hard">3 SP/Stk.</string>
+    <string name="cc_diff_if_missing_easy">Nur falls fehlend</string>
+    <string name="cc_diff_if_missing_normal">Immer</string>
+    <string name="cc_diff_if_missing_hard">Immer</string>
+    <!-- AntonTurnGuide steps -->
+    <string name="cc_guide_step_1">Oberste Entscheidungskarte vom Deck aufdecken.</string>
+    <string name="cc_guide_step_2">Anton nimmt die erste Karte in der aktuellen Reihe, die der angezeigten Priorität entspricht.</string>
+    <string name="cc_guide_step_3">Kein Treffer: die anderen zwei Prioritäten auf der Karte prüfen. Noch kein Treffer: Prioritäten 4, 5 und 6 verwenden (Prioritätskarten über dem Spielfeld).</string>
+    <string name="cc_guide_step_4">Anton zahlt keine Kosten. Erhält ALLE Fähigkeitsboni (\'oder\' → \'und\').</string>
+    <string name="cc_guide_step_5">Anton legt Karten von links nach rechts, oben nach unten ab. Ausnahme: Karten, die nach bestimmter Position werten, kommen in den ersten gültigen Slot.</string>
+    <string name="cc_guide_step_6">Den Boten verschieben, wenn die Karte es angibt.</string>
+    <string name="cc_guide_step_7">Zusätzliche Effekte der Entscheidungskarte anwenden.</string>
+    <!-- CCScoreTab counter labels -->
+    <string name="cc_scrolls_player">📜 Schriftrollen (Summe aller Karten)</string>
+    <string name="cc_keys_player">🗝️ Schlüssel (1 SP je)</string>
+    <string name="cc_score_anton_title">Anton</string>
+    <string name="cc_scrolls_anton">📜 Kartenschriftrollen</string>
+    <string name="cc_keys_anton_normal">🗝️ Schlüssel (1 SP/Stk.)</string>
+    <string name="cc_keys_anton_hard">🗝️ Schlüssel (2 SP/Stk.)</string>
+    <string name="cc_coin_rule_easy">1 SP pro 2 Münzen</string>
+    <string name="cc_coin_rule_normal">1 SP je</string>
+    <string name="cc_coin_rule_hard">2 SP je</string>
+    <string name="cc_coins_anton">🪙 Münzen (%1$s)</string>
+    <string name="cc_discounts_anton">⚡ Rabatte (%1$d SP/Stk.)</string>
+    <string name="cc_notes_if_missing">Hinweis: «falls X fehlend»-Karten werten %1$s.</string>
+    <!-- CCRulesTab rule blocks -->
+    <string name="cc_rules_prep_title">⚙️ Aufbau</string>
+    <string name="cc_rules_prep_body">Spiel normal aufbauen. Antons Tableau hinzufügen.\nDie 6 Prioritätskarten (Farben = Schildtypen) mischen und über Antons Tableau legen (eine pro Spalte).\nDie 12 Entscheidungskarten mischen und verdeckt ablegen. Anton startet ohne Münzen oder Schlüssel.\nSchwierigkeitsgrad wählen. Du bist der Startspieler.</string>
+    <string name="cc_rules_anton_turn_title">🎮 Antons Zug</string>
+    <string name="cc_rules_anton_turn_body">Anton benutzt KEINE Schlüssel und nimmt Karten IMMER aus der aktuellen Reihe (wo der Bote ist). Führt nur Schritte 2–4 aus.\n\n1. Oberste Entscheidungskarte aufdecken.\n2. Anton nimmt die erste Karte in der Reihe, die der angezeigten Priorität entspricht (links oder rechts je nach Pfeil).\n3. Kein Treffer: die anderen zwei Prioritäten versuchen; dann Prioritäten 4, 5 und 6 (Karten über dem Spielfeld).\n4. Anton zahlt keine Kosten. Erhält ALLE Boni (\'oder\' → \'und\').\n5. Ablage: links→rechts, oben→unten. Ausnahme: Karten mit Positionswertung kommen in den ersten gültigen Slot.\n6. Boten verschieben, wenn die Karte es angibt.\n7. Zusätzliche Effekte der Entscheidungskarte anwenden.</string>
+    <string name="cc_rules_effects_title">🃏 Zusätzliche Effekte (Entscheidungskarten)</string>
+    <string name="cc_rules_effects_body">Abwurfsymbol: die 3 Karten in der aktuellen Reihe abwerfen.\nMischsymbol: alle Entscheidungskarten zurück ins Deck mischen.</string>
+    <string name="cc_rules_scoring_title">🏆 Antons Wertung</string>
+    <string name="cc_rules_scoring_body">Anton wertet seine Karten wie im Mehrspielermodus (Schriftrollen).\nZusätzliche Ressourcen nach Schwierigkeitsgrad:\n\nLEICHT · Schlüssel: 1SP/Stk. · Münzen: 1SP/2 · Rabatte: 1SP/Stk. · «Falls fehlend»: nur wenn Bedingung erfüllt\nNORMAL · Schlüssel: 1SP/Stk. · Münzen: 1SP/Stk. · Rabatte: 2SP/Stk. · «Falls fehlend»: immer\nSCHWER · Schlüssel: 2SP/Stk. · Münzen: 2SP/Stk. · Rabatte: 3SP/Stk. · «Falls fehlend»: immer\n\nEin Rabatt, der auf beide Reihen gilt, zählt als 2 Rabatte.</string>
+    <string name="cc_rules_summary_title">📜 Grundspiel-Wertungsübersicht</string>
+    <string name="cc_rules_summary_body">Jede Karte hat eine Wertungsschriftrolle, die am Ende ausgewertet wird.\nDie 6 Schildtypen sind: Adel (👑), Militär (⚔️), Glaube (✝️), Handwerk (🔨), Gelehrte (📚), Bauern (🌾).\nSchlüssel geben je 1 SP.\nGold wertet nur, wenn es in Karten mit einem Beutel gespeichert ist.\nVerdeckte Karten geben keine Punkte (bringen aber beim Nehmen 6 Münzen + 2 Schlüssel).</string>
+
+    <!-- ── CoimbraSoloScreen ── -->
+    <string name="coi_title">Coimbra</string>
+    <string name="coi_subtitle">Solomodus · Störungsbot</string>
+    <string name="coi_solo_tab_title">Aktuelle Runde</string>
+    <string name="coi_of_four">von 4</string>
+    <string name="coi_bot_warning">⚠️ Der Bot geht immer als Erster jeden Zug.</string>
+    <string name="coi_dice_title">Bot-Würfel</string>
+    <string name="coi_dice_subtitle">1W6 pro Würfel, den der Bot nimmt (3 Würfel pro Runde) würfeln</string>
+    <string name="coi_dice_fallback">Wenn die angegebene Farbe nicht verfügbar ist → weißen Würfel versuchen → in der Zahl weiter nach unten gehen, bis einer verfügbar ist.</string>
+    <string name="coi_dice_lowhi">Grau/Orange «niedrig» = der niedrigere der beiden verfügbaren Werte · «hoch» = der höhere. Verbleibt nur einer, diesen nehmen.</string>
+    <string name="coi_city_title">Stadtplatzierung</string>
+    <string name="coi_city_subtitle">1W6 pro Bot-Würfel würfeln, um die Zone zu bestimmen</string>
+    <string name="coi_city_restrictions">Platzierungsbeschränkungen:</string>
+    <string name="coi_city_r1">• Maximal 2 Bot-Würfel in derselben Zone.</string>
+    <string name="coi_city_r2">• Nicht platzieren, wo bereits 4+ Elemente (Würfel + Marker) vorhanden sind, außer der Würfel garantiert dem Bot eine Karte.</string>
+    <string name="coi_city_r3">• Hat die resultierende Zone bereits 2 Bot-Würfel oder ist voll → neu zuweisen: 1–3 Oberstadt, 4–6 Mittelstadt.</string>
+    <string name="coi_castle_title">Burg</string>
+    <string name="coi_castle_hint">Gilt nur, wenn der Spieler in diesem Zug einen Würfel in die Burg gelegt hat.</string>
+    <string name="coi_castle_check">Den Wert des 7. übrigen Würfels prüfen (der nicht verwendete):</string>
+    <string name="coi_castle_ge">7. Würfel ≥ dein Würfel</string>
+    <string name="coi_castle_ge_result">✅ Ignorieren</string>
+    <string name="coi_castle_lt">7. Würfel &lt; dein Würfel</string>
+    <string name="coi_castle_lt_result">❌ Bot stiehlt 1 Marker</string>
+    <string name="coi_castle_steal_note">Stiehlt der Bot: 1W4 würfeln, um zu sehen, welchen der 4 Gunstmarker er vor dir nimmt (Bot verwendet in diesem Zug 4 Würfel).</string>
+    <string name="coi_cards_title">Karten</string>
+    <string name="coi_cards_body1">Die 5 Würfelmarker nehmen Karten normal (höchster Einfluss, Gleichstand → am weitesten links).</string>
+    <string name="coi_cards_body2">Wenn der Bot an der Reihe ist, einen Würfel würfeln, um zufällig unter den verfügbaren Karten zu wählen:</string>
+    <string name="coi_cards_roll_4">4 Karten → 1–4</string>
+    <string name="coi_cards_roll_3">3 Karten → 1–3</string>
+    <string name="coi_cards_roll_2">2 Karten → 1–2</string>
+    <string name="coi_cards_roll_1">1 Karte → nimmt sie</string>
+    <string name="coi_cards_influence">🎯 Bot-Einfluss = Einfluss der Karte + 1 (Bereich 2–5).</string>
+    <string name="coi_cards_no_effect">Der Bot aktiviert keine weiteren Karteneffekte außer dem Einflussgewinn +1.</string>
+    <string name="coi_crowns_title">Kronen</string>
+    <string name="coi_crowns_body1">Der Spieler erhält nur 1 Krone dafür, als 2. in der Zugreihenfolge zu sein (der Bot ist immer 1.).</string>
+    <string name="coi_crowns_body2">Plus Kronen aus Gunstmarkern in der aktuellen Wertungsrunde.</string>
+    <string name="coi_crowns_body3">Keine Kronenmarker während des Spiels verwenden (oder nur in der letzten Runde, falls gewünscht).</string>
+    <string name="coi_pilgrimages_title">Pilgerreisen</string>
+    <string name="coi_pilgrimages_body">Der Spieler kann jeden der 4 Startpunkte von Coimbra wählen. Der Bot macht keine Pilgerreisen.</string>
+    <string name="coi_char_cards_title">Charakterkarten I</string>
+    <string name="coi_char_cards_body1">Der Bot erhält zu Beginn 2 zufällige Charakterkarten I. Sein Einfluss = Kartenwert + 1.</string>
+    <string name="coi_char_cards_body2">Der Spieler erhält ebenfalls 2 zufällige Charakterkarten I aus den 8 verfügbaren (keine Wahl).</string>
+    <string name="coi_char_cards_body3">Wenn eine Spielerkarte das Stehlen von Ressourcen oder SP von einem anderen Spieler erlauben würde → erhält immer die Option ohne SP.</string>
+    <string name="coi_score_total">GESAMTPUNKTE</string>
+    <string name="coi_score_breakdown">Punkteaufschlüsselung</string>
+    <string name="coi_score_cards">🃏 Gildenkarten</string>
+    <string name="coi_score_cards_sub">SP aus Wertungsschriftrollen am Ende</string>
+    <string name="coi_score_pilgrimages">⛪ Pilgerreisen</string>
+    <string name="coi_score_pilgrimages_sub">Besuchte Klöster</string>
+    <string name="coi_score_influence">📊 Einflussleisten</string>
+    <string name="coi_score_influence_sub">SP aus Zwischenwertung + Spielende</string>
+    <string name="coi_score_coins">🪙 Münzen</string>
+    <string name="coi_score_coins_sub">Münzen in SP umgewandelt</string>
+    <string name="coi_score_favors">⭐ Gunstmarker</string>
+    <string name="coi_score_favors_sub">Boni aus Gunstmarkern</string>
+    <string name="coi_score_others">➕ Sonstiges</string>
+    <string name="coi_score_others_sub">Startkarten, Kronen usw.</string>
+    <string name="coi_ranking_title">Rangliste</string>
+    <string name="coi_rank_bad">Schwaches Ergebnis 😬</string>
+    <string name="coi_rank_ok">Akzeptabel 👍</string>
+    <string name="coi_rank_good">Gut 🌟</string>
+    <string name="coi_rank_great">Ausgezeichnet ⭐</string>
+    <string name="coi_rank_amazing">Unglaublich! 🏆</string>
+    <string name="coi_rules_title">Coimbra · Solomodus</string>
+    <string name="coi_rules_subtitle">Störungsbot — Fan-Version von Dave Smith (skybowl, BGG).</string>
+    <string name="coi_rules_prep_title">⚙️ Aufbau</string>
+    <string name="coi_rules_prep_body">2-Spieler-Partie (du vs. Bot) mit folgenden Ausnahmen:\n• Der Bot geht immer zuerst (jeder Zug, jede Runde).\n• Der Bot erhält 2 zufällige Charakterkarten I; sein Einfluss = jeweiliger Kartenwert + 1.\n• Der Spieler erhält ebenfalls 2 zufällige Charakterkarten I aus den 8 (keine Wahl).\n• Der Spieler kann jeden der 4 Startpunkte von Coimbra wählen.\n• Der Bot macht keine Pilgerreisen.</string>
+    <string name="coi_rules_dice_title">🎲 Bot-Würfel (Eselsbrücke: P-G-O-W-O-W)</string>
+    <string name="coi_rules_dice_body">1W6 pro Würfel, den der Bot nimmt:\n1 = Lila · 2 = Grün · 3 = Orange niedrig · 4 = Weiß niedrig · 5 = Orange hoch · 6 = Weiß hoch\n\nFarbe nicht verfügbar: weißen Würfel versuchen → in der Zahl weiter nach unten gehen.\n«Niedrig/Hoch» für Weiß und Orange = niedrigerer/höherer der beiden verfügbaren Werte. Verbleibt nur einer, diesen nehmen.</string>
+    <string name="coi_rules_city_title">🏙️ Stadtplatzierung</string>
+    <string name="coi_rules_city_body">1W6 pro Bot-Würfel:\n1–2 = Oberstadt · 3–4 = Mittelstadt · 5–6 = Unterstadt\n\nBeschränkungen: max. 2 Bot-Würfel pro Zone · nicht platzieren, wo bereits 4+ Elemente vorhanden sind (außer Würfel garantiert Bot eine Karte).\nZone blockiert → neu zuweisen: 1–3 Oberstadt, 4–6 Mittelstadt.</string>
+    <string name="coi_rules_castle_title">🏰 Burg</string>
+    <string name="coi_rules_castle_body">Nur wenn der Spieler in diesem Zug einen Würfel in die Burg gelegt hat:\n\nDen 7. übrigen Würfel mit deinem Burgwürfel vergleichen.\n• 7. Würfel ≥ dein Würfel → ignorieren, nichts passiert.\n• 7. Würfel &lt; dein Würfel → der Bot stiehlt einen Gunstmarker vor dir (1W4 würfeln, um welchen zu bestimmen). Bot verwendet in diesem Zug 4 Würfel.</string>
+    <string name="coi_rules_cards_title">🃏 Karten</string>
+    <string name="coi_rules_cards_body">Die 5 Würfelmarker nehmen Karten normal (höchster Einfluss, Gleichstand → am weitesten links).\n\nWenn der Bot an der Reihe ist: unter den verfügbaren Karten würfeln (1–4, 1–3, 1–2 oder die letzte).\n\nBot-Einfluss = Einfluss der Karte + 1 (Bereich 2–5).\nDer Bot aktiviert keine weiteren Karteneffekte.</string>
+    <string name="coi_rules_crowns_title">👑 Kronen</string>
+    <string name="coi_rules_crowns_body">Der Spieler hat nur 1 Krone dafür, als 2. in der Zugreihenfolge zu sein + Kronen aus Gunstmarkern in der aktuellen Wertungsrunde.\nKeine Kronenmarker während des Spiels verwenden (optional: in der letzten Runde nutzen).</string>
+    <string name="coi_rules_steal_title">🧍 Charakterkarten mit Stehlen</string>
+    <string name="coi_rules_steal_body">Wenn eine Spielerkarte das Stehlen von Ressourcen oder SP von einem anderen Spieler erlaubt → erhält immer die Option ohne SP.</string>
+    <string name="coi_rules_results_title">🏆 Ergebnistabelle</string>
+    <string name="coi_rules_results_body">&lt; 130 → Schwaches Ergebnis\n130–160 → Akzeptabel\n160–190 → Gut\n190–220 → Ausgezeichnet\n&gt; 220 → Unglaublich!</string>
+    <string name="coi_setup_title">Aufbau · Coimbra</string>
+    <string name="coi_setup_subtitle">2 bis 4 Spieler · Portugal, 15. Jahrhundert</string>
+    <string name="coi_setup_board_title">🗺️ Hauptspielplan</string>
+    <string name="coi_setup_board_body">• Hauptspielplan und Vorratsbrett auseinanderfalten.\n• Die 6 farblich passenden Würfel in das zentrale Feld legen.\n• Charakterkarten I aus dem Startdeck austeilen.\n• Gunstmarker auf ihre Felder legen.\n• Kartenmarkt mit Karten aus den 4 Klöstern befüllen.\n• Runde 1 auf der Rundenleiste markieren.</string>
+    <string name="coi_setup_player_title">👤 Jeder Spieler erhält</string>
+    <string name="coi_setup_player_body">• 1 doppellagiges persönliches Tableau.\n• 3 Würfelhalter → in die Fensterfelder des Tableaus.\n• 2 Würfelmarker → Position 7 auf der Wachleiste und Münzleiste.\n• 1 Scheibe → Feld 0 auf der SP-Leiste des Hauptspielplans.\n• 4 Scheiben → Feld 0 auf jeder der 4 Einflussleisten.\n• 7 Münzen + 7 Wachen (auf dem persönlichen Tableau).\n• 2 zufällige Charakterkarten I aus dem Startdeck.</string>
+    <string name="coi_setup_solo_title">⚙️ Solomodus — zusätzlicher Aufbau</string>
+    <string name="coi_setup_solo_body">• Der Bot erhält 2 zufällige Charakterkarten I. Sein Einfluss = Kartenwert + 1.\n• Der Spieler erhält ebenfalls 2 zufällige Charakterkarten I (keine Wahl).\n• Der Bot platziert KEINE Würfelhalter — verwendet den übrigen Würfel (7.) für die Burg.\n• Der Spieler wählt jeden der 4 Startpunkte von Coimbra.</string>
+    <string name="coi_setup_turn_title">🎲 Zugreihenfolge</string>
+    <string name="coi_setup_turn_body">• Der Bot geht IMMER ZUERST jeden Zug jeder Runde.\n• Der Spieler geht als Zweiter mit 1 festen Krone dafür, als 2. in der Zugreihenfolge zu sein.</string>
+
+    <!-- ── Killtron cards ── -->
+    <string name="deck_a_label">Deck A</string>
+    <string name="deck_b_label">Deck B</string>
+    <string name="deck_c_label">Deck C</string>
+    <!-- Forcejeo -->
+    <string name="card_forcejeo_desc">Bewege eine Figur aus einem verbundenen Raum in deinen Raum!</string>
+    <string name="card_forcejeo_step1">Killtron versucht, einen Spieler aus einem verbundenen Raum in seinen eigenen zu bewegen.</string>
+    <string name="card_forcejeo_step2">Gleichstand: den Spieler mit den meisten Punkten wählen.</string>
+    <string name="card_forcejeo_step3">Kann kein Spieler bewegt werden, einen Zuschauer bewegen, der sich noch nicht in seinem Fressenstapel befindet.</string>
+    <string name="card_forcejeo_step4">Farbpriorität: Rot → Gelb → Grün → Blau → Lila.</string>
+    <!-- Despliegue -->
+    <string name="card_despliegue_desc">Bewegen! Killtron bewegt sich gemäß der letzten Karte des Zuges.</string>
+    <!-- Sobresalto -->
+    <string name="card_sobresalto_desc">Bewegen! 1 Karte spielen! Killtron bewegt sich und führt eine Extraaktion aus.</string>
+    <string name="card_sobresalto_step2">Dann die oberste Karte von Deck A aufdecken und ausführen.</string>
+    <string name="card_sobresalto_step3">Die Extrakarte wird vollständig aufgelöst, bevor es weitergeht.</string>
+    <string name="card_sobresalto_step4">Ist Deck A leer, vor dem Ziehen der Extrakarte neu mischen.</string>
+    <!-- Avalancha -->
+    <string name="card_avalancha_desc">Bewege alle Figuren in deinem Raum! +2 Punkte pro bewegtem Spieler!</string>
+    <string name="card_avalancha_step1">Killtron bewegt ALLE Spieler, die sich aktuell in seinem Raum befinden.</string>
+    <string name="card_avalancha_step2">Schickt sie in den Raum mit den wenigsten Zuschauern.</string>
+    <string name="card_avalancha_step3">Gleichstand: den Raum mit den wenigsten Türen wählen.</string>
+    <string name="card_avalancha_step4">Erhält 2 Punkte pro bewegtem Spieler. Kann mehrere Punkte auf einmal ansammeln!</string>
+    <!-- Buscar -->
+    <string name="card_buscar_desc">3 Zuschauer hinzufügen! 1 Karte spielen! Killtron füllt das Spielfeld und handelt erneut.</string>
+    <string name="card_buscar_step1">3 Zuschauer aus dem Beutel in den Raum mit den wenigsten Figuren insgesamt legen.</string>
+    <string name="card_buscar_step2">Gleichstand: Du wählst, wohin die Zuschauer gehen.</string>
+    <string name="card_buscar_step3">Dann die oberste Karte von Deck B aufdecken und ausführen.</string>
+    <string name="card_buscar_step4">Ist Deck B leer, vor dem Ziehen der Extrakarte neu mischen.</string>
+    <!-- Arco Voltaico -->
+    <string name="card_arco_desc">Stiehl 1 Punkt von jedem Spieler in deinem Raum und verbundenen Räumen!</string>
+    <string name="card_arco_step1">Alle Spieler in Killtrons Raum identifizieren.</string>
+    <string name="card_arco_step2">Betrifft auch Spieler in direkt durch eine Tür verbundenen Räumen.</string>
+    <string name="card_arco_step3">Jeder betroffene Spieler verliert 1 Punkt. Killtron erhält diese Punkte.</string>
+    <string name="card_arco_step4">Ein Spieler bei 0 Punkten verliert keine Punkte (geht nicht ins Negative).</string>
+    <!-- Acosar -->
+    <string name="card_acosar_desc">Zuschauer erschrecken, dann erneut erschrecken! Killtron wertet zweimal.</string>
+    <string name="card_acosar_step1">1. Durchgang: für jede Tür 1 Zuschauer in den verbundenen Raum bewegen. +1 Pkt. pro Zuschauer.</string>
+    <string name="card_acosar_step2">Von der oberen Tür beginnen und im Uhrzeigersinn fortfahren.</string>
+    <string name="card_acosar_step3">Farbpriorität: Rot → Gelb → Grün → Blau → Lila.</string>
+    <string name="card_acosar_step4">2. Durchgang: den gesamten Erschreck-Vorgang in derselben Aktion ein zweites Mal wiederholen.</string>
+    <!-- Exterminar -->
+    <string name="card_exterminar_desc">Die Zuschauer erschrecken! Killtron erzielt sofortige Punkte.</string>
+    <string name="card_exterminar_step1">Für jede Tür in seinem Raum 1 Zuschauer in den verbundenen Raum bewegen.</string>
+    <string name="card_exterminar_step2">Von der oberen Tür beginnen und im Uhrzeigersinn fortfahren.</string>
+    <string name="card_exterminar_step3">Farbpriorität: Rot → Gelb → Grün → Blau → Lila.</string>
+    <string name="card_exterminar_step4">Erhält 1 Punkt für jeden Zuschauer, der durch eine Tür gegangen ist.</string>
+    <!-- Comer -->
+    <string name="card_comer_desc">1 Zuschauer jeder Farbe fressen! Ein Set vervollständigen und ein Ticket verdienen.</string>
+    <string name="card_comer_step1">Killtron frisst 1 Zuschauer jeder verfügbaren Farbe in seinem Raum.</string>
+    <string name="card_comer_step2">Priorität: Rot → Gelb → Grün → Blau → Lila.</string>
+    <string name="card_comer_step3">Hat es 1 von jeder Farbe (5 Farben): liefert das Set ab und verdient ein Ticket (verdeckte Punkte am Ende).</string>
+    <string name="card_comer_step4">Nach Vervollständigung eines Sets 3 Zuschauer in den Raum mit den wenigsten Figuren legen.</string>
+    <!-- resolveMovement -->
+    <string name="move_result_spectators">Letzte Karte: %1$s → Killtron bewegt sich in den Raum mit den MEISTEN Zuschauern. Gleichstand: meisten Türen.</string>
+    <string name="move_result_eat">Letzte Karte: Comer → Killtron bewegt sich in den Raum mit den MEISTEN neuen Farben (nicht in seinem Stapel). Gleichstand: meisten Türen.</string>
+    <string name="move_result_generic">Killtron bewegt sich gemäß der letzten Karte (Exterminar/Acosar → meiste Zuschauer · Comer → meiste neue Farben).</string>
+    <string name="move_door_tiebreak">Gleichstand: den Raum mit den meisten Türen wählen.</string>
+    <string name="move_adjacent_only">Bewegt sich nur in angrenzende, durch eine Tür verbundene Räume.</string>
+
+    <!-- ── CascadiaScoreScreen ── -->
+    <string name="casc_title">Cascadia</string>
+    <string name="casc_subtitle">Punkterechner</string>
+    <string name="casc_score_total">GESAMTPUNKTE</string>
+    <!-- Animal names -->
+    <string name="casc_bears">Bären</string>
+    <string name="casc_salmon">Lachse</string>
+    <string name="casc_elk">Elche</string>
+    <string name="casc_hawks">Falken</string>
+    <string name="casc_foxes">Füchse</string>
+    <string name="casc_habitats">Habitate</string>
+    <string name="casc_nature_tokens">Naturmarker</string>
+    <!-- Bear hints -->
+    <string name="casc_bear_a_hint">Nicht benachbarte Gruppen · steigende Punkte pro Paar</string>
+    <string name="casc_bear_a_counter">Anzahl der Paare</string>
+    <string name="casc_bear_b_hint">10 SP pro Gruppe von genau 3 Bären</string>
+    <string name="casc_bear_b_counter">Gruppen von 3 Bären</string>
+    <string name="casc_bear_c_hint">Gruppen von 1–3 Bären · +3 Bonus wenn alle 3 Größen vorhanden</string>
+    <string name="casc_bear_c_bonus">✓ Bonus +3 SP (alle 3 Größen vorhanden)</string>
+    <string name="casc_bear_d_hint">Gruppen von 2–4 nicht benachbarten Bären</string>
+    <string name="casc_groups_of_1">Gruppen von 1 (2 SP je)</string>
+    <string name="casc_groups_of_2_5">Gruppen von 2 (5 SP je)</string>
+    <string name="casc_groups_of_3_8">Gruppen von 3 (8 SP je)</string>
+    <string name="casc_groups_of_4_13">Gruppen von 4 (13 SP je)</string>
+    <!-- Salmon hints -->
+    <string name="casc_sal_a_hint">Läufe (max. 2 Nachbarn pro Lachs) · bis Größe 7</string>
+    <string name="casc_sal_b_hint">Läufe bis Größe 5 (Läufe ≥6 werten nicht)</string>
+    <string name="casc_sal_c_hint">Nur Läufe der Größe 3 bis 5 werten</string>
+    <string name="casc_sal_d_hint">Läufe ≥3: 1 SP/Lachs + 1 SP/benachbartes Tier · Gesamtwert eingeben</string>
+    <string name="casc_sal_total">SP Lachse gesamt</string>
+    <!-- Elk hints -->
+    <string name="casc_elk_a_hint">Gerade Linien, durch Sechseckseiten verbunden</string>
+    <string name="casc_elk_b_hint">Gruppen passend zu exakten Formen auf der Karte · Gesamtwert eingeben</string>
+    <string name="casc_elk_c_hint">Verbundene Gruppen beliebiger Form · steigende Punkte nach Größe</string>
+    <string name="casc_elk_d_hint">Kreisförmige Formation von 7 Elchen · 23 SP pro vollständigem Ring</string>
+    <string name="casc_elk_total">SP Elche gesamt</string>
+    <string name="casc_elk_line_2">Linien von 2 (5 SP je)</string>
+    <string name="casc_elk_line_3">Linien von 3 (9 SP je)</string>
+    <string name="casc_elk_line_4">Linien von 4 (13 SP je)</string>
+    <string name="casc_elk_rings">Vollständige Ringe (23 SP je)</string>
+    <!-- Hawk hints -->
+    <string name="casc_hawk_a_hint">Falken ohne benachbarten Falken</string>
+    <string name="casc_hawk_a_counter">Isolierte Falken</string>
+    <string name="casc_hawk_b_hint">Isolierte Falken mit direkter Sichtlinie zu einem anderen Falken</string>
+    <string name="casc_hawk_b_counter">Falken (isoliert + mit Sichtlinie)</string>
+    <string name="casc_hawk_c_hint">3 SP pro Sichtlinie zwischen zwei Falken</string>
+    <string name="casc_hawk_c_counter">Sichtlinien</string>
+    <string name="casc_hawk_d_hint">Falkenpaare · Punkte nach eindeutigen Typen zwischen ihnen (0=1, 1=2, 2=3, 3=4, 4=5) · Gesamtwert eingeben</string>
+    <string name="casc_hawk_total">SP Falken gesamt</string>
+    <!-- Fox hints -->
+    <string name="casc_fox_a_hint">Pro Fuchs · eindeutige benachbarte Typen (inkl. Füchse)</string>
+    <string name="casc_fox_b_hint">Pro Fuchs · eindeutige benachbarte Paare (ohne Fuchspaare)</string>
+    <string name="casc_fox_c_hint">Pro Fuchs · häufigster benachbarter Typ (ohne Füchse)</string>
+    <string name="casc_fox_d_hint">Pro Fuchspaar · eindeutige benachbarte Paare</string>
+    <!-- Habitats -->
+    <string name="casc_hab_hint">1 SP pro Plättchen im größten verbundenen Bereich jedes Habitats · +2 SP pro Gruppe ≥7 (Solo)</string>
+    <string name="casc_hab_mtn">⛰️ Berge</string>
+    <string name="casc_hab_for">🌲 Wälder</string>
+    <string name="casc_hab_pra">🌾 Prärien</string>
+    <string name="casc_hab_wet">🌊 Feuchtgebiete</string>
+    <string name="casc_hab_riv">🏞️ Flüsse</string>
+    <string name="casc_hab_bonus">Gruppen ≥7 Plättchen (+2 SP je, nur Solo)</string>
+    <!-- Nature tokens -->
+    <string name="casc_nature_counter">Nicht verwendete Marker (1 SP je)</string>
+    <!-- Rules tab -->
+    <string name="casc_rules_title">Regelübersicht</string>
+    <string name="casc_rules_bears_title">🐻 Bären</string>
+    <string name="casc_rules_bears_body">Nicht benachbarte Gruppen.\nA: Steigende Punkte nach Paarzahl (1P=2, 2P=4, 3P=9, 4P=16, 5P=25).\nB: 10 SP pro Gruppe von genau 3.\nC: Gruppen von 1–3 Bären (2/5/8 SP je) · +3 Bonus wenn alle 3 Größen vorhanden.\nD: Gruppen von 2–4 Bären (5/8/13 SP je).</string>
+    <string name="casc_rules_salmon_title">🐟 Lachse</string>
+    <string name="casc_rules_salmon_body">Läufe: jeder Lachs maximal 2 Nachbarn (kein anderer Lachs außerhalb des Laufs).\nA: Pro Lauf nach Größe (max. 7): 2/4/6/9/11/13/15.\nB: Pro Lauf nach Größe (max. 5): 2/4/6/9/11.\nC: Nur Läufe der Größe 3–5: 3/5/7 SP.\nD: Läufe ≥3 · 1 SP pro Lachs + 1 SP pro benachbartem Tier.</string>
+    <string name="casc_rules_elk_title">🦌 Elche</string>
+    <string name="casc_rules_elk_body">Zwischen Gruppen dürfen sie benachbart sein. Jeder Elch wertet nur einmal.\nA: Gerade Linien · 2 Elche=5, 3=9, 4=13 SP.\nB: Exakte Formen von der Karte.\nC: Gruppen beliebiger Form · 1/3/5/7/9/11/13 SP für Größen 1–7.\nD: Kreisförmige Formation von 7 Elchen · 23 SP pro Ring.</string>
+    <string name="casc_rules_hawk_title">🦅 Falken</string>
+    <string name="casc_rules_hawk_body">A: Isolierte Falken (keine Nachbarn) · 2/5/8/11/14/17 SP für 1–6.\nB: Isoliert mit direkter Sichtlinie zu einem anderen Falken · 3/7/12/16 SP.\nC: 3 SP pro Sichtlinie (von keinem anderen Falken unterbrochen).\nD: Paare · Punkte nach eindeutigen Typen zwischen ihnen (0=1, 1=2, 2=3, 3=4, 4=5).</string>
+    <string name="casc_rules_fox_title">🦊 Füchse</string>
+    <string name="casc_rules_fox_body">A: Pro Fuchs · eindeutige benachbarte Typen (inkl. Füchse) · 0/1/2/3/4/5 SP.\nB: Pro Fuchs · eindeutige benachbarte Paare (ohne Füchse) · 0/1/2/3 SP.\nC: Pro Fuchs · häufigster benachbarter Typ (ohne Füchse) · 0/1/2/3/4 SP.\nD: Pro Fuchspaar · eindeutige benachbarte Paare · 0/1/2/3/4 SP.</string>
+    <string name="casc_rules_hab_title">🌿 Habitate</string>
+    <string name="casc_rules_hab_body">1 SP pro Plättchen im größten verbundenen Bereich jedes Typs (Berge, Wälder, Prärien, Feuchtgebiete, Flüsse).\nSolo-Bonus: +2 SP pro Gebiet mit ≥7 Plättchen.</string>
+    <string name="casc_rules_nature_title">🍄 Naturmarker</string>
+    <string name="casc_rules_nature_body">1 SP pro nicht verwendetem Naturmarker am Spielende.</string>
+    <!-- Setup tab -->
+    <string name="casc_setup_title">Aufbau · Cascadia</string>
+    <string name="casc_setup_subtitle">Plättchenlegespiel — 1 bis 4 Spieler</string>
+    <string name="casc_setup_board_title">🗺️ Hauptspielplan</string>
+    <string name="casc_setup_board_body">• Alle Habitatplättchen verdeckt in einem Stapel mischen.\n• Alle Tiermarker in einem Beutel oder verdeckt mischen.\n• 5 Plättchen-+Marker-Paare ziehen und offen auslegen, um den zentralen Markt zu bilden.\n• 1 Wertungskarte pro Tier (5 Tiere) wählen und sichtbar auslegen.\n  → Standardmodus: Seite A verwenden. Familienmodus: mit ★ markierte Karten verwenden.</string>
+    <string name="casc_setup_player_title">👤 Jeder Spieler erhält</string>
+    <string name="casc_setup_player_body">• 1 Starthabitatplättchen (3 Sechsecke: 1 Einzel- + 2 Doppelplättchen). Offen vor sich auslegen.\n• Naturmarker: gehen in die Mitte, geteilt von allen.\n• Keine individuellen Ressourcen oder persönliches Tableau.</string>
+    <string name="casc_setup_wildlife_title">🦅 Tiermarker</string>
+    <string name="casc_setup_wildlife_body">• Marker für jedes Tier (Bären, Elche, Lachse, Falken, Füchse) werden separat gemischt.\n• Sie kommen aus dem Deck/Beutel, um den zentralen Markt jede Runde aufzufüllen.</string>
+    <string name="casc_setup_start_title">🏆 Spielstart</string>
+    <string name="casc_setup_start_body">• Der Spieler, der zuletzt einen Nationalpark besucht hat, beginnt.\n• Jede Runde: 1 Paar (Plättchen + Marker) vom Markt wählen und zum eigenen Bereich hinzufügen.\n• Du kannst 1 Naturmarker ausgeben, um den Markt aufzufüllen oder zu leeren.</string>
+</resources>

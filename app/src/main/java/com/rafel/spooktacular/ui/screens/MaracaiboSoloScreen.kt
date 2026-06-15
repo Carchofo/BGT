@@ -24,6 +24,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import com.rafel.spooktacular.R
 import com.rafel.spooktacular.ui.theme.*
 import com.rafel.spooktacular.ui.util.CardSoundPlayer
 
@@ -87,7 +89,7 @@ fun MaracaiboSoloScreen(onBack: () -> Unit) {
         topBar = {
             TopAppBar(
                 title = {
-                    Text("⚓  Piratas de Maracaibo", color = GhostWhite,
+                    Text(stringResource(R.string.mr_title), color = GhostWhite,
                         fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleLarge)
                 },
                 navigationIcon = {
@@ -100,7 +102,7 @@ fun MaracaiboSoloScreen(onBack: () -> Unit) {
                 actions = {
                     if (selectedTab == 0 && !setup) {
                         Text(
-                            "Ronda $round / 3",
+                            stringResource(R.string.mr_round, round),
                             color = PirateGold, fontWeight = FontWeight.Bold,
                             style = MaterialTheme.typography.bodyMedium,
                             modifier = Modifier.padding(end = 16.dp)
@@ -113,10 +115,10 @@ fun MaracaiboSoloScreen(onBack: () -> Unit) {
         bottomBar = {
             NavigationBar(containerColor = NavyDeep, tonalElevation = 0.dp) {
                 listOf(
-                    Triple("Setup",      Icons.Default.Settings,  0),
-                    Triple("Solitario",  Icons.Default.SmartToy,    1),
-                    Triple("Puntuación", Icons.Default.EmojiEvents, 2),
-                    Triple("Reglas",     Icons.Default.MenuBook,    3)
+                    Triple(stringResource(R.string.nav_setup),   Icons.Default.Settings,    0),
+                    Triple(stringResource(R.string.nav_solo),    Icons.Default.SmartToy,    1),
+                    Triple(stringResource(R.string.nav_scoring), Icons.Default.EmojiEvents, 2),
+                    Triple(stringResource(R.string.nav_rules),   Icons.Default.MenuBook,    3)
                 ).forEach { (label, icon, idx) ->
                     NavigationBarItem(
                         selected = selectedTab == idx,
@@ -190,7 +192,7 @@ fun MaracaiboSoloScreen(onBack: () -> Unit) {
                         )
                         Spacer(Modifier.width(8.dp))
                         Text(
-                            if (showPanel) "Cerrar turno" else "⚡ Turno de Jordán",
+                            if (showPanel) stringResource(R.string.mr_btn_close_turn) else stringResource(R.string.mr_btn_jordan_turn),
                             fontWeight = FontWeight.Bold, fontSize = 16.sp
                         )
                     }
@@ -257,7 +259,7 @@ fun MaracaiboSoloScreen(onBack: () -> Unit) {
                             shape  = RoundedCornerShape(10.dp)
                         ) {
                             Text(
-                                if (round < 3) "→ Fin Ronda $round" else "🏆 Puntuación Final",
+                                if (round < 3) stringResource(R.string.mr_btn_end_round, round) else stringResource(R.string.mr_btn_final_score),
                                 color = PirateGold, fontWeight = FontWeight.Bold
                             )
                         }
@@ -267,7 +269,7 @@ fun MaracaiboSoloScreen(onBack: () -> Unit) {
                             border = BorderStroke(1.dp, SpookyPurple.copy(0.5f)),
                             shape  = RoundedCornerShape(10.dp)
                         ) {
-                            Text("📊 Calcular PV", color = SpookyPurple)
+                            Text(stringResource(R.string.mr_btn_calc_vp), color = SpookyPurple)
                         }
                     }
 
@@ -297,9 +299,9 @@ private fun MaracaiboSetup(
     ) {
         Spacer(Modifier.height(12.dp))
         Text("⚓", fontSize = 54.sp)
-        Text("Piratas de Maracaibo", color = PirateGold,
+        Text(stringResource(R.string.mr_solo_title), color = PirateGold,
             fontWeight = FontWeight.Black, fontSize = 24.sp, textAlign = TextAlign.Center)
-        Text("Modo Solitario vs Jordán", color = GhostWhite.copy(0.65f),
+        Text(stringResource(R.string.mr_solo_subtitle), color = GhostWhite.copy(0.65f),
             style = MaterialTheme.typography.bodyLarge, textAlign = TextAlign.Center)
 
         HorizontalDivider(color = PirateGold.copy(0.25f))
@@ -308,7 +310,7 @@ private fun MaracaiboSetup(
         Surface(color = NavyCard, shape = RoundedCornerShape(16.dp),
             border = BorderStroke(1.dp, PirateGold.copy(0.3f))) {
             Column(Modifier.fillMaxWidth().padding(20.dp)) {
-                Text("Dificultad", color = PirateGold, fontWeight = FontWeight.Black, fontSize = 18.sp)
+                Text(stringResource(R.string.mr_difficulty_label), color = PirateGold, fontWeight = FontWeight.Black, fontSize = 18.sp)
                 Spacer(Modifier.height(6.dp))
                 Text(
                     when (bCards) {
@@ -319,7 +321,7 @@ private fun MaracaiboSetup(
                     },
                     color = GhostWhite, style = MaterialTheme.typography.bodyMedium
                 )
-                Text("Cartas B en el mazo de Jordán: $bCards de 6",
+                Text(stringResource(R.string.mr_b_cards_count, bCards),
                     color = GhostWhite.copy(0.5f), style = MaterialTheme.typography.bodySmall)
                 Spacer(Modifier.height(10.dp))
                 Slider(
@@ -354,8 +356,8 @@ private fun MaracaiboSetup(
             border = BorderStroke(1.dp, GhostWhite.copy(0.12f))) {
             Row(Modifier.fillMaxWidth().padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
                 Column(Modifier.weight(1f)) {
-                    Text("⚔️  Expansión Piratas", color = GhostWhite, fontWeight = FontWeight.Bold)
-                    Text("Reglas de Fuertes y capitanes para Jordán",
+                    Text(stringResource(R.string.mr_expansion_title), color = GhostWhite, fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.mr_expansion_subtitle),
                         color = GhostWhite.copy(0.5f), style = MaterialTheme.typography.bodySmall)
                 }
                 Switch(
@@ -371,7 +373,7 @@ private fun MaracaiboSetup(
         // Setup steps
         Surface(color = GhostWhite.copy(0.03f), shape = RoundedCornerShape(12.dp)) {
             Column(Modifier.fillMaxWidth().padding(16.dp)) {
-                Text("📋 Preparación", color = GhostWhite.copy(0.55f),
+                Text(stringResource(R.string.mr_prep_title), color = GhostWhite.copy(0.55f),
                     fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelLarge)
                 Spacer(Modifier.height(10.dp))
                 val steps = listOf(
@@ -407,7 +409,7 @@ private fun MaracaiboSetup(
             colors = ButtonDefaults.buttonColors(containerColor = PirateGold),
             shape = RoundedCornerShape(14.dp)
         ) {
-            Text("⚓  ¡Zarpar!", color = NavyDeep, fontWeight = FontWeight.Black, fontSize = 18.sp)
+            Text(stringResource(R.string.btn_set_sail), color = NavyDeep, fontWeight = FontWeight.Black, fontSize = 18.sp)
         }
         Spacer(Modifier.height(24.dp))
     }
@@ -427,13 +429,11 @@ private fun MaracaiboGulfToggle(jordanInGulf: Boolean, onToggle: (Boolean) -> Un
             Text("🌊", fontSize = 22.sp)
             Spacer(Modifier.width(10.dp))
             Column(Modifier.weight(1f)) {
-                Text("Jordán está en el Golfo", color = GhostWhite, fontWeight = FontWeight.Bold,
+                Text(stringResource(R.string.mr_jordan_in_gulf_title), color = GhostWhite, fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.bodyMedium)
                 Text(
-                    if (jordanInGulf)
-                        "Su próximo turno: se mueve a Maracaibo → +1 mejora → +6 PV"
-                    else
-                        "Activa si Jordán termina su turno en el Golfo",
+                    if (jordanInGulf) stringResource(R.string.mr_jordan_in_gulf_active)
+                    else stringResource(R.string.mr_jordan_in_gulf_inactive),
                     color = GhostWhite.copy(0.5f), style = MaterialTheme.typography.bodySmall
                 )
             }
@@ -462,17 +462,17 @@ private fun MaracaiboTracker(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text("🏴‍☠️", fontSize = 20.sp)
                 Spacer(Modifier.width(8.dp))
-                Text("Jordán", color = PirateGold, fontWeight = FontWeight.Black, fontSize = 18.sp)
+                Text(stringResource(R.string.mr_jordan_title), color = PirateGold, fontWeight = FontWeight.Black, fontSize = 18.sp)
                 Spacer(Modifier.weight(1f))
                 Surface(color = HalloweenOrange.copy(0.18f), shape = RoundedCornerShape(8.dp)) {
-                    Text("$vp PV acumulados", color = HalloweenOrange, fontWeight = FontWeight.Bold,
+                    Text(stringResource(R.string.mr_jordan_vp, vp), color = HalloweenOrange, fontWeight = FontWeight.Bold,
                         style = MaterialTheme.typography.labelLarge,
                         modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp))
                 }
             }
 
             Spacer(Modifier.height(12.dp))
-            Text("Marcador Escondite (Incursión/Exploración)",
+            Text(stringResource(R.string.mr_hideout_marker),
                 color = GhostWhite.copy(0.5f), style = MaterialTheme.typography.labelSmall)
             Spacer(Modifier.height(6.dp))
 
@@ -536,20 +536,20 @@ private fun MaracaiboStrength(
         border = BorderStroke(1.dp, GhostWhite.copy(0.1f))) {
         Row(Modifier.fillMaxWidth().padding(14.dp)) {
             Column(Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
-                Text("🗡️  Incursión actual", color = HalloweenOrange,
+                Text(stringResource(R.string.mr_current_raid), color = HalloweenOrange,
                     fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelLarge)
                 Spacer(Modifier.height(4.dp))
                 if (raidVP > 0) Text("+$raidVP PV", color = GhostWhite,
                     fontWeight = FontWeight.Bold, fontSize = 16.sp)
                 Text("+$raidTreasures tesoro${if (raidTreasures > 1) "s" else ""}",
                     color = PirateGold, fontWeight = FontWeight.Bold, fontSize = 16.sp)
-                if (checkIsland) Text("(verifica si supera en tesoros)", color = GhostWhite.copy(0.4f),
+                if (checkIsland) Text(stringResource(R.string.mr_verify_treasures), color = GhostWhite.copy(0.4f),
                     style = MaterialTheme.typography.labelSmall, textAlign = TextAlign.Center)
             }
             Box(Modifier.width(1.dp).height(55.dp).background(GhostWhite.copy(0.1f))
                 .align(Alignment.CenterVertically))
             Column(Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
-                Text("🧭  Exploración actual", color = Color(0xFF4FC3F7),
+                Text(stringResource(R.string.mr_current_explore), color = Color(0xFF4FC3F7),
                     fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelLarge)
                 Spacer(Modifier.height(4.dp))
                 Text("+$exploreVP PV", color = GhostWhite, fontWeight = FontWeight.Bold, fontSize = 16.sp)
@@ -583,17 +583,17 @@ private fun MaracaiboTurnPanel(
         border = BorderStroke(1.5.dp, HalloweenOrange.copy(0.5f))) {
         Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
 
-            Text("Turno de Jordán", color = HalloweenOrange,
+            Text(stringResource(R.string.mr_jordan_turn), color = HalloweenOrange,
                 fontWeight = FontWeight.Black, fontSize = 18.sp)
 
             if (jordanInGulf) {
                 // ── Special: Gulf → Maracaibo
                 Surface(color = PirateGold.copy(0.12f), shape = RoundedCornerShape(10.dp)) {
                     Column(Modifier.fillMaxWidth().padding(12.dp)) {
-                        Text("⚡ Jordán estaba en el Golfo", color = PirateGold, fontWeight = FontWeight.Bold)
+                        Text(stringResource(R.string.mr_jordan_in_gulf_note), color = PirateGold, fontWeight = FontWeight.Bold)
                         Spacer(Modifier.height(4.dp))
                         Text(
-                            "No se revela carta.\n→ Jordán se mueve a Maracaibo\n→ +1 Mejora de barco\n→ +6 PV",
+                            stringResource(R.string.mr_gulf_detail),
                             color = GhostWhite.copy(0.8f), style = MaterialTheme.typography.bodySmall
                         )
                     }
@@ -601,13 +601,13 @@ private fun MaracaiboTurnPanel(
                 Button(onClick = onMaracaibo, modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(containerColor = PirateGold),
                     shape = RoundedCornerShape(10.dp)) {
-                    Text("✓  Ejecutar — Maracaibo", color = NavyDeep, fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.btn_execute_maracaibo), color = NavyDeep, fontWeight = FontWeight.Bold)
                 }
 
             } else {
                 // ── B card toggle
                 Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                    Text("¿Es carta B?", color = GhostWhite, style = MaterialTheme.typography.bodyMedium,
+                    Text(stringResource(R.string.mr_is_b_card), color = GhostWhite, style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.weight(1f))
                     Switch(
                         checked = isBCard, onCheckedChange = { isBCard = it; bonusDone = false },
@@ -623,10 +623,10 @@ private fun MaracaiboTurnPanel(
                     Surface(color = HalloweenOrange.copy(0.08f), shape = RoundedCornerShape(10.dp),
                         border = BorderStroke(1.dp, HalloweenOrange.copy(0.3f))) {
                         Column(Modifier.fillMaxWidth().padding(12.dp)) {
-                            Text("⭐ Acción de bonificación (primero)", color = HalloweenOrange,
+                            Text(stringResource(R.string.mr_bonus_action_title), color = HalloweenOrange,
                                 fontWeight = FontWeight.Bold, style = MaterialTheme.typography.bodyMedium)
                             Spacer(Modifier.height(6.dp))
-                            Text("Realiza la acción de bonificación de la carta B y pulsa el botón correspondiente:",
+                            Text(stringResource(R.string.mr_bonus_action_body),
                                 color = GhostWhite.copy(0.6f), style = MaterialTheme.typography.bodySmall)
                             Spacer(Modifier.height(8.dp))
                             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -649,7 +649,7 @@ private fun MaracaiboTurnPanel(
                 } else {
                     // ── Main actions in priority order
                     Text(
-                        "Jordán intenta cada acción en orden. Realiza la primera posible:",
+                        stringResource(R.string.mr_main_actions_hint),
                         color = GhostWhite.copy(0.55f), style = MaterialTheme.typography.bodySmall
                     )
 
@@ -797,7 +797,7 @@ private fun MaracaiboActionCard(
                         colors = ButtonDefaults.buttonColors(containerColor = color),
                         shape = RoundedCornerShape(8.dp)
                     ) {
-                        Text("✓  Jordán realiza esta acción", color = NavyDeep, fontWeight = FontWeight.Bold)
+                        Text(stringResource(R.string.btn_jordan_action), color = NavyDeep, fontWeight = FontWeight.Bold)
                     }
                 }
             }
@@ -828,9 +828,9 @@ private fun MaracaiboUpgradeDialog(
     Surface(color = Color(0xFF150B2E), shape = RoundedCornerShape(14.dp),
         border = BorderStroke(1.5.dp, SpookyPurple.copy(0.6f))) {
         Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text("⚓  Efecto de Mejora de Barco", color = SpookyPurple,
+            Text(stringResource(R.string.mr_upgrade_title), color = SpookyPurple,
                 fontWeight = FontWeight.Black, fontSize = 16.sp)
-            Text("Mira el tablero de Jordán y selecciona la ranura que se acaba de rellenar:",
+            Text(stringResource(R.string.mr_upgrade_hint),
                 color = GhostWhite.copy(0.55f), style = MaterialTheme.typography.bodySmall)
 
             effects.forEachIndexed { idx, (em, title, desc) ->
@@ -869,7 +869,7 @@ private fun MaracaiboRulesCard() {
         border = BorderStroke(1.dp, GhostWhite.copy(0.07f))) {
         Column(Modifier.fillMaxWidth().clickable { expanded = !expanded }.padding(14.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text("📋  Reglas de Jordán", color = GhostWhite.copy(0.5f),
+                Text(stringResource(R.string.mr_rules_reference), color = GhostWhite.copy(0.5f),
                     fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelLarge,
                     modifier = Modifier.weight(1f))
                 Icon(if (expanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
@@ -1033,7 +1033,7 @@ private fun MrScoringContent(
         Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Text("Conteo de Puntuación", style = MaterialTheme.typography.titleMedium,
+        Text(stringResource(R.string.mr_score_title), style = MaterialTheme.typography.titleMedium,
             color = PirateGold, fontWeight = FontWeight.Black)
 
         // ── Jordán (auto-calculado) ───────────────────────────────────────────
@@ -1043,7 +1043,7 @@ private fun MrScoringContent(
                 Row(Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically) {
-                    Text("🤖 Jordán", style = MaterialTheme.typography.titleSmall,
+                    Text(stringResource(R.string.mr_score_jordan), style = MaterialTheme.typography.titleSmall,
                         color = PirateGold, fontWeight = FontWeight.Bold)
                     Text("$jordanTotal PV", color = PirateGold,
                         fontWeight = FontWeight.Black, fontSize = 17.sp)
@@ -1080,7 +1080,7 @@ private fun MrScoringContent(
                 Row(Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically) {
-                    Text("🧑 Tú", style = MaterialTheme.typography.titleSmall,
+                    Text(stringResource(R.string.mr_score_you), style = MaterialTheme.typography.titleSmall,
                         color = Color(0xFF4AEE7A), fontWeight = FontWeight.Bold)
                     Text("$yourTotal PV", color = Color(0xFF4AEE7A),
                         fontWeight = FontWeight.Black, fontSize = 17.sp)
@@ -1105,7 +1105,7 @@ private fun MrScoringContent(
                 // Bonus ≥6 misiones toggle
                 Row(Modifier.fillMaxWidth().padding(vertical = 4.dp),
                     verticalAlignment = Alignment.CenterVertically) {
-                    Text("Bonus ≥6 misiones  (+10 PV)",
+                    Text(stringResource(R.string.mr_mission_bonus_label),
                         style = MaterialTheme.typography.bodySmall,
                         color = GhostWhite.copy(0.75f), modifier = Modifier.weight(1f))
                     Switch(
@@ -1137,13 +1137,13 @@ private fun MrScoringContent(
         ) {
             Column(Modifier.padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    if (win) "🎉 ¡GANASTE!" else if (tie) "🤝 EMPATE" else "💀 JORDÁN GANA",
+                    if (win) stringResource(R.string.mr_result_win) else if (tie) stringResource(R.string.mr_result_tie) else stringResource(R.string.mr_result_lose),
                     style = MaterialTheme.typography.titleLarge,
                     color = if (win) Color(0xFF4AEE7A) else if (tie) PirateGold else Color(0xFFAA2222),
                     fontWeight = FontWeight.Black
                 )
                 Spacer(Modifier.height(6.dp))
-                Text("Tú: $yourTotal PV  ·  Jordán: $jordanTotal PV",
+                Text(stringResource(R.string.mr_you_vs_jordan, yourTotal, jordanTotal),
                     style = MaterialTheme.typography.bodyMedium, color = GhostWhite)
             }
         }
@@ -1193,7 +1193,7 @@ private fun MrRulesContent() {
         Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        Text("Referencia Rápida", style = MaterialTheme.typography.titleMedium,
+        Text(stringResource(R.string.mr_rules_title), style = MaterialTheme.typography.titleMedium,
             color = PirateGold, fontWeight = FontWeight.Black)
         MaracaiboRulesCard()
         Spacer(Modifier.height(8.dp))
@@ -1208,37 +1208,15 @@ internal fun MrSetupTab(modifier: Modifier = Modifier) {
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Text("Preparación · Piratas de Maracaibo", color = GhostWhite, fontWeight = FontWeight.Bold,
+        Text(stringResource(R.string.mr_setup_title), color = GhostWhite, fontWeight = FontWeight.Bold,
             style = MaterialTheme.typography.titleLarge)
-        Text("1 a 4 jugadores · El Caribe, s. XVII",
+        Text(stringResource(R.string.mr_setup_subtitle),
             color = GhostWhite.copy(alpha = 0.4f), style = MaterialTheme.typography.bodySmall)
 
-        MrSetupBlock("🗺️ Tablero principal",
-            "• Despliega el tablero del Caribe con los puertos y ubicaciones.\n" +
-            "• Coloca el marcador de ronda en la casilla 1.\n" +
-            "• Reparte las cartas de puerto en sus ubicaciones según las instrucciones.\n" +
-            "• Coloca las misiones y mejoras de barco disponibles.")
-        MrSetupBlock("👤 Cada jugador recibe",
-            "• 1 tablero de barco.\n" +
-            "• 24 discos → 2 en cada espacio circular del tablero de barco.\n" +
-            "• Barco → casilla Havana del tablero principal.\n" +
-            "• Explorador → casilla inicial del track de exploración.\n" +
-            "• 1 ficha en el track de combate → casilla 1.\n" +
-            "• 1 ficha en el track de ingresos de doblones → casilla 8.\n" +
-            "• 1 ficha en el track de ingresos de PV → casilla 0.\n" +
-            "• 1 disco en la casilla 0 del track de PV principal.\n" +
-            "• 1 ficha de influencia en la casilla 0 de cada nación (3 fichas).\n" +
-            "• 8 cartas del mazo A (roba del mazo A sin mirar).")
-        MrSetupBlock("🪙 Doblones de inicio",
-            "• 1º jugador → 8 doblones.\n" +
-            "• 2º jugador → 9 doblones.\n" +
-            "• 3º jugador → 10 doblones.\n" +
-            "• 4º jugador → 11 doblones.")
-        MrSetupBlock("🤖 Solo mode — Jordán",
-            "• Jordán no recibe tablero propio.\n" +
-            "• Lleva los contadores de: ríos explorados, mejoras, misiones y residencias.\n" +
-            "• El jugador configura el modo (estándar / expansión) en la pantalla de inicio.\n" +
-            "• Ver tab Solitario para el tracker de turno de Jordán.")
+        MrSetupBlock(stringResource(R.string.mr_setup_board_title), stringResource(R.string.mr_setup_board_body))
+        MrSetupBlock(stringResource(R.string.mr_setup_player_title), stringResource(R.string.mr_setup_player_body))
+        MrSetupBlock(stringResource(R.string.mr_setup_doubloons_title), stringResource(R.string.mr_setup_doubloons_body))
+        MrSetupBlock(stringResource(R.string.mr_setup_solo_title), stringResource(R.string.mr_setup_solo_body))
     }
 }
 

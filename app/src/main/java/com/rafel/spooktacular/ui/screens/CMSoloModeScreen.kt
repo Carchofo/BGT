@@ -21,6 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import com.rafel.spooktacular.R
 import com.rafel.spooktacular.ui.theme.*
 import com.rafel.spooktacular.ui.util.CardSoundPlayer
@@ -115,11 +116,14 @@ private val TINGENT_CARDS = listOf(
 // ── Acciones del tracker ──────────────────────────────────────────────────────
 
 enum class TrackerAction {
-    NONE,           // Sin acción
-    FACEUP,         // Toma carta del Territorio Salvaje bocarriba + Huevo
-    FACEDOWN,       // Roba carta del mazo bocabajo
-    DISCOVERY,      // Descubrimiento: loseta Hábitat + Huevo del lago
-    TIME_ADVANCE    // Avanza marcador de Tiempo
+    NONE,            // Sin acción
+    REVEAL_TERRAIN,  // Revelar terreno (océano con huevo; empate: más a la izq.; sin huevo: más a la izq.)
+    TIME_ADVANCE,    // Avanza tiempo / Recarga de Tingent
+    CLAIM_YELLOW,    // Reclama trofeo amarillo
+    CLAIM_BROWN,     // Reclama trofeo marrón
+    CLAIM_BLUE,      // Reclama trofeo azul
+    TURN_BROWN,      // Voltea a zona marrón + Reclama logro azul (el que más puntos dé)
+    TURN_BROWN_TIME  // Voltea a zona marrón + Avanza marcador de tiempo
 }
 
 data class TrackerActionInfo(
@@ -131,58 +135,85 @@ data class TrackerActionInfo(
 
 val TRACKER_ACTION_INFO = mapOf(
     TrackerAction.NONE to TrackerActionInfo(TrackerAction.NONE, "", "", ""),
-    TrackerAction.FACEUP to TrackerActionInfo(
-        TrackerAction.FACEUP, "📋", "Carta bocarriba",
-        "Toma del Territorio Salvaje la carta de la especie objetivo con mayor Puntuación Final. Colócala bocarriba. Obtén 1 Huevo de esa especie."
-    ),
-    TrackerAction.FACEDOWN to TrackerActionInfo(
-        TrackerAction.FACEDOWN, "📥", "Carta bocabajo",
-        "Roba 1 carta del mazo de Criaturas y colócala bocabajo en el área de Tingent. Gana PV por ella al final según la dificultad."
-    ),
-    TrackerAction.DISCOVERY to TrackerActionInfo(
-        TrackerAction.DISCOVERY, "🗺️", "Descubrimiento",
-        "Toma una loseta de Hábitat y colócala en el hexágono de Lago más a la izquierda con Huevo. Tingent obtiene ese Huevo."
+    TrackerAction.REVEAL_TERRAIN to TrackerActionInfo(
+        TrackerAction.REVEAL_TERRAIN, "🏝️", "Revelar terreno",
+        "Revela el océano según las reglas de Tingent:\n• Si hay huevo: el océano que tenga huevo (empate → más a la izquierda).\n• Si no hay huevo: el océano más a la izquierda."
     ),
     TrackerAction.TIME_ADVANCE to TrackerActionInfo(
         TrackerAction.TIME_ADVANCE, "⏱️", "Avanza Tiempo",
-        "Avanza el marcador de la Tabla de Tiempo un espacio. Aplica inmediatamente el efecto del icono de Tiempo correspondiente."
+        "Avanza el marcador de la Tabla de Tiempo un espacio. Aplica el efecto del icono correspondiente. Recarga de Tingent."
+    ),
+    TrackerAction.CLAIM_YELLOW to TrackerActionInfo(
+        TrackerAction.CLAIM_YELLOW, "🟡", "Reclama trofeo amarillo",
+        "Tingent reclama el trofeo amarillo disponible."
+    ),
+    TrackerAction.CLAIM_BROWN to TrackerActionInfo(
+        TrackerAction.CLAIM_BROWN, "🟤", "Reclama trofeo marrón",
+        "Tingent reclama un trofeo marrón disponible (si queda alguno)."
+    ),
+    TrackerAction.CLAIM_BLUE to TrackerActionInfo(
+        TrackerAction.CLAIM_BLUE, "🔵", "Reclama trofeo azul",
+        "Tingent reclama un trofeo azul disponible (si queda alguno)."
+    ),
+    TrackerAction.TURN_BROWN to TrackerActionInfo(
+        TrackerAction.TURN_BROWN, "🔄🟤", "¡Zona Marrón! + Logro azul",
+        "El marcador entra en la zona marrón.\nAdemás Tingent reclama el logro azul: elige el que más puntos dé."
+    ),
+    TrackerAction.TURN_BROWN_TIME to TrackerActionInfo(
+        TrackerAction.TURN_BROWN_TIME, "🔄🟤", "¡Zona Marrón! + Avanza Tiempo",
+        "El marcador entra en la zona marrón.\nAdemás avanza el marcador de la Tabla de Tiempo un espacio."
     )
 )
 
-// Grid 4×6 = 24 posiciones. Mapeado desde las fotos del tablero físico.
-// ⚠️ Verificar contra el tablero físico y corregir si es necesario.
+// ── Tracks verificados contra tablero físico ──────────────────────────────────
+// ✅ SALVAJE verificado · ⚠️ resto pendiente de verificación con tablero físico
 
-private val TRACK_PEREZOSO = listOf( // 1★
-    TrackerAction.FACEUP, TrackerAction.FACEUP, TrackerAction.FACEDOWN, TrackerAction.FACEUP, TrackerAction.NONE, TrackerAction.NONE,
-    TrackerAction.FACEDOWN, TrackerAction.FACEDOWN, TrackerAction.FACEUP, TrackerAction.FACEDOWN, TrackerAction.NONE, TrackerAction.NONE,
-    // --- zona marrón desde pos 13 ---
-    TrackerAction.FACEUP, TrackerAction.FACEDOWN, TrackerAction.NONE, TrackerAction.DISCOVERY, TrackerAction.TIME_ADVANCE, TrackerAction.NONE,
-    TrackerAction.FACEDOWN, TrackerAction.NONE, TrackerAction.FACEDOWN, TrackerAction.FACEDOWN, TrackerAction.FACEDOWN, TrackerAction.NONE
+private val TRACK_SALVAJE = listOf( // 3★ ✅ verificado
+    // pos 1-6 (zona amarilla)
+    TrackerAction.NONE, TrackerAction.NONE, TrackerAction.REVEAL_TERRAIN, TrackerAction.TIME_ADVANCE, TrackerAction.NONE, TrackerAction.NONE,
+    // pos 7-10 (zona amarilla)
+    TrackerAction.CLAIM_YELLOW, TrackerAction.TIME_ADVANCE, TrackerAction.REVEAL_TERRAIN, TrackerAction.NONE,
+    // pos 11: voltea a marrón + logro azul
+    TrackerAction.TURN_BROWN,
+    // pos 12-24 (zona marrón)
+    TrackerAction.TIME_ADVANCE,
+    TrackerAction.REVEAL_TERRAIN, TrackerAction.CLAIM_BROWN, TrackerAction.CLAIM_YELLOW, TrackerAction.TIME_ADVANCE,
+    TrackerAction.CLAIM_BROWN, TrackerAction.NONE,
+    TrackerAction.CLAIM_BLUE, TrackerAction.CLAIM_BROWN,
+    TrackerAction.TIME_ADVANCE, TrackerAction.TIME_ADVANCE, TrackerAction.TIME_ADVANCE, TrackerAction.TIME_ADVANCE
 )
 
-private val TRACK_FACILON = listOf( // 2★
-    TrackerAction.FACEUP, TrackerAction.FACEUP, TrackerAction.FACEDOWN, TrackerAction.FACEUP, TrackerAction.NONE, TrackerAction.NONE,
-    TrackerAction.FACEDOWN, TrackerAction.FACEUP, TrackerAction.FACEUP, TrackerAction.FACEDOWN, TrackerAction.NONE, TrackerAction.NONE,
-    // --- zona marrón desde pos 10 ---
-    TrackerAction.FACEUP, TrackerAction.FACEDOWN, TrackerAction.FACEUP, TrackerAction.NONE, TrackerAction.DISCOVERY, TrackerAction.TIME_ADVANCE,
-    TrackerAction.FACEDOWN, TrackerAction.FACEDOWN, TrackerAction.FACEUP, TrackerAction.FACEDOWN, TrackerAction.FACEDOWN, TrackerAction.NONE
+// ⚠️ Tracks pendientes de verificación — se muestran sin acciones hasta confirmar
+private val N = TrackerAction.NONE
+private val TRACK_PEREZOSO = listOf( // 1★ ✅ verificado
+    // pos 1-6 (zona amarilla)
+    N, N, TrackerAction.REVEAL_TERRAIN, TrackerAction.TIME_ADVANCE, N, N,
+    // pos 7-12
+    TrackerAction.REVEAL_TERRAIN, TrackerAction.TIME_ADVANCE, TrackerAction.CLAIM_YELLOW, N, N, TrackerAction.REVEAL_TERRAIN,
+    // pos 13-15
+    TrackerAction.TIME_ADVANCE, TrackerAction.CLAIM_BLUE, N,
+    // pos 16: voltea a marrón (solo cambio de zona, sin acción extra)
+    N,
+    // pos 17-24 (zona marrón)
+    TrackerAction.CLAIM_BROWN, TrackerAction.CLAIM_YELLOW,
+    TrackerAction.TIME_ADVANCE, TrackerAction.CLAIM_BROWN,
+    TrackerAction.CLAIM_BLUE, TrackerAction.TIME_ADVANCE,
+    TrackerAction.CLAIM_BROWN, TrackerAction.TIME_ADVANCE
 )
-
-private val TRACK_SALVAJE = listOf( // 3★
-    TrackerAction.FACEUP, TrackerAction.FACEDOWN, TrackerAction.FACEUP, TrackerAction.FACEUP, TrackerAction.NONE, TrackerAction.NONE,
-    TrackerAction.FACEDOWN, TrackerAction.FACEUP, TrackerAction.FACEDOWN, TrackerAction.FACEUP, TrackerAction.DISCOVERY, TrackerAction.NONE,
-    // --- zona marrón desde pos 7 ---
-    TrackerAction.FACEUP, TrackerAction.FACEDOWN, TrackerAction.FACEUP, TrackerAction.FACEDOWN, TrackerAction.FACEUP, TrackerAction.TIME_ADVANCE,
-    TrackerAction.FACEDOWN, TrackerAction.FACEUP, TrackerAction.FACEDOWN, TrackerAction.FACEDOWN, TrackerAction.FACEUP, TrackerAction.FACEDOWN
+private val TRACK_FACILON = listOf( // 2★ ✅ verificado
+    // pos 1-6 (zona amarilla)
+    N, N, TrackerAction.REVEAL_TERRAIN, TrackerAction.TIME_ADVANCE, N, N,
+    // pos 7-12
+    TrackerAction.CLAIM_YELLOW, TrackerAction.TIME_ADVANCE, TrackerAction.REVEAL_TERRAIN, N, N, TrackerAction.CLAIM_BLUE,
+    // pos 13: voltea a marrón + avanza tiempo
+    TrackerAction.TURN_BROWN_TIME,
+    // pos 14-24 (zona marrón)
+    TrackerAction.REVEAL_TERRAIN, TrackerAction.CLAIM_BROWN, TrackerAction.CLAIM_YELLOW, N,
+    TrackerAction.CLAIM_BROWN, TrackerAction.TIME_ADVANCE,
+    TrackerAction.CLAIM_BLUE, TrackerAction.CLAIM_BROWN,
+    TrackerAction.TIME_ADVANCE, TrackerAction.TIME_ADVANCE, TrackerAction.TIME_ADVANCE
 )
-
-private val TRACK_TERRORIFICO = listOf( // 4★
-    TrackerAction.FACEUP, TrackerAction.FACEDOWN, TrackerAction.FACEUP, TrackerAction.FACEDOWN, TrackerAction.DISCOVERY, TrackerAction.NONE,
-    TrackerAction.FACEUP, TrackerAction.FACEDOWN, TrackerAction.FACEUP, TrackerAction.FACEDOWN, TrackerAction.FACEUP, TrackerAction.TIME_ADVANCE,
-    // --- zona marrón desde pos 4 ---
-    TrackerAction.FACEDOWN, TrackerAction.FACEUP, TrackerAction.FACEDOWN, TrackerAction.FACEUP, TrackerAction.FACEDOWN, TrackerAction.FACEUP,
-    TrackerAction.FACEDOWN, TrackerAction.FACEUP, TrackerAction.FACEDOWN, TrackerAction.FACEDOWN, TrackerAction.FACEUP, TrackerAction.FACEDOWN
-)
+private val TRACK_TERRORIFICO = List(24) { N } // 4★ ⚠️ pendiente
 
 // ── Dificultades ──────────────────────────────────────────────────────────────
 
@@ -196,9 +227,9 @@ data class TingentDifficulty(
 )
 
 private val DIFFICULTIES = listOf(
-    TingentDifficulty("Perezoso",    1, 1, 13, 1, TRACK_PEREZOSO),
-    TingentDifficulty("Facilón",     2, 2, 10, 2, TRACK_FACILON),
-    TingentDifficulty("Salvaje",     3, 3,  7, 3, TRACK_SALVAJE),
+    TingentDifficulty("Perezoso",    1, 1, 16, 1, TRACK_PEREZOSO),
+    TingentDifficulty("Facilón",     2, 2, 13, 2, TRACK_FACILON),  // brownThreshold=13 ✅
+    TingentDifficulty("Salvaje",     3, 3, 11, 3, TRACK_SALVAJE),
     TingentDifficulty("Terrorífico", 4, 4,  4, 3, TRACK_TERRORIFICO)
 )
 
@@ -281,13 +312,13 @@ fun CMSoloModeScreen(onBack: () -> Unit = {}) {
     }
 
     val zoneColor = if (inBrownZone) BrownZone else YellowZone
-    val zoneName  = if (inBrownZone) "Zona Marrón" else "Zona Amarilla"
+    val zoneName  = if (inBrownZone) stringResource(R.string.cm_zone_brown) else stringResource(R.string.cm_zone_yellow)
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
-                    Text("🦋  Criaturas Maravillosas",
+                    Text(stringResource(R.string.cm_title),
                         style = MaterialTheme.typography.titleMedium,
                         color = GhostWhite, fontWeight = FontWeight.Bold)
                 },
@@ -306,10 +337,10 @@ fun CMSoloModeScreen(onBack: () -> Unit = {}) {
         bottomBar = {
             NavigationBar(containerColor = CMBackground, tonalElevation = 0.dp) {
                 listOf(
-                    Triple("Setup",      Icons.Default.Settings,   0),
-                    Triple("Solitario",  Icons.Default.SmartToy,     1),
-                    Triple("Puntuación", Icons.Default.EmojiEvents,  2),
-                    Triple("Reglas",     Icons.Default.MenuBook,     3)
+                    Triple(stringResource(R.string.nav_setup),   Icons.Default.Settings,    0),
+                    Triple(stringResource(R.string.nav_solo),    Icons.Default.SmartToy,    1),
+                    Triple(stringResource(R.string.nav_scoring), Icons.Default.EmojiEvents, 2),
+                    Triple(stringResource(R.string.nav_rules),   Icons.Default.MenuBook,    3)
                 ).forEach { (label, icon, idx) ->
                     NavigationBarItem(
                         selected = selectedTab == idx,
@@ -387,15 +418,15 @@ private fun CMSetupScreen(
     ) {
         Text("🦋", fontSize = 56.sp)
         Spacer(Modifier.height(12.dp))
-        Text("Modo Solitario",
+        Text(stringResource(R.string.cm_solo_mode_title),
             style = MaterialTheme.typography.headlineMedium,
             color = YellowZone, fontWeight = FontWeight.Black,
             textAlign = TextAlign.Center)
-        Text("vs. Tingent", style = MaterialTheme.typography.bodyLarge,
+        Text(stringResource(R.string.cm_vs_tingent), style = MaterialTheme.typography.bodyLarge,
             color = GhostWhite.copy(alpha = 0.5f))
 
         Spacer(Modifier.height(32.dp))
-        Text("Nivel de dificultad",
+        Text(stringResource(R.string.cm_difficulty_label),
             style = MaterialTheme.typography.titleSmall,
             color = GhostWhite.copy(alpha = 0.6f))
         Spacer(Modifier.height(12.dp))
@@ -440,6 +471,30 @@ private fun CMSetupScreen(
             }
         }
 
+        // Aviso si la dificultad seleccionada no está verificada
+        if (selected.track.all { it == TrackerAction.NONE }) {
+            Spacer(Modifier.height(12.dp))
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(10.dp),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFF3A2000)),
+                border = BorderStroke(1.dp, Color(0xFFFF8C00).copy(alpha = 0.5f))
+            ) {
+                Row(
+                    Modifier.padding(12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text("⚠️", fontSize = 18.sp)
+                    Spacer(Modifier.width(10.dp))
+                    Text(
+                        stringResource(R.string.cm_tracker_unverified),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color(0xFFFFB347)
+                    )
+                }
+            }
+        }
+
         Spacer(Modifier.height(28.dp))
         Button(
             onClick = onStart,
@@ -447,7 +502,7 @@ private fun CMSetupScreen(
             shape = RoundedCornerShape(14.dp),
             colors = ButtonDefaults.buttonColors(containerColor = YellowZone)
         ) {
-            Text("▶  Empezar partida",
+            Text(stringResource(R.string.btn_start_game_cm),
                 color = Color(0xFF100C06), fontWeight = FontWeight.Black)
         }
     }
@@ -493,7 +548,7 @@ private fun CMPlayingScreen(
             Text(zoneName,
                 style = MaterialTheme.typography.labelLarge,
                 color = zoneColor, fontWeight = FontWeight.Bold)
-            Text("· Turno $turnCount",
+            Text(stringResource(R.string.cm_turn_label, turnCount),
                 style = MaterialTheme.typography.labelLarge,
                 color = GhostWhite.copy(alpha = 0.4f))
         }
@@ -544,7 +599,7 @@ private fun CMPlayingScreen(
                         shape = RoundedCornerShape(10.dp)
                     ) {
                         Column(Modifier.padding(12.dp)) {
-                            Text("Acción",
+                            Text(stringResource(R.string.cm_action_label),
                                 style = MaterialTheme.typography.labelLarge.copy(fontSize = 10.sp),
                                 color = zoneColor, fontWeight = FontWeight.Bold,
                                 letterSpacing = 1.sp)
@@ -589,8 +644,8 @@ private fun CMPlayingScreen(
                             fontSize = 14.sp)
                         Spacer(Modifier.width(6.dp))
                         Text(
-                            if (currentCard.advancesTracker) "Marcador avanza"
-                            else "Marcador se queda",
+                            if (currentCard.advancesTracker) stringResource(R.string.cm_tracker_advances)
+                            else stringResource(R.string.cm_tracker_stays),
                             style = MaterialTheme.typography.labelLarge.copy(fontSize = 11.sp),
                             color = advanceColor,
                             fontWeight = FontWeight.Bold
@@ -610,7 +665,7 @@ private fun CMPlayingScreen(
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text("🃏", fontSize = 44.sp)
                     Spacer(Modifier.height(8.dp))
-                    Text("Pulsa para robar la primera carta",
+                    Text(stringResource(R.string.cm_draw_first_card),
                         style = MaterialTheme.typography.bodyMedium,
                         color = GhostWhite.copy(alpha = 0.4f),
                         textAlign = TextAlign.Center)
@@ -636,7 +691,7 @@ private fun CMPlayingScreen(
                     Spacer(Modifier.width(10.dp))
                     Column {
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text("⚙️ Acción del tracker",
+                            Text(stringResource(R.string.cm_tracker_action_label),
                                 style = MaterialTheme.typography.labelLarge.copy(fontSize = 10.sp),
                                 color = Color(0xFFFF6B00), fontWeight = FontWeight.Bold)
                             Spacer(Modifier.width(6.dp))
@@ -664,8 +719,8 @@ private fun CMPlayingScreen(
             colors = ButtonDefaults.buttonColors(containerColor = zoneColor)
         ) {
             Text(
-                if (currentCard == null) "Robar primera carta de Tingent"
-                else "Siguiente turno · Robar carta",
+                if (currentCard == null) stringResource(R.string.btn_draw_first)
+                else stringResource(R.string.btn_next_turn_draw),
                 color = Color(0xFF100C06),
                 fontWeight = FontWeight.Black
             )
@@ -688,10 +743,10 @@ private fun TrackerBar(pos: Int, brownThreshold: Int, inBrownZone: Boolean, trac
                 Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Tracker Tingent",
+                Text(stringResource(R.string.cm_tracker_title),
                     style = MaterialTheme.typography.labelLarge.copy(fontSize = 11.sp),
                     color = GhostWhite.copy(alpha = 0.5f))
-                Text("Pos. $pos / $total",
+                Text(stringResource(R.string.cm_tracker_pos, pos, total),
                     style = MaterialTheme.typography.labelLarge.copy(fontSize = 11.sp),
                     color = if (inBrownZone) BrownZone else YellowZone,
                     fontWeight = FontWeight.Bold)
@@ -721,11 +776,14 @@ private fun TrackerBar(pos: Int, brownThreshold: Int, inBrownZone: Boolean, trac
                             }
                             val cellAction = if (track.size >= cellPos) track[cellPos - 1] else TrackerAction.NONE
                             val actionEmoji = when(cellAction) {
-                                TrackerAction.FACEUP       -> "📋"
-                                TrackerAction.FACEDOWN     -> "📥"
-                                TrackerAction.DISCOVERY    -> "🗺"
-                                TrackerAction.TIME_ADVANCE -> "⏱"
-                                TrackerAction.NONE         -> ""
+                                TrackerAction.REVEAL_TERRAIN  -> "🗺"
+                                TrackerAction.TIME_ADVANCE    -> "⏱"
+                                TrackerAction.CLAIM_YELLOW    -> "🟡"
+                                TrackerAction.CLAIM_BROWN     -> "🟤"
+                                TrackerAction.CLAIM_BLUE      -> "🔵"
+                                TrackerAction.TURN_BROWN      -> "↪"
+                                TrackerAction.TURN_BROWN_TIME -> "↪⏱"
+                                TrackerAction.NONE            -> ""
                             }
                             Box(
                                 Modifier.weight(1f).aspectRatio(1f)
@@ -758,14 +816,14 @@ private fun TrackerBar(pos: Int, brownThreshold: Int, inBrownZone: Boolean, trac
                     Box(Modifier.size(8.dp).clip(RoundedCornerShape(2.dp))
                         .background(YellowZone))
                     Spacer(Modifier.width(4.dp))
-                    Text("Zona amarilla", fontSize = 10.sp,
+                    Text(stringResource(R.string.cm_legend_yellow), fontSize = 10.sp,
                         color = GhostWhite.copy(alpha = 0.4f))
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Box(Modifier.size(8.dp).clip(RoundedCornerShape(2.dp))
                         .background(BrownZone))
                     Spacer(Modifier.width(4.dp))
-                    Text("Zona marrón", fontSize = 10.sp,
+                    Text(stringResource(R.string.cm_legend_brown), fontSize = 10.sp,
                         color = GhostWhite.copy(alpha = 0.4f))
                 }
             }
@@ -789,15 +847,15 @@ private fun CMScoringContent(s: CMScoringState, difficulty: TingentDifficulty) {
         Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Text("Conteo de Puntuación",
+        Text(stringResource(R.string.cm_score_title),
             style = MaterialTheme.typography.titleMedium,
             color = YellowZone, fontWeight = FontWeight.Black)
-        Text("Introduce los valores al terminar la partida",
+        Text(stringResource(R.string.cm_score_subtitle),
             style = MaterialTheme.typography.bodySmall,
             color = GhostWhite.copy(alpha = 0.4f))
 
         // Sección Jugador
-        CMScoreSection("🧑 Tú", youTotal, Color(0xFF4AEE7A)) {
+        CMScoreSection(stringResource(R.string.cm_score_you), youTotal, Color(0xFF4AEE7A)) {
             CMScoreRow("Cartas Final de Partida (PV directo)", s.youEndCards, s.youEndCards,
                 onInc = { s.youEndCards++ },  onDec = { if (s.youEndCards  > 0) s.youEndCards--  })
             CMScoreRow("Cartas Criatura · suma sellos rojos 🔴", s.youCreatures, s.youCreatures,
@@ -815,7 +873,7 @@ private fun CMScoringContent(s: CMScoringState, difficulty: TingentDifficulty) {
         }
 
         // Sección Tingent
-        CMScoreSection("🤖 Tingent · ${difficulty.name}", tingTotal, BrownZone) {
+        CMScoreSection(stringResource(R.string.cm_score_tingent, difficulty.name), tingTotal, BrownZone) {
             CMScoreRow("Cartas FP bocarriba ×5 PV  (n=${s.tingEndUp})", s.tingEndUp, s.tingEndUp * 5,
                 onInc = { s.tingEndUp++ },    onDec = { if (s.tingEndUp    > 0) s.tingEndUp--    })
             CMScoreRow("Cartas Criatura bocarriba · suma PV", s.tingCreatUp, s.tingCreatUp,
@@ -845,13 +903,13 @@ private fun CMScoringContent(s: CMScoringState, difficulty: TingentDifficulty) {
         ) {
             Column(Modifier.padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    if (win) "🎉 ¡GANASTE!" else if (tie) "🤝 EMPATE" else "💀 TINGENT GANA",
+                    if (win) stringResource(R.string.cm_result_win) else if (tie) stringResource(R.string.cm_result_tie) else stringResource(R.string.cm_result_lose),
                     style = MaterialTheme.typography.titleLarge,
                     color = if (win) Color(0xFF4AEE7A) else if (tie) YellowZone else BrownZone,
                     fontWeight = FontWeight.Black
                 )
                 Spacer(Modifier.height(6.dp))
-                Text("Tú: $youTotal PV  ·  Tingent: $tingTotal PV",
+                Text(stringResource(R.string.cm_score_you_vs_tingent, youTotal, tingTotal),
                     style = MaterialTheme.typography.bodyMedium, color = GhostWhite)
             }
         }
@@ -929,57 +987,56 @@ private fun CMRulesContent() {
         Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        Text("Referencia Rápida", style = MaterialTheme.typography.titleMedium,
+        Text(stringResource(R.string.cm_rules_title), style = MaterialTheme.typography.titleMedium,
             color = YellowZone, fontWeight = FontWeight.Black)
 
-        CMRuleCard("🦋 Turno de Tingent") {
+        CMRuleCard(stringResource(R.string.cm_rules_turn_title)) {
             listOf(
-                "1. Roba una carta del mazo de Tingent",
-                "2. Aplica la acción de la zona actual (amarilla o marrón)",
-                "3. Si la carta tiene ⚙️ rojo → avanza el tracker",
-                "4. Si el tracker llega al umbral → entra en Zona Marrón y baraja de nuevo",
-                "5. Si el tracker aterriza en una casilla especial → ejecuta también esa acción"
+                stringResource(R.string.cm_rules_turn_1),
+                stringResource(R.string.cm_rules_turn_2),
+                stringResource(R.string.cm_rules_turn_3),
+                stringResource(R.string.cm_rules_turn_4),
+                stringResource(R.string.cm_rules_turn_5)
             ).forEach { Text("• $it", style = MaterialTheme.typography.bodySmall,
                 color = GhostWhite.copy(alpha = 0.75f), modifier = Modifier.padding(vertical = 1.dp)) }
         }
 
-        CMRuleCard("🟡→🟤 Transición de Zona") {
+        CMRuleCard(stringResource(R.string.cm_rules_zone_title)) {
             Text(
-                "Cuando el tracker llega al umbral de dificultad, Tingent pasa a Zona Marrón. " +
-                "Todas las cartas usan el lado marrón desde ese momento. El mazo se baraja de nuevo.",
+                stringResource(R.string.cm_rules_zone_body),
                 style = MaterialTheme.typography.bodySmall, color = GhostWhite.copy(alpha = 0.75f)
             )
         }
 
-        CMRuleCard("📋 Acciones especiales del Tracker") {
+        CMRuleCard(stringResource(R.string.cm_rules_tracker_title)) {
             listOf(
-                "📋 Carta bocarriba → toma del Territorio la especie objetivo con mayor PV + 1 huevo",
-                "📥 Carta bocabajo → roba del mazo bocabajo (puntúa al final según dificultad)",
-                "🗺️ Descubrimiento → coloca loseta Hábitat en lago con huevo; Tingent obtiene el huevo",
-                "⏱️ Avance de Tiempo → avanza el marcador de Tiempo; aplica el efecto inmediatamente"
+                stringResource(R.string.cm_rules_tracker_1),
+                stringResource(R.string.cm_rules_tracker_2),
+                stringResource(R.string.cm_rules_tracker_3),
+                stringResource(R.string.cm_rules_tracker_4)
             ).forEach { Text("• $it", style = MaterialTheme.typography.bodySmall,
                 color = GhostWhite.copy(alpha = 0.75f), modifier = Modifier.padding(vertical = 1.dp)) }
         }
 
-        CMRuleCard("🏆 Puntuación de Tingent") {
+        CMRuleCard(stringResource(R.string.cm_rules_tingent_score_title)) {
             listOf(
-                "Cartas Final de Partida bocarriba × 5 PV",
-                "Cartas de Criatura bocarriba: suma de sus PV impresos",
-                "Logros completados: suma de sus PV",
-                "Trofeos × 3 PV",
-                "Huevos × 1 PV",
-                "Cartas bocabajo × [1 / 2 / 3 PV según dificultad]"
+                stringResource(R.string.cm_rules_tingent_score_1),
+                stringResource(R.string.cm_rules_tingent_score_2),
+                stringResource(R.string.cm_rules_tingent_score_3),
+                stringResource(R.string.cm_rules_tingent_score_4),
+                stringResource(R.string.cm_rules_tingent_score_5),
+                stringResource(R.string.cm_rules_tingent_score_6)
             ).forEach { Text("• $it", style = MaterialTheme.typography.bodySmall,
                 color = GhostWhite.copy(alpha = 0.75f), modifier = Modifier.padding(vertical = 1.dp)) }
         }
 
-        CMRuleCard("🧑 Puntuación del Jugador") {
+        CMRuleCard(stringResource(R.string.cm_rules_player_score_title)) {
             listOf(
-                "Cartas Final de Partida: PV impresos",
-                "Cartas de Criatura: suma sellos rojos",
-                "Logros: 6 / 12 / 15 PV cada uno",
-                "Trofeos × 3 PV",
-                "Recursos + Cazamariposas ÷ 4 (redondea abajo)"
+                stringResource(R.string.cm_rules_player_score_1),
+                stringResource(R.string.cm_rules_player_score_2),
+                stringResource(R.string.cm_rules_player_score_3),
+                stringResource(R.string.cm_rules_player_score_4),
+                stringResource(R.string.cm_rules_player_score_5)
             ).forEach { Text("• $it", style = MaterialTheme.typography.bodySmall,
                 color = GhostWhite.copy(alpha = 0.75f), modifier = Modifier.padding(vertical = 1.dp)) }
         }
@@ -1011,34 +1068,15 @@ internal fun CMSetupTab(modifier: Modifier = Modifier) {
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Text("Preparación · Criaturas Maravillosas", color = GhostWhite, fontWeight = FontWeight.Bold,
+        Text(stringResource(R.string.cm_setup_title), color = GhostWhite, fontWeight = FontWeight.Bold,
             style = MaterialTheme.typography.titleLarge)
-        Text("2 a 4 jugadores · Colocación de trabajadores + tableau",
+        Text(stringResource(R.string.cm_setup_subtitle),
             color = GhostWhite.copy(alpha = 0.4f), style = MaterialTheme.typography.bodySmall)
 
-        CMSetupBlock("🗺️ Tablero general",
-            "• Monta el tablero hexagonal de la isla y coloca los tokens de hábitat en sus espacios.\n" +
-            "• Mezcla las cartas de criaturas y forma el mercado visible (cartas bocarriba).\n" +
-            "• Saca aleatoriamente 7 fichas de objetivo y colócalas visibles para todos.\n" +
-            "• Coloca el tablero de suministro con los recursos de inicio.")
-        CMSetupBlock("👤 Cada jugador recibe",
-            "• 1 tablero personal de doble capa.\n" +
-            "• Elige 1 Capitán de los disponibles → coloca su tablero de Capitán junto al tablero personal.\n" +
-            "• 3 tripulantes propios (en tu color).\n" +
-            "• Elige 4 cartas de inicio de entre las 8 disponibles.\n" +
-            "• Recursos de inicio según orden de turno:\n" +
-            "  1º jugador → sin bonus extra\n" +
-            "  2º jugador → +1 recurso\n" +
-            "  3º jugador → +2 recursos\n" +
-            "  4º jugador → +3 recursos")
-        CMSetupBlock("🎯 Solo mode — Tingent",
-            "• Coloca el marcador de Tingent en la posición 1 del tracker.\n" +
-            "• Mezcla el mazo de cartas de Tingent (12 cartas).\n" +
-            "• Tingent NO tiene tablero personal ni recursos — solo el tracker y su mazo.\n" +
-            "• El jugador configura la dificultad antes de empezar (ver tab Solitario).")
-        CMSetupBlock("🔄 Orden de turno",
-            "• El jugador con la criatura de menor valor empieza.\n" +
-            "• Tingent actúa después de cada turno del jugador según la carta revelada.")
+        CMSetupBlock(stringResource(R.string.cm_setup_board_title), stringResource(R.string.cm_setup_board_body))
+        CMSetupBlock(stringResource(R.string.cm_setup_player_title), stringResource(R.string.cm_setup_player_body))
+        CMSetupBlock(stringResource(R.string.cm_setup_solo_title), stringResource(R.string.cm_setup_solo_body))
+        CMSetupBlock(stringResource(R.string.cm_setup_turnorder_title), stringResource(R.string.cm_setup_turnorder_body))
     }
 }
 
