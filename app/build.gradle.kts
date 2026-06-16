@@ -1,18 +1,34 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
 }
 
+val keystorePropertiesFile = rootProject.file("keystore.properties")
+val keystoreProperties = Properties().apply {
+    if (keystorePropertiesFile.exists()) load(keystorePropertiesFile.inputStream())
+}
+
 android {
-    namespace = "com.rafel.spooktacular"
+    namespace = "com.rafel.bgt"
     compileSdk {
         version = release(36) {
             minorApiLevel = 1
         }
     }
 
+    signingConfigs {
+        create("release") {
+            storeFile = file(keystoreProperties.getProperty("storeFile", ""))
+            storePassword = keystoreProperties.getProperty("storePassword", System.getenv("KEYSTORE_PASSWORD") ?: "")
+            keyAlias = keystoreProperties.getProperty("keyAlias", System.getenv("KEY_ALIAS") ?: "")
+            keyPassword = keystoreProperties.getProperty("keyPassword", System.getenv("KEY_PASSWORD") ?: "")
+        }
+    }
+
     defaultConfig {
-        applicationId = "com.rafel.spooktacular"
+        applicationId = "com.rafel.bgt"
         minSdk = 23
         targetSdk = 36
         versionCode = 1
@@ -23,6 +39,7 @@ android {
 
     buildTypes {
         release {
+            signingConfig = signingConfigs.getByName("release")
             optimization {
                 enable = false
             }

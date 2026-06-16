@@ -22,6 +22,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Spooktacular"
+rootProject.name = "BGT"
 include(":app")
  

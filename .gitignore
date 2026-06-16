@@ -1,3 +1,8 @@
+# Keystore — NUNCA subir al repo
+*.jks
+*.keystore
+keystore.properties
+
 *.iml
 .gradle
 /local.properties
