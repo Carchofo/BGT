@@ -1,6 +1,11 @@
 package com.rafel.bgt
 
+import android.app.DownloadManager
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -13,10 +18,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.rafel.bgt.R
+import kotlinx.coroutines.launch
 import com.rafel.bgt.ui.screens.CascadiaScoreScreen
 import com.rafel.bgt.ui.screens.CastleComboSoloScreen
 import com.rafel.bgt.ui.screens.CoimbraSoloScreen
@@ -36,16 +43,46 @@ private const val PREFS_NAME = "tbg_prefs"
 private const val KEY_DISCLAIMER = "disclaimer_accepted"
 
 class MainActivity : ComponentActivity() {
+
+    private var pendingDownloadId = -1L
+    private var pendingVersion = ""
+
+    private val downloadReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            val id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
+            if (id == pendingDownloadId && pendingVersion.isNotEmpty()) {
+                ApkInstaller.install(context, pendingVersion)
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         SoundSettings.init(this)
         val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
+        val filter = IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(downloadReceiver, filter, RECEIVER_NOT_EXPORTED)
+        } else {
+            @Suppress("UnspecifiedRegisterReceiverFlag")
+            registerReceiver(downloadReceiver, filter)
+        }
+
         setContent {
             BGTTheme {
                 var showDisclaimer by remember {
                     mutableStateOf(!prefs.getBoolean(KEY_DISCLAIMER, false))
+                }
+                var updateInfo by remember { mutableStateOf<UpdateInfo?>(null) }
+
+                LaunchedEffect(Unit) {
+                    lifecycleScope.launch {
+                        val currentVersion = packageManager
+                            .getPackageInfo(packageName, 0).versionName ?: "1.0"
+                        updateInfo = UpdateChecker.check(currentVersion)
+                    }
                 }
 
                 BGTApp()
@@ -58,8 +95,27 @@ class MainActivity : ComponentActivity() {
                         }
                     )
                 }
+
+                updateInfo?.let { info ->
+                    UpdateDialog(
+                        version = info.version,
+                        onUpdate = {
+                            pendingVersion = info.version
+                            pendingDownloadId = ApkInstaller.download(
+                                this@MainActivity, info.downloadUrl, info.version
+                            )
+                            updateInfo = null
+                        },
+                        onDismiss = { updateInfo = null }
+                    )
+                }
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(downloadReceiver)
     }
 }
 
@@ -110,6 +166,36 @@ private fun DisclaimerDialog(onAccept: () -> Unit) {
             }
         },
         containerColor = com.rafel.bgt.ui.theme.CardBackground
+    )
+}
+
+@Composable
+private fun UpdateDialog(
+    version: String,
+    onUpdate: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Text("Nueva versión disponible", fontWeight = FontWeight.Bold)
+        },
+        text = {
+            Text("BGT $version ya está disponible. ¿Quieres descargarla e instalarla ahora?")
+        },
+        confirmButton = {
+            Button(
+                onClick = onUpdate,
+                colors = ButtonDefaults.buttonColors(containerColor = HalloweenOrange)
+            ) {
+                Text("Actualizar", fontWeight = FontWeight.Bold)
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Ahora no")
+            }
+        }
     )
 }
 
