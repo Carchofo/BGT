@@ -6,4 +6,5 @@ object Routes {
     const val MONSTERS    = "monsters"
     const val SCORE_BOARD = "score_board"
     const val RULES       = "rules"
+    const val ABOUT       = "about"
 }

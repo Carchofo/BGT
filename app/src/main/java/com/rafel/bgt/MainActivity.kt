@@ -30,6 +30,7 @@ import com.rafel.bgt.ui.screens.CoimbraSoloScreen
 import com.rafel.bgt.ui.screens.CMSoloModeScreen
 import com.rafel.bgt.ui.screens.TiletumSoloScreen
 import com.rafel.bgt.ui.screens.MaracaiboSoloScreen
+import com.rafel.bgt.ui.screens.AboutScreen
 import com.rafel.bgt.ui.screens.HomeScreen
 import com.rafel.bgt.ui.screens.MonstersScreen
 import com.rafel.bgt.ui.screens.ScoreBoardScreen
@@ -203,7 +204,7 @@ private fun UpdateDialog(
 fun BGTApp() {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = "home") {
-        composable("home")              { HomeScreen(onNavigate = { navController.navigate(it) }) }
+        composable("home")              { HomeScreen(onNavigate = { navController.navigate(it) }, onAbout = { navController.navigate("about") }) }
         composable("solo_mode")         { SoloModeScreen(onBack = { navController.popBackStack() }) }
         composable("monsters")          { MonstersScreen(onBack = { navController.popBackStack() }) }
         composable("score_board")       { ScoreBoardScreen(onBack = { navController.popBackStack() }) }
@@ -213,5 +214,6 @@ fun BGTApp() {
         composable("cascadia_score")    { CascadiaScoreScreen(onBack = { navController.popBackStack() }) }
         composable("castle_combo_solo") { CastleComboSoloScreen(onBack = { navController.popBackStack() }) }
         composable("coimbra_solo")      { CoimbraSoloScreen(onBack = { navController.popBackStack() }) }
+        composable("about")             { AboutScreen(onBack = { navController.popBackStack() }) }
     }
 }

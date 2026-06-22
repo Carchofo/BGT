@@ -125,6 +125,7 @@ private val GAMES_SORTED = GAMES.filter { it.available }.sortedBy { it.title } +
 @Composable
 fun HomeScreen(
     onNavigate: (String) -> Unit = {},
+    onAbout: () -> Unit = {},
     vm: HomeViewModel = viewModel()
 ) {
     val favoriteIds by vm.favoriteIds.collectAsStateWithLifecycle()
@@ -196,6 +197,14 @@ fun HomeScreen(
                     }
                 },
                 actions = {
+                    IconButton(onClick = onAbout) {
+                        Icon(
+                            imageVector = Icons.Default.Info,
+                            contentDescription = "Acerca de",
+                            tint = GhostWhite.copy(alpha = 0.45f),
+                            modifier = Modifier.size(22.dp)
+                        )
+                    }
                     IconButton(onClick = { showBugDialog = true }) {
                         Icon(
                             imageVector = Icons.Default.BugReport,
@@ -305,6 +314,7 @@ fun HomeScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun BugReportDialog(
     onDismiss: () -> Unit,
