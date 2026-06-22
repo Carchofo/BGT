@@ -179,6 +179,7 @@ fun SoloModeScreen(onBack: () -> Unit = {}) {
     var cardIndex  by remember { mutableIntStateOf(0) }   // 0=A, 1=B, 2=C
     var turnNumber by remember { mutableIntStateOf(1) }
     var turnCards  by remember { mutableStateOf<List<KilltronCard>>(emptyList()) }
+    var playerScore  by remember { mutableIntStateOf(0) }
     var selectedTab by remember { mutableIntStateOf(0) }
 
     // Intercepta el botón atrás del sistema mientras se juega
@@ -234,6 +235,12 @@ fun SoloModeScreen(onBack: () -> Unit = {}) {
                     label = { Text(stringResource(R.string.nav_game)) },
                     colors = navColors
                 )
+                NavigationBarItem(
+                    selected = selectedTab == 2, onClick = { selectedTab = 2 },
+                    icon = { Icon(Icons.Default.EmojiEvents, null) },
+                    label = { Text("Puntos") },
+                    colors = navColors
+                )
             }
         },
         containerColor = MidnightBlue
@@ -244,6 +251,11 @@ fun SoloModeScreen(onBack: () -> Unit = {}) {
         ) {
             when (selectedTab) {
                 0 -> SpookySetupTab(Modifier.fillMaxSize())
+                2 -> SpooktacularScoreTab(
+                    playerScore = playerScore,
+                    onScoreChange = { playerScore = it },
+                    onReset = { playerScore = 0 }
+                )
                 else -> when (phase) {
                     SoloPhase.READY -> ReadyScreen(
                         turnNumber = turnNumber,
@@ -692,6 +704,71 @@ private fun SpookySetupTab(modifier: Modifier = Modifier) {
             stringResource(R.string.spooky_setup_objective_body))
         SpookySetupBlock(stringResource(R.string.spooky_setup_soloai_title),
             stringResource(R.string.spooky_setup_soloai_body))
+    }
+}
+
+@Composable
+private fun SpooktacularScoreTab(playerScore: Int, onScoreChange: (Int) -> Unit, onReset: () -> Unit) {
+    val bg     = Color(0xFF1A0A2E)
+    val accent = HalloweenOrange
+    val text   = GhostWhite
+
+    val ranking = when {
+        playerScore < 10 -> "💀 DERROTA"
+        playerScore < 20 -> "😅 Sobreviviste"
+        playerScore < 30 -> "🏆 Victoria"
+        else             -> "⭐ Victoria Perfecta"
+    }
+
+    Column(
+        modifier = Modifier.fillMaxSize().background(bg).padding(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(24.dp)
+    ) {
+        Spacer(Modifier.height(16.dp))
+        Text("🎃", fontSize = 48.sp)
+        Text("Tu Puntuación", color = text, fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.titleLarge)
+
+        Surface(color = Color(0xFF2A0D45), shape = RoundedCornerShape(16.dp)) {
+            Row(
+                modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(24.dp)
+            ) {
+                IconButton(onClick = { onScoreChange(playerScore - 1) }) {
+                    Icon(Icons.Default.Remove, null, tint = accent, modifier = Modifier.size(32.dp))
+                }
+                Text("$playerScore", color = text, fontWeight = FontWeight.Black, fontSize = 48.sp)
+                IconButton(onClick = { onScoreChange(playerScore + 1) }) {
+                    Icon(Icons.Default.Add, null, tint = accent, modifier = Modifier.size(32.dp))
+                }
+            }
+        }
+
+        Text(ranking, color = accent, fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.headlineSmall)
+
+        Surface(color = Color(0xFF1E0D36), shape = RoundedCornerShape(12.dp)) {
+            Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                listOf("< 10" to "💀 Derrota", "10-19" to "😅 Sobreviviste",
+                       "20-29" to "🏆 Victoria", "30+" to "⭐ Victoria Perfecta").forEach { (range, label) ->
+                    Row(Modifier.fillMaxWidth()) {
+                        Text(range, color = text.copy(0.5f), style = MaterialTheme.typography.bodySmall,
+                            modifier = Modifier.width(48.dp))
+                        Text(label, color = text, style = MaterialTheme.typography.bodySmall)
+                    }
+                }
+            }
+        }
+
+        OutlinedButton(
+            onClick = onReset,
+            border = androidx.compose.foundation.BorderStroke(1.dp, accent.copy(0.4f)),
+            shape = RoundedCornerShape(10.dp)
+        ) {
+            Text("Reiniciar puntuación", color = accent)
+        }
     }
 }
 

@@ -21,6 +21,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.rafel.bgt.R
 import com.rafel.bgt.ui.theme.*
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.rafel.bgt.ui.viewmodels.CascadiaViewModel
 
 private val CascGreen = Color(0xFF43A047)
 
@@ -38,7 +40,7 @@ private val FOX_C_PTS    = intArrayOf(0, 1, 2, 3, 4)
 private val FOX_D_PTS    = intArrayOf(0, 1, 2, 3, 4)
 
 // ─── Estado ───────────────────────────────────────────────────────
-private class CascadiaScoreState {
+class CascadiaScoreState {
     // Osos
     var bearVariant by mutableStateOf(0)
     var bearPairs   by mutableStateOf(0)  // A
@@ -124,9 +126,8 @@ private class CascadiaScoreState {
 // ─── Pantalla principal ────────────────────────────────────────────
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CascadiaScoreScreen(onBack: () -> Unit = {}) {
-    var selectedTab by remember { mutableIntStateOf(0) }
-    val s = remember { CascadiaScoreState() }
+fun CascadiaScoreScreen(onBack: () -> Unit = {}, vm: CascadiaViewModel = viewModel()) {
+    val s = vm.scoreState
 
     Scaffold(
         topBar = {
@@ -155,7 +156,7 @@ fun CascadiaScoreScreen(onBack: () -> Unit = {}) {
                     Triple(2, Icons.Default.MenuBook, stringResource(R.string.nav_rules))
                 ).forEach { (idx, icon, label) ->
                     NavigationBarItem(
-                        selected = selectedTab == idx, onClick = { selectedTab = idx },
+                        selected = vm.selectedTab == idx, onClick = { vm.selectedTab = idx },
                         icon = { Icon(icon, null) },
                         label = { Text(label) },
                         colors = NavigationBarItemDefaults.colors(
@@ -170,7 +171,7 @@ fun CascadiaScoreScreen(onBack: () -> Unit = {}) {
         },
         containerColor = MidnightBlue
     ) { padding ->
-        when (selectedTab) {
+        when (vm.selectedTab) {
             0 -> CascSetupTab(Modifier.padding(padding))
             1 -> CascScoreTab(s, Modifier.padding(padding))
             2 -> CascRulesTab(Modifier.padding(padding))
