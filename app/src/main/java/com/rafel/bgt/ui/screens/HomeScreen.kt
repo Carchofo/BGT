@@ -31,9 +31,14 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.rafel.bgt.BugReporter
 import com.rafel.bgt.R
 import com.rafel.bgt.ui.theme.*
 import com.rafel.bgt.ui.util.SoundSettings
+import com.rafel.bgt.ui.viewmodel.HomeViewModel
+import kotlinx.coroutines.launch
 
 enum class ViewMode { LIST, GRID }
 
@@ -119,14 +124,18 @@ private val GAMES_SORTED = GAMES.filter { it.available }.sortedBy { it.title } +
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    onNavigate: (String) -> Unit = {}
+    onNavigate: (String) -> Unit = {},
+    vm: HomeViewModel = viewModel()
 ) {
-    var favoriteIds by remember { mutableStateOf(setOf<String>()) }
+    val favoriteIds by vm.favoriteIds.collectAsStateWithLifecycle()
     var viewMode by remember { mutableStateOf(ViewMode.LIST) }
     var searchQuery by remember { mutableStateOf("") }
     var showFavoritesOnly by remember { mutableStateOf(false) }
     var activeFeatures by remember { mutableStateOf(emptySet<GameFeature>()) }
+    var showBugDialog by remember { mutableStateOf(false) }
     val keyboard = LocalSoftwareKeyboardController.current
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
 
     val isFiltering = searchQuery.isNotBlank() || showFavoritesOnly || activeFeatures.isNotEmpty()
 
@@ -151,7 +160,6 @@ fun HomeScreen(
         }
     }
 
-    val context = LocalContext.current
     val isMuted by SoundSettings.isMuted
 
     Scaffold(
@@ -188,6 +196,14 @@ fun HomeScreen(
                     }
                 },
                 actions = {
+                    IconButton(onClick = { showBugDialog = true }) {
+                        Icon(
+                            imageVector = Icons.Default.BugReport,
+                            contentDescription = "Reportar bug",
+                            tint = GhostWhite.copy(alpha = 0.45f),
+                            modifier = Modifier.size(22.dp)
+                        )
+                    }
                     IconButton(onClick = { showFavoritesOnly = !showFavoritesOnly }) {
                         Icon(
                             imageVector = if (showFavoritesOnly) Icons.Default.Star else Icons.Default.StarBorder,
@@ -212,6 +228,15 @@ fun HomeScreen(
         },
         containerColor = MidnightBlue
     ) { padding ->
+        if (showBugDialog) {
+            BugReportDialog(
+                onDismiss = { showBugDialog = false },
+                onSend = { game, msg ->
+                    showBugDialog = false
+                    scope.launch { BugReporter.send(context, game, msg) }
+                }
+            )
+        }
         Column(
             Modifier
                 .fillMaxSize()
@@ -272,12 +297,82 @@ fun HomeScreen(
                 EmptyState(showFavoritesOnly)
             } else {
                 when (viewMode) {
-                    ViewMode.LIST -> GameListView(filteredGames, favoriteIds, { id -> favoriteIds = if (id in favoriteIds) favoriteIds - id else favoriteIds + id }, onNavigate)
-                    ViewMode.GRID -> GameGridView(filteredGames, favoriteIds, { id -> favoriteIds = if (id in favoriteIds) favoriteIds - id else favoriteIds + id }, onNavigate)
+                    ViewMode.LIST -> GameListView(filteredGames, favoriteIds, vm::toggleFavorite, onNavigate)
+                    ViewMode.GRID -> GameGridView(filteredGames, favoriteIds, vm::toggleFavorite, onNavigate)
                 }
             }
         }
     }
+}
+
+@Composable
+private fun BugReportDialog(
+    onDismiss: () -> Unit,
+    onSend: (game: String, message: String) -> Unit
+) {
+    val games = listOf("General", "Spooktacular", "Criaturas Maravillosas", "Tiletum", "Maracaibo", "Castle Combo", "Cascadia", "Coimbra")
+    var selectedGame by remember { mutableStateOf(games[0]) }
+    var expanded by remember { mutableStateOf(false) }
+    var message by remember { mutableStateOf("") }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("🐛 Reportar bug", fontWeight = FontWeight.Bold, color = GhostWhite) },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = it }) {
+                    OutlinedTextField(
+                        value = selectedGame,
+                        onValueChange = {},
+                        readOnly = true,
+                        label = { Text("Juego", color = GhostWhite.copy(alpha = 0.6f)) },
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
+                        modifier = Modifier.menuAnchor().fillMaxWidth(),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = HalloweenOrange,
+                            unfocusedBorderColor = CardBorder,
+                            focusedTextColor = GhostWhite,
+                            unfocusedTextColor = GhostWhite
+                        )
+                    )
+                    ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                        games.forEach { game ->
+                            DropdownMenuItem(
+                                text = { Text(game) },
+                                onClick = { selectedGame = game; expanded = false }
+                            )
+                        }
+                    }
+                }
+                OutlinedTextField(
+                    value = message,
+                    onValueChange = { message = it },
+                    label = { Text("Descripción del problema", color = GhostWhite.copy(alpha = 0.6f)) },
+                    modifier = Modifier.fillMaxWidth(),
+                    minLines = 3,
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = HalloweenOrange,
+                        unfocusedBorderColor = CardBorder,
+                        focusedTextColor = GhostWhite,
+                        unfocusedTextColor = GhostWhite,
+                        focusedContainerColor = CardBackground,
+                        unfocusedContainerColor = CardBackground
+                    )
+                )
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = { if (message.isNotBlank()) onSend(selectedGame, message) },
+                enabled = message.isNotBlank(),
+                colors = ButtonDefaults.buttonColors(containerColor = HalloweenOrange)
+            ) { Text("Enviar", fontWeight = FontWeight.Bold) }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) { Text("Cancelar", color = GhostWhite.copy(alpha = 0.6f)) }
+        },
+        containerColor = CardBackground
+    )
 }
 
 @Composable
