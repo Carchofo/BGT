@@ -5,7 +5,7 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.net.URL
 
-data class UpdateInfo(val version: String, val downloadUrl: String)
+data class UpdateInfo(val version: String, val downloadUrl: String, val releaseNotes: String = "")
 
 object UpdateChecker {
 
@@ -26,7 +26,8 @@ object UpdateChecker {
                     ?.getString("browser_download_url")
                     ?: return@withContext null
 
-                UpdateInfo(tag, url)
+                val notes = runCatching { json.getString("body") }.getOrDefault("")
+                UpdateInfo(tag, url, notes)
             } catch (e: Exception) {
                 null
             }

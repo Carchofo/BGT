@@ -10,7 +10,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
@@ -100,6 +103,7 @@ class MainActivity : ComponentActivity() {
                 updateInfo?.let { info ->
                     UpdateDialog(
                         version = info.version,
+                        releaseNotes = info.releaseNotes,
                         onUpdate = {
                             pendingVersion = info.version
                             pendingDownloadId = ApkInstaller.download(
@@ -173,16 +177,42 @@ private fun DisclaimerDialog(onAccept: () -> Unit) {
 @Composable
 private fun UpdateDialog(
     version: String,
+    releaseNotes: String,
     onUpdate: () -> Unit,
     onDismiss: () -> Unit
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {
-            Text("Nueva versión disponible", fontWeight = FontWeight.Bold)
+            Text("🎲 BGT $version disponible", fontWeight = FontWeight.Bold, color = GhostWhite)
         },
         text = {
-            Text("BGT $version ya está disponible. ¿Quieres descargarla e instalarla ahora?")
+            LazyColumn(modifier = Modifier.fillMaxWidth()) {
+                if (releaseNotes.isNotBlank()) {
+                    item {
+                        Text(
+                            "Novedades:",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = HalloweenOrange,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(Modifier.height(6.dp))
+                        Text(
+                            releaseNotes.take(600),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = GhostWhite.copy(alpha = 0.80f)
+                        )
+                        Spacer(Modifier.height(12.dp))
+                    }
+                }
+                item {
+                    Text(
+                        "¿Descargar e instalar ahora?",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = GhostWhite.copy(alpha = 0.70f)
+                    )
+                }
+            }
         },
         confirmButton = {
             Button(
@@ -194,9 +224,10 @@ private fun UpdateDialog(
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Ahora no")
+                Text("Ahora no", color = GhostWhite.copy(alpha = 0.55f))
             }
-        }
+        },
+        containerColor = CardBackground
     )
 }
 
