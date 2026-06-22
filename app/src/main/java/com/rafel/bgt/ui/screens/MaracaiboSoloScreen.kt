@@ -26,64 +26,31 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.rafel.bgt.R
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.rafel.bgt.ui.theme.*
 import com.rafel.bgt.ui.util.CardSoundPlayer
+import com.rafel.bgt.ui.viewmodels.MaracaiboViewModel
 
 private val PirateGold  = Color(0xFFD4A017)
 private val NavyDeep    = Color(0xFF0A1628)
 private val NavyMid     = Color(0xFF0D2240)
 private val NavyCard    = Color(0xFF111D30)
 
-// ── Estado de puntuación del jugador ──────────────────────────────────────────
-
-private class MrScoringState {
-    var yourRivers           by mutableStateOf(0)
-    var yourDoubloons        by mutableStateOf(0)
-    var yourUpgradeVP        by mutableStateOf(0)
-    var yourResidenceVP      by mutableStateOf(0)
-    var yourTreasureVP       by mutableStateOf(0)
-    var yourBuriedTreasures  by mutableStateOf(0)
-    var yourMissionVP        by mutableStateOf(0)
-    var yourMissionBonus     by mutableStateOf(false)
-}
-
 // ─────────────────────────────────────────────────────────────────────────────
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MaracaiboSoloScreen(onBack: () -> Unit) {
+fun MaracaiboSoloScreen(onBack: () -> Unit, vm: MaracaiboViewModel = viewModel()) {
 
     val context = LocalContext.current
     val soundPlayer = remember { CardSoundPlayer(context) }
     DisposableEffect(Unit) { onDispose { soundPlayer.release() } }
 
-    var setup       by remember { mutableStateOf(true) }
-    var selectedTab by remember { mutableIntStateOf(0) }
-    val mrScoring   = remember { MrScoringState() }
-    var bCards      by remember { mutableStateOf(0) }
-    var withExp by remember { mutableStateOf(false) }
-
-    // Jordan state
-    var jordanMarker     by remember { mutableStateOf(0) }  // 0-3 (hideout position)
-    var jordanUpgrades   by remember { mutableStateOf(0) }
-    var jordanMissions   by remember { mutableStateOf(1) }  // starts with 1
-    var jordanResidences by remember { mutableStateOf(0) }
-    var jordanFigurehead by remember { mutableStateOf(false) }
-    var jordanRivers     by remember { mutableStateOf(0) }
-    var jordanTreasures  by remember { mutableStateOf(0) }
-    var jordanVP         by remember { mutableStateOf(0) }
-    var round            by remember { mutableStateOf(1) }
-    var jordanInGulf     by remember { mutableStateOf(false) }
-
-    var showPanel   by remember { mutableStateOf(false) }
-    var showUpgrade by remember { mutableStateOf(false) }
-
-    // Derived strengths based on marker position
-    val m              = jordanMarker.coerceIn(0, 3)
+    val m              = vm.jordanMarker.coerceIn(0, 3)
     val raidVP         = intArrayOf(0, 2, 2, 3)[m]
     val raidTreasures  = if (m == 3) 2 else 1
     val exploreVP      = intArrayOf(3, 3, 4, 6)[m]
     val exploreExtra   = intArrayOf(0, 1, 2, 2)[m]
-    val checkIsland    = m >= 2   // Jordan checks if he has more treasures than you
+    val checkIsland    = m >= 2
 
     Scaffold(
         topBar = {
@@ -94,15 +61,15 @@ fun MaracaiboSoloScreen(onBack: () -> Unit) {
                 },
                 navigationIcon = {
                     IconButton(onClick = {
-                        if (selectedTab != 0) selectedTab = 0 else onBack()
+                        if (vm.selectedTab != 0) vm.selectedTab = 0 else onBack()
                     }) {
                         Icon(Icons.Default.ArrowBack, null, tint = GhostWhite)
                     }
                 },
                 actions = {
-                    if (selectedTab == 0 && !setup) {
+                    if (vm.selectedTab == 0 && !vm.setup) {
                         Text(
-                            stringResource(R.string.mr_round, round),
+                            stringResource(R.string.mr_round, vm.round),
                             color = PirateGold, fontWeight = FontWeight.Bold,
                             style = MaterialTheme.typography.bodyMedium,
                             modifier = Modifier.padding(end = 16.dp)
@@ -121,8 +88,8 @@ fun MaracaiboSoloScreen(onBack: () -> Unit) {
                     Triple(stringResource(R.string.nav_rules),   Icons.Default.MenuBook,    3)
                 ).forEach { (label, icon, idx) ->
                     NavigationBarItem(
-                        selected = selectedTab == idx,
-                        onClick  = { selectedTab = idx },
+                        selected = vm.selectedTab == idx,
+                        onClick  = { vm.selectedTab = idx },
                         icon  = { Icon(icon, null, modifier = Modifier.size(20.dp)) },
                         label = { Text(label, fontSize = 11.sp) },
                         colors = NavigationBarItemDefaults.colors(
@@ -142,21 +109,18 @@ fun MaracaiboSoloScreen(onBack: () -> Unit) {
             Modifier.fillMaxSize().padding(pad)
                 .background(Brush.verticalGradient(listOf(NavyDeep, Color(0xFF050C18))))
         ) {
-            if (selectedTab == 0) {
+            if (vm.selectedTab == 0) {
                 MrSetupTab(Modifier.padding(pad))
-            } else if (selectedTab == 2) {
-                MrScoringContent(
-                    mrScoring, jordanVP, jordanRivers, jordanUpgrades,
-                    jordanMissions, jordanResidences, jordanTreasures
-                )
-            } else if (selectedTab == 3) {
+            } else if (vm.selectedTab == 2) {
+                MrScoringContent(vm)
+            } else if (vm.selectedTab == 3) {
                 MrRulesContent()
-            } else if (setup) {
+            } else if (vm.setup) {
                 MaracaiboSetup(
-                    bCards, withExp,
-                    onBCardsChange    = { bCards = it },
-                    onExpansionToggle = { withExp = it },
-                    onStart           = { soundPlayer.playShuffle(); setup = false }
+                    vm.bCards, vm.withExp,
+                    onBCardsChange    = { vm.bCards = it },
+                    onExpansionToggle = { vm.withExp = it },
+                    onStart           = { soundPlayer.playShuffle(); vm.setup = false }
                 )
             } else {
                 Column(
@@ -165,106 +129,99 @@ fun MaracaiboSoloScreen(onBack: () -> Unit) {
                         .padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    // ── Gulf toggle ──────────────────────────────────────────
-                    MaracaiboGulfToggle(jordanInGulf) { jordanInGulf = it }
+                    MaracaiboGulfToggle(vm.jordanInGulf) { vm.jordanInGulf = it }
 
-                    // ── Jordan tracker ───────────────────────────────────────
                     MaracaiboTracker(
-                        jordanMarker, jordanUpgrades, jordanMissions,
-                        jordanResidences, jordanFigurehead,
-                        jordanRivers, jordanTreasures, jordanVP
+                        vm.jordanMarker, vm.jordanUpgrades, vm.jordanMissions,
+                        vm.jordanResidences, vm.jordanFigurehead,
+                        vm.jordanRivers, vm.jordanTreasures, vm.jordanVP
                     )
 
-                    // ── Current Raid / Explore strength ──────────────────────
                     MaracaiboStrength(raidVP, raidTreasures, exploreVP, exploreExtra, checkIsland)
 
-                    // ── Jordan turn button ────────────────────────────────────
                     Button(
-                        onClick = { if (!showPanel) soundPlayer.playDeal(); showPanel = !showPanel },
+                        onClick = { if (!vm.showPanel) soundPlayer.playDeal(); vm.showPanel = !vm.showPanel },
                         modifier = Modifier.fillMaxWidth().height(52.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = if (showPanel) SpookyPurple else HalloweenOrange),
+                            containerColor = if (vm.showPanel) SpookyPurple else HalloweenOrange),
                         shape = RoundedCornerShape(12.dp)
                     ) {
                         Icon(
-                            if (showPanel) Icons.Default.Close else Icons.Default.PlayArrow,
+                            if (vm.showPanel) Icons.Default.Close else Icons.Default.PlayArrow,
                             null, modifier = Modifier.size(20.dp)
                         )
                         Spacer(Modifier.width(8.dp))
                         Text(
-                            if (showPanel) stringResource(R.string.mr_btn_close_turn) else stringResource(R.string.mr_btn_jordan_turn),
+                            if (vm.showPanel) stringResource(R.string.mr_btn_close_turn) else stringResource(R.string.mr_btn_jordan_turn),
                             fontWeight = FontWeight.Bold, fontSize = 16.sp
                         )
                     }
 
-                    // ── Turn panel ────────────────────────────────────────────
-                    AnimatedVisibility(showPanel,
+                    AnimatedVisibility(vm.showPanel,
                         enter = expandVertically() + fadeIn(),
                         exit  = shrinkVertically() + fadeOut()
                     ) {
                         MaracaiboTurnPanel(
-                            jordanInGulf, raidVP, raidTreasures, exploreVP,
-                            exploreExtra, m, checkIsland, withExp,
+                            vm.jordanInGulf, raidVP, raidTreasures, exploreVP,
+                            exploreExtra, m, checkIsland, vm.withExp,
                             onRaid = {
-                                jordanVP += raidVP
-                                jordanTreasures += raidTreasures
-                                showPanel = false
+                                vm.jordanVP += raidVP
+                                vm.jordanTreasures += raidTreasures
+                                vm.showPanel = false
                             },
                             onExplore = { rivers ->
-                                jordanVP += exploreVP
-                                jordanRivers += rivers
-                                showPanel = false
+                                vm.jordanVP += exploreVP
+                                vm.jordanRivers += rivers
+                                vm.showPanel = false
                             },
-                            onMission  = { jordanMissions++;          showPanel = false },
-                            onUpgrade  = { jordanUpgrades++;          showPanel = false; showUpgrade = true },
+                            onMission  = { vm.jordanMissions++;           vm.showPanel = false },
+                            onUpgrade  = { vm.jordanUpgrades++;           vm.showPanel = false; vm.showUpgrade = true },
                             onMaracaibo = {
-                                jordanVP += 6; jordanUpgrades++
-                                jordanInGulf = false
-                                showPanel = false; showUpgrade = true
+                                vm.jordanVP += 6; vm.jordanUpgrades++
+                                vm.jordanInGulf = false
+                                vm.showPanel = false; vm.showUpgrade = true
                             }
                         )
                     }
 
-                    // ── Upgrade effect ────────────────────────────────────────
-                    AnimatedVisibility(showUpgrade,
+                    AnimatedVisibility(vm.showUpgrade,
                         enter = expandVertically() + fadeIn(),
                         exit  = shrinkVertically() + fadeOut()
                     ) {
-                        MaracaiboUpgradeDialog(jordanMarker, jordanFigurehead) { idx ->
+                        MaracaiboUpgradeDialog(vm.jordanMarker, vm.jordanFigurehead) { idx ->
                             when (idx) {
-                                0 -> if (jordanMarker < 3) jordanMarker++
-                                1 -> jordanFigurehead = true
-                                2 -> jordanMissions++
+                                0 -> if (vm.jordanMarker < 3) vm.jordanMarker++
+                                1 -> vm.jordanFigurehead = true
+                                2 -> vm.jordanMissions++
                                 3 -> {
-                                    val isFirst = jordanResidences == 0
-                                    jordanResidences++
-                                    if (isFirst) jordanVP += 2
+                                    val isFirst = vm.jordanResidences == 0
+                                    vm.jordanResidences++
+                                    if (isFirst) vm.jordanVP += 2
                                 }
                             }
-                            showUpgrade = false
+                            vm.showUpgrade = false
                         }
                     }
 
                     HorizontalDivider(color = GhostWhite.copy(alpha = 0.08f))
 
-                    // ── Round / scoring buttons ───────────────────────────────
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                         OutlinedButton(
                             onClick = {
-                                showPanel = false
-                                if (round < 3) round++ else selectedTab = 1
+                                vm.showPanel = false
+                                if (vm.round < 3) vm.round++ else vm.selectedTab = 1
                             },
                             modifier = Modifier.weight(1f),
                             border = BorderStroke(1.dp, PirateGold.copy(0.5f)),
                             shape  = RoundedCornerShape(10.dp)
                         ) {
                             Text(
-                                if (round < 3) stringResource(R.string.mr_btn_end_round, round) else stringResource(R.string.mr_btn_final_score),
+                                if (vm.round < 3) stringResource(R.string.mr_btn_end_round, vm.round) else stringResource(R.string.mr_btn_final_score),
                                 color = PirateGold, fontWeight = FontWeight.Bold
                             )
                         }
                         OutlinedButton(
-                            onClick = { selectedTab = 1 },
+                            onClick = { vm.selectedTab = 1 },
                             modifier = Modifier.weight(1f),
                             border = BorderStroke(1.dp, SpookyPurple.copy(0.5f)),
                             shape  = RoundedCornerShape(10.dp)
@@ -273,11 +230,10 @@ fun MaracaiboSoloScreen(onBack: () -> Unit) {
                         }
                     }
 
-                    // ── Jordan rules reference ────────────────────────────────
                     MaracaiboRulesCard()
                     Spacer(Modifier.height(40.dp))
                 }
-            } // closes else { Column }
+            }
         }
     }
 }
@@ -1013,18 +969,14 @@ private fun MaracaiboScoring(
 // ─────────────────────────────────────────────────────────────────────────────
 
 @Composable
-private fun MrScoringContent(
-    s: MrScoringState,
-    jordanVP: Int, jordanRivers: Int, jordanUpgrades: Int,
-    jordanMissions: Int, jordanResidences: Int, jordanTreasures: Int
-) {
-    val jordanMissionBonus = if (jordanMissions >= 6) 10 else 0
-    val jordanTotal = jordanVP + jordanRivers * 4 + jordanUpgrades * 6 +
-        jordanMissions * 5 + jordanMissionBonus + jordanResidences * 15 + jordanTreasures * 2
+private fun MrScoringContent(vm: MaracaiboViewModel) {
+    val jordanMissionBonus = if (vm.jordanMissions >= 6) 10 else 0
+    val jordanTotal = vm.jordanVP + vm.jordanRivers * 4 + vm.jordanUpgrades * 6 +
+        vm.jordanMissions * 5 + jordanMissionBonus + vm.jordanResidences * 15 + vm.jordanTreasures * 2
 
-    val yourTotal = s.yourRivers * 4 + s.yourDoubloons / 5 + s.yourUpgradeVP +
-        s.yourResidenceVP + s.yourTreasureVP + s.yourBuriedTreasures * 2 +
-        s.yourMissionVP + (if (s.yourMissionBonus) 10 else 0)
+    val yourTotal = vm.yourRivers * 4 + vm.yourDoubloons / 5 + vm.yourUpgradeVP +
+        vm.yourResidenceVP + vm.yourTreasureVP + vm.yourBuriedTreasures * 2 +
+        vm.yourMissionVP + (if (vm.yourMissionBonus) 10 else 0)
 
     val win = yourTotal > jordanTotal
     val tie = yourTotal == jordanTotal
@@ -1050,13 +1002,13 @@ private fun MrScoringContent(
                 }
                 HorizontalDivider(Modifier.padding(vertical = 8.dp), color = PirateGold.copy(0.25f))
                 listOf(
-                    "PV acumulados en partida"                  to jordanVP,
-                    "$jordanRivers ríos × 4 PV"                to jordanRivers * 4,
-                    "$jordanUpgrades mejoras × 6 PV"           to jordanUpgrades * 6,
-                    "$jordanMissions misiones × 5 PV"          to jordanMissions * 5,
-                    "Bonus ≥6 misiones"                        to jordanMissionBonus,
-                    "$jordanResidences residencias × 15 PV"    to jordanResidences * 15,
-                    "$jordanTreasures tesoros × 2 PV"          to jordanTreasures * 2,
+                    "PV acumulados en partida"                       to vm.jordanVP,
+                    "${vm.jordanRivers} ríos × 4 PV"                to vm.jordanRivers * 4,
+                    "${vm.jordanUpgrades} mejoras × 6 PV"           to vm.jordanUpgrades * 6,
+                    "${vm.jordanMissions} misiones × 5 PV"          to vm.jordanMissions * 5,
+                    "Bonus ≥6 misiones"                             to jordanMissionBonus,
+                    "${vm.jordanResidences} residencias × 15 PV"    to vm.jordanResidences * 15,
+                    "${vm.jordanTreasures} tesoros × 2 PV"          to vm.jordanTreasures * 2,
                 ).forEach { (label, pv) ->
                     Row(Modifier.fillMaxWidth().padding(vertical = 2.dp)) {
                         Text(label, style = MaterialTheme.typography.bodySmall,
@@ -1087,20 +1039,20 @@ private fun MrScoringContent(
                 }
                 HorizontalDivider(Modifier.padding(vertical = 8.dp), color = Color(0xFF4AEE7A).copy(0.25f))
 
-                MrScoreRow("Ríos cruzados × 4 PV  (n=${s.yourRivers})", s.yourRivers, s.yourRivers * 4,
-                    onInc = { s.yourRivers++ },          onDec = { if (s.yourRivers          > 0) s.yourRivers--          })
-                MrScoreRow("Doblones  (${s.yourDoubloons} ÷ 5)", s.yourDoubloons, s.yourDoubloons / 5,
-                    onInc = { s.yourDoubloons++ },       onDec = { if (s.yourDoubloons       > 0) s.yourDoubloons--       })
-                MrScoreRow("PV mejoras adquiridas (suma)", s.yourUpgradeVP, s.yourUpgradeVP,
-                    onInc = { s.yourUpgradeVP++ },       onDec = { if (s.yourUpgradeVP       > 0) s.yourUpgradeVP--       })
-                MrScoreRow("PV residencias construidas (suma)", s.yourResidenceVP, s.yourResidenceVP,
-                    onInc = { s.yourResidenceVP++ },     onDec = { if (s.yourResidenceVP     > 0) s.yourResidenceVP--     })
-                MrScoreRow("Tesoros (2-5 PV cada uno, total)", s.yourTreasureVP, s.yourTreasureVP,
-                    onInc = { s.yourTreasureVP++ },      onDec = { if (s.yourTreasureVP      > 0) s.yourTreasureVP--      })
-                MrScoreRow("Tesoros enterrados × 2 PV  (n=${s.yourBuriedTreasures})", s.yourBuriedTreasures, s.yourBuriedTreasures * 2,
-                    onInc = { s.yourBuriedTreasures++ }, onDec = { if (s.yourBuriedTreasures > 0) s.yourBuriedTreasures-- })
-                MrScoreRow("Misiones (PV condición más alta cumplida)", s.yourMissionVP, s.yourMissionVP,
-                    onInc = { s.yourMissionVP++ },       onDec = { if (s.yourMissionVP       > 0) s.yourMissionVP--       })
+                MrScoreRow("Ríos cruzados × 4 PV  (n=${vm.yourRivers})", vm.yourRivers, vm.yourRivers * 4,
+                    onInc = { vm.yourRivers++ },          onDec = { if (vm.yourRivers          > 0) vm.yourRivers--          })
+                MrScoreRow("Doblones  (${vm.yourDoubloons} ÷ 5)", vm.yourDoubloons, vm.yourDoubloons / 5,
+                    onInc = { vm.yourDoubloons++ },       onDec = { if (vm.yourDoubloons       > 0) vm.yourDoubloons--       })
+                MrScoreRow("PV mejoras adquiridas (suma)", vm.yourUpgradeVP, vm.yourUpgradeVP,
+                    onInc = { vm.yourUpgradeVP++ },       onDec = { if (vm.yourUpgradeVP       > 0) vm.yourUpgradeVP--       })
+                MrScoreRow("PV residencias construidas (suma)", vm.yourResidenceVP, vm.yourResidenceVP,
+                    onInc = { vm.yourResidenceVP++ },     onDec = { if (vm.yourResidenceVP     > 0) vm.yourResidenceVP--     })
+                MrScoreRow("Tesoros (2-5 PV cada uno, total)", vm.yourTreasureVP, vm.yourTreasureVP,
+                    onInc = { vm.yourTreasureVP++ },      onDec = { if (vm.yourTreasureVP      > 0) vm.yourTreasureVP--      })
+                MrScoreRow("Tesoros enterrados × 2 PV  (n=${vm.yourBuriedTreasures})", vm.yourBuriedTreasures, vm.yourBuriedTreasures * 2,
+                    onInc = { vm.yourBuriedTreasures++ }, onDec = { if (vm.yourBuriedTreasures > 0) vm.yourBuriedTreasures-- })
+                MrScoreRow("Misiones (PV condición más alta cumplida)", vm.yourMissionVP, vm.yourMissionVP,
+                    onInc = { vm.yourMissionVP++ },       onDec = { if (vm.yourMissionVP       > 0) vm.yourMissionVP--       })
 
                 // Bonus ≥6 misiones toggle
                 Row(Modifier.fillMaxWidth().padding(vertical = 4.dp),
@@ -1109,16 +1061,16 @@ private fun MrScoringContent(
                         style = MaterialTheme.typography.bodySmall,
                         color = GhostWhite.copy(0.75f), modifier = Modifier.weight(1f))
                     Switch(
-                        checked = s.yourMissionBonus,
-                        onCheckedChange = { s.yourMissionBonus = it },
+                        checked = vm.yourMissionBonus,
+                        onCheckedChange = { vm.yourMissionBonus = it },
                         colors = SwitchDefaults.colors(
                             checkedThumbColor = PirateGold,
                             checkedTrackColor = PirateGold.copy(0.3f)
                         )
                     )
-                    Text(if (s.yourMissionBonus) "+10 PV" else "—",
+                    Text(if (vm.yourMissionBonus) "+10 PV" else "—",
                         style = MaterialTheme.typography.labelLarge.copy(fontSize = 11.sp),
-                        color = if (s.yourMissionBonus) PirateGold else GhostWhite.copy(0.3f),
+                        color = if (vm.yourMissionBonus) PirateGold else GhostWhite.copy(0.3f),
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.width(48.dp), textAlign = TextAlign.End)
                 }
