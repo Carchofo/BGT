@@ -24,6 +24,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.rafel.bgt.R
 import com.rafel.bgt.ui.theme.*
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.rafel.bgt.ui.viewmodels.CMViewModel
 import com.rafel.bgt.ui.util.CardSoundPlayer
 
 // ── Datos de cartas Tingent ───────────────────────────────────────────────────
@@ -239,7 +241,7 @@ private enum class CMPhase { SETUP, PLAYING }
 
 // ── Estado de puntuación (persiste entre cambios de tab) ──────────────────────
 
-private class CMScoringState {
+class CMScoringState {
     var youEndCards   by mutableStateOf(0)
     var youCreatures  by mutableStateOf(0)
     var youAch6       by mutableStateOf(0)
@@ -267,7 +269,7 @@ private val CMBorder    = Color(0xFF5C4A2A)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CMSoloModeScreen(onBack: () -> Unit = {}) {
+fun CMSoloModeScreen(onBack: () -> Unit = {}, vm: CMViewModel = viewModel()) {
 
     val context = LocalContext.current
     val soundPlayer = remember { CardSoundPlayer(context) }
@@ -282,8 +284,7 @@ fun CMSoloModeScreen(onBack: () -> Unit = {}) {
     var currentCard by remember { mutableStateOf<TingentCard?>(null) }
     var currentTrackerAction by remember { mutableStateOf(TrackerAction.NONE) }
     var turnCount  by remember { mutableIntStateOf(1) }
-    var selectedTab by remember { mutableIntStateOf(0) }
-    val cmScoring   = remember { CMScoringState() }
+    val cmScoring = vm.scoring
 
     fun drawCard() {
         if (deckIndex >= deck.size) {
@@ -324,7 +325,7 @@ fun CMSoloModeScreen(onBack: () -> Unit = {}) {
                 },
                 navigationIcon = {
                     IconButton(onClick = {
-                        if (selectedTab != 0) selectedTab = 0
+                        if (vm.selectedTab != 0) vm.selectedTab = 0
                         else if (phase == CMPhase.PLAYING) phase = CMPhase.SETUP
                         else onBack()
                     }) {
@@ -343,8 +344,8 @@ fun CMSoloModeScreen(onBack: () -> Unit = {}) {
                     Triple(stringResource(R.string.nav_rules),   Icons.Default.MenuBook,    3)
                 ).forEach { (label, icon, idx) ->
                     NavigationBarItem(
-                        selected = selectedTab == idx,
-                        onClick  = { selectedTab = idx },
+                        selected = vm.selectedTab == idx,
+                        onClick  = { vm.selectedTab = idx },
                         icon  = { Icon(icon, null, modifier = Modifier.size(20.dp)) },
                         label = { Text(label, fontSize = 11.sp) },
                         colors = NavigationBarItemDefaults.colors(
@@ -364,7 +365,7 @@ fun CMSoloModeScreen(onBack: () -> Unit = {}) {
             Modifier.fillMaxSize().padding(padding)
                 .background(Brush.verticalGradient(listOf(CMBackground, Color(0xFF100C06))))
         ) {
-            when (selectedTab) {
+            when (vm.selectedTab) {
                 0 -> CMSetupTab(Modifier.padding(padding))
                 1 -> when (phase) {
                     CMPhase.SETUP -> CMSetupScreen(

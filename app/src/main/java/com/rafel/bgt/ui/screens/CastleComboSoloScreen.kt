@@ -20,13 +20,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.rafel.bgt.R
 import com.rafel.bgt.ui.theme.*
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.rafel.bgt.ui.viewmodels.CastleComboViewModel
 
 private val CCGold   = Color(0xFFDAA520)
 private val CCBrown  = Color(0xFF8B4513)
 private val CCCream  = Color(0xFFFFF8DC)
 
 // ─── Estado compartido ────────────────────────────────────────────
-private class CastleComboState {
+class CastleComboState {
     // Configuración
     var difficulty  by mutableStateOf(1)   // 0=Fácil, 1=Normal, 2=Difícil
     var turn        by mutableStateOf(1)
@@ -53,9 +55,8 @@ private class CastleComboState {
 // ─── Pantalla principal ────────────────────────────────────────────
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CastleComboSoloScreen(onBack: () -> Unit = {}) {
-    var selectedTab by remember { mutableIntStateOf(0) }
-    val s = remember { CastleComboState() }
+fun CastleComboSoloScreen(onBack: () -> Unit = {}, vm: CastleComboViewModel = viewModel()) {
+    val s = vm.state
 
     Scaffold(
         topBar = {
@@ -71,7 +72,7 @@ fun CastleComboSoloScreen(onBack: () -> Unit = {}) {
                 },
                 navigationIcon = {
                     IconButton(onClick = {
-                        if (selectedTab != 0) selectedTab = 0 else onBack()
+                        if (vm.selectedTab != 0) vm.selectedTab = 0 else onBack()
                     }) {
                         Icon(Icons.Default.ArrowBack, null, tint = GhostWhite)
                     }
@@ -88,7 +89,7 @@ fun CastleComboSoloScreen(onBack: () -> Unit = {}) {
                     Triple(3, Icons.Default.MenuBook, stringResource(R.string.nav_rules))
                 ).forEach { (idx, icon, label) ->
                     NavigationBarItem(
-                        selected = selectedTab == idx, onClick = { selectedTab = idx },
+                        selected = vm.selectedTab == idx, onClick = { vm.selectedTab = idx },
                         icon = { Icon(icon, null) },
                         label = { Text(label) },
                         colors = NavigationBarItemDefaults.colors(
@@ -103,7 +104,7 @@ fun CastleComboSoloScreen(onBack: () -> Unit = {}) {
         },
         containerColor = MidnightBlue
     ) { padding ->
-        when (selectedTab) {
+        when (vm.selectedTab) {
             0 -> CCSetupTab(Modifier.padding(padding))
             1 -> CCSoloTab(s, Modifier.padding(padding))
             2 -> CCScoreTab(s, Modifier.padding(padding))
