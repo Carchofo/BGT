@@ -26,6 +26,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.rafel.bgt.R
 import com.rafel.bgt.ui.theme.*
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.rafel.bgt.ui.viewmodels.TiletumViewModel
 import com.rafel.bgt.ui.util.CardSoundPlayer
 
 // ── Colores ───────────────────────────────────────────────────────────────────
@@ -274,7 +276,7 @@ private enum class TilPhase { SETUP, PLAYING, KING, FAIR, FINAL }
 
 // ── Estado de puntuación (persiste entre cambios de tab) ──────────────────────
 
-private class TilScoringState {
+class TilScoringState {
     var yourInGame      by mutableStateOf(0)
     var yourHouses      by mutableStateOf(0)
     var yourPillars     by mutableStateOf(0)
@@ -289,7 +291,7 @@ private class TilScoringState {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TiletumSoloScreen(onBack: () -> Unit = {}) {
+fun TiletumSoloScreen(onBack: () -> Unit = {}, vm: TiletumViewModel = viewModel()) {
 
     val context = LocalContext.current
     val soundPlayer = remember { CardSoundPlayer(context) }
@@ -307,8 +309,7 @@ fun TiletumSoloScreen(onBack: () -> Unit = {}) {
     var playerScore by remember { mutableIntStateOf(0) }
     var dieValue   by remember { mutableIntStateOf(3) }
     var dieColor   by remember { mutableStateOf(DiceColor.DARK) }
-    var selectedTab by remember { mutableIntStateOf(0) }
-    val tilScoring  = remember { TilScoringState() }
+    val tilScoring = vm.scoring
 
     val scored = if (dieColor == DiceColor.YELLOW) dieValue else dieValue * 2
 
@@ -344,7 +345,7 @@ fun TiletumSoloScreen(onBack: () -> Unit = {}) {
                         Text(stringResource(R.string.til_title),
                             style = MaterialTheme.typography.titleMedium,
                             color = TilGold, fontWeight = FontWeight.Bold)
-                        if (selectedTab == 0 && phase == TilPhase.PLAYING)
+                        if (vm.selectedTab == 0 && phase == TilPhase.PLAYING)
                             Text(stringResource(R.string.til_round_turn, round, turn),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = GhostWhite.copy(alpha = 0.5f))
@@ -352,8 +353,8 @@ fun TiletumSoloScreen(onBack: () -> Unit = {}) {
                 },
                 navigationIcon = {
                     IconButton(onClick = {
-                        if (selectedTab != 0) {
-                            selectedTab = 0
+                        if (vm.selectedTab != 0) {
+                            vm.selectedTab = 0
                         } else when (phase) {
                             TilPhase.KING    -> phase = TilPhase.PLAYING
                             TilPhase.FAIR    -> phase = TilPhase.KING
@@ -376,8 +377,8 @@ fun TiletumSoloScreen(onBack: () -> Unit = {}) {
                     Triple(stringResource(R.string.nav_rules),   Icons.Default.MenuBook,    3)
                 ).forEach { (label, icon, idx) ->
                     NavigationBarItem(
-                        selected = selectedTab == idx,
-                        onClick  = { selectedTab = idx },
+                        selected = vm.selectedTab == idx,
+                        onClick  = { vm.selectedTab = idx },
                         icon  = { Icon(icon, null, modifier = Modifier.size(20.dp)) },
                         label = { Text(label, fontSize = 11.sp) },
                         colors = NavigationBarItemDefaults.colors(
@@ -397,7 +398,7 @@ fun TiletumSoloScreen(onBack: () -> Unit = {}) {
             Modifier.fillMaxSize().padding(padding)
                 .background(Brush.verticalGradient(listOf(TilBg, Color(0xFF0E0A04))))
         ) {
-            when (selectedTab) {
+            when (vm.selectedTab) {
                 0 -> TilSetupTab(Modifier.padding(padding))
                 1 -> when (phase) {
                     TilPhase.SETUP -> TilSetupScreen(

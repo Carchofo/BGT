@@ -2,10 +2,12 @@ package com.rafel.bgt.ui.screens
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import kotlinx.coroutines.delay
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -202,6 +204,14 @@ private fun CoiSoloTab(s: CoimbraState, modifier: Modifier = Modifier) {
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
+        // Dado interactivo del bot
+        Row(
+            Modifier.fillMaxWidth().padding(bottom = 8.dp),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            CoimbraDiceRoller()
+        }
+        HorizontalDivider(color = GhostWhite.copy(alpha = 0.08f), modifier = Modifier.padding(vertical = 4.dp))
         // Ronda
         CoiCard {
             CoiSectionHeader(stringResource(R.string.coi_solo_tab_title))
@@ -573,6 +583,57 @@ private fun CoiRuleBlock(title: String, body: String) {
             Text(body, color = GhostWhite.copy(alpha = 0.75f),
                 style = MaterialTheme.typography.bodySmall)
         }
+    }
+}
+
+@Composable
+private fun CoimbraDiceRoller(modifier: Modifier = Modifier) {
+    var roll     by remember { mutableIntStateOf(0) }
+    var rolling  by remember { mutableStateOf(false) }
+    var rollTick by remember { mutableIntStateOf(0) }
+
+    LaunchedEffect(rollTick) {
+        if (rollTick == 0) return@LaunchedEffect
+        rolling = true
+        repeat(12) { delay(40L); roll = (1..6).random() }
+        rolling = false
+    }
+
+    val diceColor = when (roll) {
+        1    -> Color(0xFF7C3AED)
+        2    -> Color(0xFF16A34A)
+        3, 5 -> Color(0xFFF97316)
+        else -> Color(0xFF6B7280)
+    }
+    val diceLabel = when (roll) {
+        1    -> "Morado"
+        2    -> "Verde"
+        3    -> "Naranja"
+        4    -> "Gris"
+        5    -> "Naranja — re-roll"
+        6    -> "Gris — re-roll"
+        else -> "Toca para tirar"
+    }
+
+    Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(6.dp)) {
+        Surface(
+            modifier = Modifier.size(72.dp).clickable(enabled = !rolling) { rollTick++ },
+            color = Color(0xFF1A1A2E),
+            shape = RoundedCornerShape(12.dp),
+            border = BorderStroke(2.dp, if (roll == 0) GhostWhite.copy(0.2f) else diceColor)
+        ) {
+            Box(contentAlignment = Alignment.Center) {
+                Text(
+                    text = if (roll == 0) "🎲" else "$roll",
+                    fontSize = if (roll == 0) 28.sp else 36.sp,
+                    color = if (roll == 0) GhostWhite.copy(0.4f) else diceColor,
+                    fontWeight = FontWeight.Black
+                )
+            }
+        }
+        Text(diceLabel, color = if (roll == 0) GhostWhite.copy(0.4f) else diceColor,
+            style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold)
     }
 }
 
