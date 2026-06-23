@@ -110,7 +110,12 @@ private val GAMES = listOf(
         bannerRes = R.drawable.banner_coimbra,
         features = setOf(GameFeature.SOLO, GameFeature.RULES)
     ),
-    GameItem(id = "g4", title = "Próximamente", subtitle = ""),
+    GameItem(
+        id = "friday", title = "Friday",
+        subtitle = "Solo puro • Construye tu mazo para sobrevivir",
+        hasBanner = false, available = true, route = "friday_solo", tag = "DISPONIBLE",
+        features = setOf(GameFeature.SOLO, GameFeature.RULES, GameFeature.SCORE)
+    ),
     GameItem(id = "g5", title = "Próximamente", subtitle = ""),
     GameItem(id = "g6", title = "Próximamente", subtitle = ""),
     GameItem(id = "g7", title = "Próximamente", subtitle = ""),

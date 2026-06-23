@@ -30,6 +30,7 @@ import kotlinx.coroutines.launch
 import com.rafel.bgt.ui.screens.CascadiaScoreScreen
 import com.rafel.bgt.ui.screens.CastleComboSoloScreen
 import com.rafel.bgt.ui.screens.CoimbraSoloScreen
+import com.rafel.bgt.ui.screens.FridaySoloScreen
 import com.rafel.bgt.ui.screens.CMSoloModeScreen
 import com.rafel.bgt.ui.screens.TiletumSoloScreen
 import com.rafel.bgt.ui.screens.MaracaiboSoloScreen
@@ -245,6 +246,7 @@ fun BGTApp() {
         composable("cascadia_score")    { CascadiaScoreScreen(onBack = { navController.popBackStack() }) }
         composable("castle_combo_solo") { CastleComboSoloScreen(onBack = { navController.popBackStack() }) }
         composable("coimbra_solo")      { CoimbraSoloScreen(onBack = { navController.popBackStack() }) }
+        composable("friday_solo")       { FridaySoloScreen(onBack = { navController.popBackStack() }) }
         composable("about")             { AboutScreen(onBack = { navController.popBackStack() }) }
     }
 }
