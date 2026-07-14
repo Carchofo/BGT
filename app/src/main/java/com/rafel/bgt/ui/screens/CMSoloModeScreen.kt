@@ -396,8 +396,8 @@ fun CMSoloModeScreen(onBack: () -> Unit = {}, vm: CMViewModel = viewModel()) {
                         onDrawCard = { soundPlayer.playDeal(); drawCard() }
                     )
                 }
-                1 -> CMScoringContent(cmScoring, difficulty)
-                2 -> CMRulesContent()
+                2 -> CMScoringContent(cmScoring, difficulty)
+                3 -> CMRulesContent()
             }
         }
     }
