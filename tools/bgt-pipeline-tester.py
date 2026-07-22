@@ -19,6 +19,7 @@ import argparse
 import base64
 import json
 import sys
+import urllib.parse
 import urllib.request
 from datetime import datetime
 from pathlib import Path
@@ -26,9 +27,63 @@ from pathlib import Path
 OLLAMA_URL = "http://192.168.0.25:11434/api/generate"
 TEST_ENDPOINT = "http://192.168.0.25:5678/webhook/bgt-test-turn"
 COMMUNITY_ENDPOINT = "http://192.168.0.25:5678/webhook/bgt-community-submit"
+SEARXNG_URL = "http://192.168.0.25:8080/search"
 PERSONA_MODEL = "qwen3.5:4b"
+DISCOVERY_MODEL = "qwen2.5-coder:14b"  # mismo modelo que usa el fixer/router de produccion
 MAX_TURNS = 8
 LOG_DIR = Path(__file__).parent / "pipeline-tests"
+
+IMPLEMENTED_GAMES = ["Spooktacular", "Criaturas Maravillosas", "Tiletum", "Piratas de Maracaibo",
+                     "Castle Combo", "Cascadia", "Coimbra", "Friday"]
+CANDIDATE_GAMES = ["Viticulture", "Spirit Island", "Wingspan", "Arkham Horror LCG", "Pandemic",
+                   "Robinson Crusoe", "Gloomhaven: Jaws of the Lion", "7 Wonders Duel", "Too Many Bones"]
+
+
+def searxng_query(q):
+    url = f"{SEARXNG_URL}?q={urllib.parse.quote(q)}&format=json&language=es"
+    with urllib.request.urlopen(url, timeout=25) as r:
+        return json.loads(r.read().decode("utf-8"))
+
+
+def discover_game_candidate():
+    """Busca en foros (Reddit/BGG via SearXNG, gratis y local) un juego con
+    modo solitario del que se hable bien y que no este ya en BGT ni en la cola
+    de candidatos. Usa qwen2.5-coder:14b (mismo modelo que produccion) para
+    elegir uno de los resultados reales, no inventado."""
+    queries = [
+        "board game solo mode automa recommendation reddit soloboardgaming 2026",
+        "best new solo board game 2026 boardgamegeek",
+    ]
+    snippets = []
+    for q in queries:
+        try:
+            res = searxng_query(q)
+            for r in res.get("results", [])[:8]:
+                snippets.append(f"- {r.get('title','')}: {r.get('content','')[:200]} ({r.get('url','')})")
+        except Exception as e:
+            print(f"[discover] búsqueda falló para '{q}': {e}")
+    if not snippets:
+        return None
+
+    excluded = ", ".join(IMPLEMENTED_GAMES + CANDIDATE_GAMES)
+    prompt = (
+        "Estos son resultados reales de foros (Reddit/BGG) sobre juegos de mesa con modo solitario:\n\n"
+        + "\n".join(snippets)
+        + f"\n\nYa tenemos implementados o en cola: {excluded}. "
+        "Elige UN juego mencionado en los resultados de arriba (no de tu conocimiento previo) que NO esté "
+        "en esa lista y tenga buena fama de modo solitario. Responde SOLO JSON: "
+        '{"juego": "nombre exacto", "por_que": "una frase citando lo que dicen los foros", "fuente_url": "url del snippet que lo menciona"}. '
+        "Si ningún resultado sirve, responde exactamente: NINGUNO"
+    )
+    resp = post_json(OLLAMA_URL, {"model": DISCOVERY_MODEL, "prompt": prompt, "stream": False, "format": "json"})
+    raw = resp.get("response", "").strip()
+    if raw == "NINGUNO" or not raw:
+        return None
+    try:
+        return json.loads(raw)
+    except Exception:
+        print(f"[discover] respuesta no parseable: {raw[:200]}")
+        return None
 
 
 def post_json(url, payload, timeout=180):
@@ -123,8 +178,32 @@ def run_conversation(mode, goal, photos):
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(description="Simula un usuario probando el bot de BGT")
-    ap.add_argument("--mode", choices=["game", "modify"], required=True)
-    ap.add_argument("--goal", required=True, help="Qué quiere conseguir el usuario sintético, en lenguaje natural")
+    ap.add_argument("--mode", choices=["game", "modify"], required=False)
+    ap.add_argument("--goal", required=False, help="Qué quiere conseguir el usuario sintético, en lenguaje natural")
     ap.add_argument("--photos", nargs="*", default=[], help="Rutas de imágenes a enviar como assets")
+    ap.add_argument("--discover", action="store_true",
+                     help="Busca en foros (SearXNG) un juego real con buena fama de modo solitario "
+                          "que no esté ya en BGT, y prueba a pedirlo con /juego_nuevo automáticamente")
     args = ap.parse_args()
-    run_conversation(args.mode, args.goal, args.photos)
+
+    if args.discover:
+        print("=== Descubriendo candidato en foros (Reddit/BGG vía SearXNG) ===")
+        found = discover_game_candidate()
+        if not found:
+            print("No se encontró ningún candidato nuevo en esta pasada. Nada que probar.")
+            sys.exit(0)
+        print(f"[discover] Candidato encontrado: {found.get('juego')} — {found.get('por_que')}")
+        print(f"[discover] Fuente: {found.get('fuente_url')}")
+        goal = (
+            f"Quieres pedir el juego \"{found.get('juego')}\" para BGT. Motivo: {found.get('por_que')} "
+            f"Lo has visto comentado en foros de juegos de mesa, en concreto aquí: {found.get('fuente_url')}"
+        )
+        log_file = run_conversation("game", goal, [])
+        with open(log_file, "a", encoding="utf-8") as f:
+            f.write(f"\n## Origen del candidato (descubrimiento automático)\n"
+                    f"- Juego: {found.get('juego')}\n- Razón: {found.get('por_que')}\n"
+                    f"- Fuente: {found.get('fuente_url')}\n")
+    else:
+        if not args.mode or not args.goal:
+            ap.error("--mode y --goal son obligatorios salvo que uses --discover")
+        run_conversation(args.mode, args.goal, args.photos)

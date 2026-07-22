@@ -11,6 +11,7 @@ $BugsDir       = "C:\Users\perka\self-hosted-ai-starter-kit\shared\bgt-bugs"
 $JavaHome      = "C:\Program Files\Android\Android Studio\jbr"
 $LogDir        = "$RepoDir\tools\fixer-logs"
 $OllamaUrl     = "http://192.168.0.25:11434/api/generate"
+$AnnounceUrl   = "http://192.168.0.25:5678/webhook/bgt-announce"
 $MaxClaudePerDay = 5
 $MaxDiffFiles  = 3
 $MaxDiffLines  = 60
@@ -18,6 +19,13 @@ $ForbiddenPaths = @("build.gradle.kts", ".github/", "keystore.properties")
 
 New-Item -ItemType Directory -Force $LogDir | Out-Null
 $env:JAVA_HOME = $JavaHome
+
+function Send-GroupAnnounce($message) {
+    try {
+        $body = @{ message = $message; source = 'bgt-bug-fixer' } | ConvertTo-Json
+        Invoke-RestMethod -Uri $AnnounceUrl -Method Post -Body $body -ContentType "application/json" -TimeoutSec 10 | Out-Null
+    } catch { Write-Host "Aviso: no se pudo anunciar al grupo ($_)" }
+}
 
 function Get-ClaudeUsageToday {
     $f = "$LogDir\claude-usage-$(Get-Date -Format yyyy-MM-dd).count"
@@ -190,6 +198,7 @@ foreach ($bug in $bugs) {
         (Get-Content $bug.FullName -Raw) -replace "status: fixing", "status: proposed`nbranch: $branch`nfixed_by: $fixer`npr: https://github.com/Carchofo/BGT/compare/main...$branch" | Set-Content $bug.FullName -Encoding utf8
         git checkout main 2>&1 | Out-Null
         Write-Host "PROPUESTO ($fixer): $branch — revisar y mergear en GitHub"
+        Send-GroupAnnounce "🔧 *$fixer* propuso un fix para \`$id\`. Rafel lo revisará antes de publicarlo. Gracias a quien reportó este fallo 🙌"
     }
     catch {
         (Get-Content $bug.FullName -Raw) -replace "status: fixing", "status: error" | Set-Content $bug.FullName -Encoding utf8

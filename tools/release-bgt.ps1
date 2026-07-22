@@ -44,5 +44,13 @@ try {
     git push origin $new
     Write-Host "Release $new lanzada. GitHub Actions construye y publica el APK firmado."
     Write-Host "Seguimiento: https://github.com/Carchofo/BGT/actions"
+
+    try {
+        $announceBody = @{
+            message = "🎃 *BGT $new* ya está en camino. $Notes`n`nGitHub Actions está construyendo el APK firmado — llegará por autoupdate en unos minutos. Gracias a quien reportó o pidió algo de esta versión 🙌"
+            source  = 'release-bgt'
+        } | ConvertTo-Json
+        Invoke-RestMethod -Uri "http://192.168.0.25:5678/webhook/bgt-announce" -Method Post -Body $announceBody -ContentType "application/json" -TimeoutSec 10 | Out-Null
+    } catch { Write-Host "Aviso: no se pudo anunciar la release al grupo ($_)" }
 }
 finally { Pop-Location }
