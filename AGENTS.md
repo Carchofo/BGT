@@ -6,6 +6,14 @@ Contexto para cualquier agente (Claude Code, qwen via n8n) que trabaje en este r
 App Android **BGT — Board Game Tools** (Kotlin + Jetpack Compose, package `com.rafel.bgt`).
 Bots solitario fan-made y calculadoras para juegos de mesa. Distribución por GitHub releases con autoupdate OTA (`UpdateChecker` + `ApkInstaller`).
 
+## Regla de producto: no solapar solitarios (2026-07-22)
+Cuando un juego YA está implementado y aparece un automa/solitario ALTERNATIVO para ese
+mismo juego (comunidad, investigación, o petición vía Telegram): **nunca** duplicar el
+juego ni sobrescribir el automa actual. Se añade como **variante seleccionable dentro de
+un submenú de la pantalla ya existente**, con crédito visible al autor original. Diseño
+detallado pendiente en `bgt-games-vault/decisions/` (agente Opus, 2026-07-22) — consultar
+ahí antes de implementar cualquier variante.
+
 ## Reglas duras
 1. **Nunca hagas commit/push a `main`.** Trabaja siempre en ramas `bot/*` y deja que un humano haga merge.
 2. **Gate obligatorio:** `./gradlew testDebugUnitTest assembleDebug` debe estar verde antes de proponer cualquier cambio.

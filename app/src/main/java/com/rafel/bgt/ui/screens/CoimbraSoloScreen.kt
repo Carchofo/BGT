@@ -18,10 +18,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.rafel.bgt.R
+import com.rafel.bgt.data.AutomaVariant
+import com.rafel.bgt.data.AutomaVariants
 import com.rafel.bgt.ui.theme.*
 import com.rafel.bgt.ui.viewmodels.CoimbraViewModel
 
@@ -37,6 +40,11 @@ fun CoimbraSoloScreen(onBack: () -> Unit = {}) {
     val vm: CoimbraViewModel = viewModel()
     var selectedTab by vm::selectedTab
     val s = vm
+
+    val context = LocalContext.current
+    val variants = remember { AutomaVariants.forGame(context, "coimbra") }
+    val selectedVariant = variants.firstOrNull { it.id == vm.selectedVariantId }
+        ?: variants.firstOrNull { it.isDefault } ?: variants.first()
 
     Scaffold(
         topBar = {
@@ -85,7 +93,7 @@ fun CoimbraSoloScreen(onBack: () -> Unit = {}) {
         containerColor = MidnightBlue
     ) { padding ->
         when (selectedTab) {
-            0 -> CoiSetupTab(Modifier.padding(padding))
+            0 -> CoiSetupTab(variants, selectedVariant, { vm.selectedVariantId = it.id }, Modifier.padding(padding))
             1 -> CoiSoloTab(s, Modifier.padding(padding))
             2 -> CoiScoreTab(s, Modifier.padding(padding))
             3 -> CoiRulesTab(Modifier.padding(padding))
@@ -611,7 +619,12 @@ private fun CoimbraDiceRoller(modifier: Modifier = Modifier) {
 
 // ─── Tab Setup ─────────────────────────────────────────────────────
 @Composable
-private fun CoiSetupTab(modifier: Modifier = Modifier) {
+private fun CoiSetupTab(
+    variants: List<AutomaVariant>,
+    selected: AutomaVariant,
+    onSelect: (AutomaVariant) -> Unit,
+    modifier: Modifier = Modifier
+) {
     Column(
         modifier = modifier.fillMaxSize().verticalScroll(rememberScrollState())
             .padding(horizontal = 16.dp, vertical = 12.dp),
@@ -622,9 +635,53 @@ private fun CoiSetupTab(modifier: Modifier = Modifier) {
         Text(stringResource(R.string.coi_setup_subtitle),
             color = GhostWhite.copy(alpha = 0.4f), style = MaterialTheme.typography.bodySmall)
 
+        // Selector de variante de automa -- solo se muestra si hay más de una
+        // (ver bgt-games-vault/decisions/2026-07-22-variantes-automa.md)
+        if (variants.size > 1) {
+            CoiVariantSelector(variants, selected, onSelect)
+        }
+
         CoiRuleBlock(stringResource(R.string.coi_setup_board_title), stringResource(R.string.coi_setup_board_body))
         CoiRuleBlock(stringResource(R.string.coi_setup_player_title), stringResource(R.string.coi_setup_player_body))
         CoiRuleBlock(stringResource(R.string.coi_setup_solo_title), stringResource(R.string.coi_setup_solo_body))
         CoiRuleBlock(stringResource(R.string.coi_setup_turn_title), stringResource(R.string.coi_setup_turn_body))
+    }
+}
+
+@Composable
+private fun CoiVariantSelector(
+    variants: List<AutomaVariant>,
+    selected: AutomaVariant,
+    onSelect: (AutomaVariant) -> Unit
+) {
+    CoiCard {
+        CoiSectionHeader(stringResource(R.string.automa_variant_section_title))
+        variants.forEach { v ->
+            Row(
+                Modifier.fillMaxWidth().clickable { onSelect(v) }.padding(vertical = 6.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                RadioButton(
+                    selected = v.id == selected.id, onClick = { onSelect(v) },
+                    colors = RadioButtonDefaults.colors(selectedColor = CoiAmber, unselectedColor = GhostWhite.copy(alpha = 0.4f))
+                )
+                Column(Modifier.weight(1f)) {
+                    val nameRes = if (v.displayNameKey.isNotBlank()) {
+                        val resId = LocalContext.current.resources.getIdentifier(v.displayNameKey, "string", LocalContext.current.packageName)
+                        if (resId != 0) stringResource(resId) else v.author
+                    } else v.author
+                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                        Text(nameRes, color = GhostWhite, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.bodyMedium)
+                        Text(
+                            if (v.verified) stringResource(R.string.automa_verified_badge) else stringResource(R.string.automa_community_badge),
+                            color = if (v.verified) CoiGold else GhostWhite.copy(alpha = 0.5f),
+                            style = MaterialTheme.typography.labelSmall
+                        )
+                    }
+                    Text("· ${v.author}", color = GhostWhite.copy(alpha = 0.5f), style = MaterialTheme.typography.labelSmall)
+                }
+            }
+        }
     }
 }

@@ -472,6 +472,12 @@
     <string name="coi_setup_turn_title">🎲 Orden de turno</string>
     <string name="coi_setup_turn_body">• El Bot siempre va PRIMERO en todos los turnos de todas las rondas.\n• El jugador va segundo, con 1 corona fija por ser 2º en orden de turno.</string>
 
+    <!-- ── Variantes de automa (ver bgt-games-vault/decisions/2026-07-22-variantes-automa.md) ── -->
+    <string name="automa_variant_section_title">Elige automa</string>
+    <string name="automa_verified_badge">✓ verificado</string>
+    <string name="automa_community_badge">⚠ aportado por la comunidad</string>
+    <string name="coi_variant_official">Interferencia (oficial)</string>
+
     <!-- ── Killtron cards ── -->
     <string name="deck_a_label">Mazo A</string>
     <string name="deck_b_label">Mazo B</string>

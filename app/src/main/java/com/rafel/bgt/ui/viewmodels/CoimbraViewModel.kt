@@ -16,6 +16,8 @@ private val CoiGold  = Color(0xFFF5B800)
 class CoimbraViewModel : ViewModel() {
 
     var selectedTab by mutableIntStateOf(0)
+    // null = usar la variante marcada isDefault en automa-variants.json
+    var selectedVariantId by mutableStateOf<String?>(null)
     var round by mutableIntStateOf(1)
 
     // Puntuación por categorías

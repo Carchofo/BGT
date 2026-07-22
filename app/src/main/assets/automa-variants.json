@@ -1,0 +1,15 @@
+{
+  "coimbra": [
+    {
+      "id": "coimbra_interferencia",
+      "displayNameKey": "coi_variant_official",
+      "logic": "INTERFERENCIA",
+      "author": "BGT (oficial)",
+      "source": "reglamento oficial",
+      "sourceUrl": null,
+      "addedDate": "2026-07-14",
+      "verified": true,
+      "isDefault": true
+    }
+  ]
+}
