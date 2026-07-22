@@ -65,6 +65,15 @@
   }
   .btn-download:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(255,107,0,.6)}
   .btn-download small{display:block;font-size:.8rem;font-weight:400;opacity:.9;margin-top:.15rem}
+  .hero-ctas{display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;align-items:stretch}
+  .btn-telegram{
+    display:inline-block;text-decoration:none;color:#7fd0ff;font-weight:700;font-size:1.05rem;
+    padding:1rem 2rem;border-radius:14px;background:#2AABEE1a;border:1px solid #2AABEE88;
+    opacity:.6;cursor:not-allowed;transition:transform .15s ease;
+  }
+  .btn-telegram.active{opacity:1;cursor:pointer}
+  .btn-telegram.active:hover{transform:translateY(-2px)}
+  .btn-telegram small{display:block;font-size:.78rem;font-weight:400;opacity:.85;margin-top:.15rem;color:#a8d8f5}
   .release-meta{margin-top:1rem;color:#9a9ab5;font-size:.95rem}
   .release-meta span{color:var(--pumpkin);font-weight:600}
   .badge-free{
@@ -72,6 +81,11 @@
     border:1px solid var(--card-border);border-radius:999px;
     padding:.3rem 1rem;font-size:.85rem;color:#b9b9cf;background:rgba(26,26,46,.6);
   }
+  .feature-strip{
+    display:flex;flex-wrap:wrap;justify-content:center;gap:.6rem 1.4rem;
+    margin-top:1.6rem;font-size:.85rem;color:#a8a8c4;
+  }
+  .feature-strip span{white-space:nowrap}
 
   /* SECTIONS */
   section{padding:3.5rem 0}
@@ -139,12 +153,12 @@
   }
   .request-form label{display:block;font-weight:600;color:var(--ghost);margin:1rem 0 .35rem}
   .request-form label:first-of-type{margin-top:0}
-  .request-form input,.request-form textarea{
+  .request-form input,.request-form textarea,.request-form select{
     width:100%;padding:.7rem .9rem;border-radius:10px;
     border:1px solid var(--card-border);background:#0E0E1F;color:var(--ghost);
     font-family:inherit;font-size:1rem;
   }
-  .request-form input:focus,.request-form textarea:focus{outline:2px solid var(--orange-dark)}
+  .request-form input:focus,.request-form textarea:focus,.request-form select:focus{outline:2px solid var(--orange-dark)}
   .request-form textarea{min-height:110px;resize:vertical}
   .request-form button{
     margin-top:1.4rem;width:100%;
@@ -171,9 +185,8 @@
     font-weight:700;color:#fff;opacity:.65;cursor:not-allowed;
     border:1px solid var(--card-border);
   }
-  .donate-btn.kofi{background:#13C3FF22;border-color:#13C3FF88;color:#7fdcff}
-  .donate-btn.paypal{background:#0070BA22;border-color:#0070BA88;color:#8fc4ff}
-  .donate-btn.bmc{background:#FFDD0022;border-color:#FFDD0066;color:#ffe680}
+  .donate-btn.kofi{background:#FF5E5B22;border-color:#FF5E5B88;color:#ff9d9b}
+  .donate-btn.sponsors{background:#EA4AAA22;border-color:#EA4AAA88;color:#ff9ed6;opacity:1;cursor:pointer}
   .donate-btn small{font-weight:400;opacity:.85}
 
   .tg-btn{
@@ -208,12 +221,24 @@
   <h1>BGT</h1>
   <div class="sub">Board Game Tools</div>
   <p class="tagline">Bots solitario, calculadoras de puntuación y ayudas de juego para tus juegos de mesa favoritos. Gratis, sin anuncios y hecha por un fan para fans.</p>
-  <a class="btn-download" href="https://github.com/Carchofo/BGT/releases/latest" id="download-btn">
-    ⬇ Descargar APK
-    <small id="version-label">última versión</small>
-  </a>
+  <div class="hero-ctas">
+    <a class="btn-download" href="https://github.com/Carchofo/BGT/releases/latest" id="download-btn">
+      ⬇ Descargar APK
+      <small id="version-label">última versión</small>
+    </a>
+    <a class="btn-telegram" href="#" id="telegram-link-hero" aria-disabled="true">
+      ✈️ Únete al grupo
+      <small>pide juegos, reporta fallos, comenta</small>
+    </a>
+  </div>
   <div class="release-meta" id="release-meta"></div>
   <div class="badge-free">🎃 100% gratuita · Android · Fan-made</div>
+  <div class="feature-strip">
+    <span>🔄 Se actualiza sola</span>
+    <span>📴 Sin cuenta ni registro</span>
+    <span>🚫 Sin anuncios</span>
+    <span>🤖 IA local, no tus datos en la nube</span>
+  </div>
 </header>
 
 <section id="juegos">
@@ -329,8 +354,13 @@
       <div class="community-card">
         <span class="emoji">✈️</span>
         <h3>Bot de Telegram</h3>
-        <p>Pide la última versión con <code>/update</code> o escribe directamente al bot para comentar, sugerir o preguntar. Se guarda igual que el feedback de la app.</p>
+        <p><code>/juego_nuevo</code> para pedir un juego, <code>/modificar</code> para reportar un fallo en uno ya implementado, <code>/update</code> para la última versión. Todo con conversación guiada, sin formularios.</p>
         <a href="#" id="telegram-link" class="tg-btn" aria-disabled="true">Próximamente en Telegram</a>
+      </div>
+      <div class="community-card">
+        <span class="emoji">🏆</span>
+        <h3>Sube de rango en el grupo</h3>
+        <p>De <strong>Novato de Mazo</strong> a <strong>Game Master</strong>: cuantos más aportes útiles hagas, más rango y más peso tiene tu voz en la comunidad.</p>
       </div>
     </div>
   </div>
@@ -338,16 +368,21 @@
 
 <section id="pedir-juego">
   <div class="container">
-    <h2 class="section-title">🗳️ Pide un juego nuevo</h2>
-    <p class="section-lead">¿Quieres un bot solitario o una calculadora para tu juego favorito? Cuéntanoslo y entrará en la lista de deseos de la comunidad.</p>
+    <h2 class="section-title">🗳️ Sugerencias y peticiones</h2>
+    <p class="section-lead">¿Quieres un bot para un juego que no está en la app, o has encontrado un fallo en uno de los que ya existen? Elige qué es y cuéntanoslo.</p>
     <form class="request-form" id="request-form">
+      <label for="req-type">¿Qué nos quieres pedir?</label>
+      <select id="req-type" name="req-type">
+        <option value="game">🎲 Un juego nuevo que no está en BGT</option>
+        <option value="modify">🐛 Un fallo o mejora en un juego ya implementado</option>
+      </select>
       <label for="game">Nombre del juego</label>
       <input type="text" id="game" name="game" required maxlength="120" placeholder="Ej: Ark Nova">
-      <label for="message">¿Por qué te gustaría verlo en BGT?</label>
+      <label for="message" id="message-label">¿Por qué te gustaría verlo en BGT?</label>
       <textarea id="message" name="message" required maxlength="1000" placeholder="Ej: su modo solitario oficial es muy farragoso y un bot automático lo arreglaría…"></textarea>
       <button type="submit" id="submit-btn">Enviar petición</button>
       <div id="form-status"></div>
-      <div class="form-note">⚠️ Por ahora el formulario solo funciona dentro de la red local del desarrollador (envía a <code>192.168.0.25:5678</code>). Pronto estará disponible públicamente.</div>
+      <div class="form-note">⚠️ Este formulario solo funciona en la red local del desarrollador todavía. <strong>Usa el bot de Telegram (botón "Únete al grupo" arriba)</strong> — funciona ya mismo desde cualquier sitio y es la vía recomendada.</div>
     </form>
   </div>
 </section>
@@ -355,11 +390,10 @@
 <section class="community" id="donaciones">
   <div class="container">
     <h2 class="section-title">☕ Apoya el proyecto</h2>
-    <p class="section-lead">BGT es y será siempre gratuita. Si quieres invitar a un café al desarrollador, pronto podrás hacerlo por aquí.</p>
+    <p class="section-lead" id="donate-lead">BGT es y será siempre gratuita, sin anuncios ni funciones de pago. Si te ha ahorrado partidas frustrantes, puedes invitar al desarrollador a un café.</p>
     <div class="donate-buttons">
-      <a class="donate-btn kofi" href="#" aria-disabled="true" onclick="return false">❤️ Ko-fi <small>· próximamente</small></a>
-      <a class="donate-btn paypal" href="#" aria-disabled="true" onclick="return false">💙 PayPal <small>· próximamente</small></a>
-      <a class="donate-btn bmc" href="#" aria-disabled="true" onclick="return false">☕ Buy Me a Coffee <small>· próximamente</small></a>
+      <a href="#" id="kofi-link" class="donate-btn kofi" aria-disabled="true" onclick="return false">❤️ Ko-fi <small>· próximamente</small></a>
+      <a href="https://github.com/sponsors/Carchofo" id="sponsors-link" class="donate-btn sponsors" target="_blank" rel="noopener">🐙 GitHub Sponsors</a>
     </div>
   </div>
 </section>
@@ -402,28 +436,62 @@
 })();
 
 // ── Bot de Telegram ──
-// Cuando el bot exista, pon aquí su username (sin @) y se activa el enlace solo.
-var TELEGRAM_BOT_USERNAME = null; // ej: 'BGT_boardgame_bot'
+// Bot activo hoy: @Xeft_bot (nombre genérico, pendiente de rebranding vía BotFather /setname).
+// Cambia este valor si en el futuro se renombra o se crea uno nuevo dedicado a BGT.
+var TELEGRAM_BOT_USERNAME = 'Xeft_bot';
 (function () {
-  var link = document.getElementById('telegram-link');
+  var links = [document.getElementById('telegram-link'), document.getElementById('telegram-link-hero')];
   if (TELEGRAM_BOT_USERNAME) {
-    link.href = 'https://t.me/' + TELEGRAM_BOT_USERNAME;
-    link.textContent = '✈️ Abrir @' + TELEGRAM_BOT_USERNAME;
+    links.forEach(function (link) {
+      if (!link) return;
+      link.href = 'https://t.me/' + TELEGRAM_BOT_USERNAME;
+      link.removeAttribute('aria-disabled');
+      link.classList.add('active');
+      link.target = '_blank';
+      link.rel = 'noopener';
+    });
+    document.getElementById('telegram-link').textContent = '✈️ Abrir @' + TELEGRAM_BOT_USERNAME;
+  }
+})();
+
+// ── Donaciones (Ko-fi) ──
+// En cuanto exista la cuenta (plan 90 días, semana 1-2), pon aquí el usuario y se activa sola.
+var KOFI_USERNAME = null; // ej: 'carchofo'
+(function () {
+  var link = document.getElementById('kofi-link');
+  if (KOFI_USERNAME) {
+    link.href = 'https://ko-fi.com/' + KOFI_USERNAME;
+    link.textContent = '❤️ Invítame en Ko-fi';
     link.removeAttribute('aria-disabled');
-    link.classList.add('active');
+    link.onclick = null;
     link.target = '_blank';
     link.rel = 'noopener';
   }
 })();
 
-// ── Formulario "Pide un juego nuevo" ──
+// ── Formulario "Sugerencias y peticiones" ──
+var reqTypeSelect = document.getElementById('req-type');
+var messageLabel = document.getElementById('message-label');
+var messageBox = document.getElementById('message');
+function updateFormCopy() {
+  if (reqTypeSelect.value === 'modify') {
+    messageLabel.textContent = '¿Qué falla o qué le falta?';
+    messageBox.placeholder = 'Ej: en dificultad Terrorífico el track de acciones no muestra nada…';
+  } else {
+    messageLabel.textContent = '¿Por qué te gustaría verlo en BGT?';
+    messageBox.placeholder = 'Ej: su modo solitario oficial es muy farragoso y un bot automático lo arreglaría…';
+  }
+}
+reqTypeSelect.addEventListener('change', updateFormCopy);
+updateFormCopy();
+
 document.getElementById('request-form').addEventListener('submit', function (e) {
   e.preventDefault();
   var btn = document.getElementById('submit-btn');
   var status = document.getElementById('form-status');
   var payload = {
     game: document.getElementById('game').value.trim(),
-    type: 'game',
+    type: reqTypeSelect.value,
     message: document.getElementById('message').value.trim()
   };
   if (!payload.game || !payload.message) return;
