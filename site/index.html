@@ -176,6 +176,15 @@
   .donate-btn.bmc{background:#FFDD0022;border-color:#FFDD0066;color:#ffe680}
   .donate-btn small{font-weight:400;opacity:.85}
 
+  .tg-btn{
+    display:inline-flex;align-items:center;gap:.4rem;margin-top:.7rem;
+    padding:.5rem 1rem;border-radius:10px;text-decoration:none;
+    font-size:.85rem;font-weight:700;
+    background:#2AABEE22;border:1px solid #2AABEE88;color:#7fd0ff;
+    opacity:.65;cursor:not-allowed;
+  }
+  .tg-btn.active{opacity:1;cursor:pointer}
+
   /* FOOTER */
   footer{
     border-top:1px solid var(--card-border);
@@ -317,6 +326,12 @@
         <h3>Agentes de IA locales</h3>
         <p>Los aportes se procesan con agentes de IA que corren en local: leen las fotos, clasifican el feedback y preparan las mejoras para la siguiente versión.</p>
       </div>
+      <div class="community-card">
+        <span class="emoji">✈️</span>
+        <h3>Bot de Telegram</h3>
+        <p>Pide la última versión con <code>/update</code> o escribe directamente al bot para comentar, sugerir o preguntar. Se guarda igual que el feedback de la app.</p>
+        <a href="#" id="telegram-link" class="tg-btn" aria-disabled="true">Próximamente en Telegram</a>
+      </div>
     </div>
   </div>
 </section>
@@ -384,6 +399,21 @@
     .catch(function () {
       document.getElementById('release-meta').textContent = '';
     });
+})();
+
+// ── Bot de Telegram ──
+// Cuando el bot exista, pon aquí su username (sin @) y se activa el enlace solo.
+var TELEGRAM_BOT_USERNAME = null; // ej: 'BGT_boardgame_bot'
+(function () {
+  var link = document.getElementById('telegram-link');
+  if (TELEGRAM_BOT_USERNAME) {
+    link.href = 'https://t.me/' + TELEGRAM_BOT_USERNAME;
+    link.textContent = '✈️ Abrir @' + TELEGRAM_BOT_USERNAME;
+    link.removeAttribute('aria-disabled');
+    link.classList.add('active');
+    link.target = '_blank';
+    link.rel = 'noopener';
+  }
 })();
 
 // ── Formulario "Pide un juego nuevo" ──

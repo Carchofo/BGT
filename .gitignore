@@ -18,3 +18,4 @@ keystore.properties
 .externalNativeBuild
 .cxx
 local.properties
+tools/pipeline-tests/

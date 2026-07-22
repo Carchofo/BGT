@@ -15,10 +15,15 @@ Bots solitario fan-made y calculadoras para juegos de mesa. Distribución por Gi
 6. Patrón de pantallas: Screen composable + ViewModel separado (ui/viewmodels). Sigue el estilo existente.
 7. No incluyas arte oficial de juegos ni textos de reglamentos con copyright en la APK. Las fotos de la comunidad son solo input de investigación, nunca assets distribuidos.
 
-## Flujo de bugs
-- La app envía bugs a `POST /webhook/bgt-bug` (n8n) → cola en `shared/bgt-bugs/*.md` (frontmatter `status: new`).
-- `tools/bgt-bug-fixer.ps1` (tarea programada cada 6 h) los procesa: rama `bot/<id>`, fix + test que reproduce el bug, gate, push, `status: proposed` con URL de comparación.
-- Estados: `new → fixing → proposed | gate-failed | needs-info | error`.
+## Flujo de bugs (router híbrido Ollama/Claude, 2026-07-22)
+- La app/Telegram envían bugs a `POST /webhook/bgt-bug` (n8n) → cola en `shared/bgt-bugs/*.md` (`status: new`).
+- El workflow de intake clasifica automáticamente con qwen2.5-coder:7b y escribe `difficulty: trivial|complex|needs-info` en el frontmatter.
+- `tools/bgt-bug-fixer.ps1` (tarea programada cada 6 h):
+  - `trivial` → primero intenta qwen2.5-coder:14b local (gratis) sobre el `archivo_probable`, con heurísticas (máx 3 archivos, máx 60 líneas, rutas prohibidas, coincidencia de archivo) y revisor 7b antes de aceptar el diff.
+  - Si Ollama no resuelve, o `difficulty: complex`, escala a Claude Code — con un tope diario (`$MaxClaudePerDay`, hoy 5) para que el gasto nunca sea sorpresa; al superarlo, `status: queued-claude`.
+  - Gate idéntico para ambos: `./gradlew testDebugUnitTest assembleDebug`. Sin verde no hay propuesta.
+- Estados: `new → fixing → proposed | gate-failed | needs-info | error | queued-claude`.
+- Ningún camino automatiza merge ni release — sigue siendo 100% decisión humana (regla 1).
 
 ## Aportes de comunidad
 - `POST /webhook/bgt-community-submit` (tipos: photo/feedback/game) → `shared/bgt-community/` con análisis de visión (qwen3.5:9b) para fotos.
