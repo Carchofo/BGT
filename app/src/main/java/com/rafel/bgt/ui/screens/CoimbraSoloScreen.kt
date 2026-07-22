@@ -20,51 +20,23 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.rafel.bgt.R
 import com.rafel.bgt.ui.theme.*
+import com.rafel.bgt.ui.viewmodels.CoimbraViewModel
 
 private val CoiAmber  = Color(0xFFD4900A)
 private val CoiGold   = Color(0xFFF5B800)
 
 // ─── Tablas de dados (built inside composable for localization) ───
 
-// ─── Estado ───────────────────────────────────────────────────────
-private class CoimbraState {
-    var round by mutableStateOf(1)
-
-    // Puntuación por categorías
-    var ptCartas        by mutableStateOf(0)
-    var ptPeregrin      by mutableStateOf(0)
-    var ptInfluencia    by mutableStateOf(0)
-    var ptMonedas       by mutableStateOf(0)
-    var ptFavores       by mutableStateOf(0)
-    var ptOtros         by mutableStateOf(0)
-
-    val total get() = ptCartas + ptPeregrin + ptInfluencia + ptMonedas + ptFavores + ptOtros
-
-    val ratingIndex get() = when {
-        total < 130 -> 0
-        total < 160 -> 1
-        total < 190 -> 2
-        total < 220 -> 3
-        else        -> 4
-    }
-
-    val ratingColor get() = when {
-        total < 130 -> BloodRed
-        total < 160 -> GhostWhite
-        total < 190 -> CoiAmber
-        total < 220 -> CoiGold
-        else        -> HalloweenOrange
-    }
-}
-
 // ─── Pantalla principal ────────────────────────────────────────────
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CoimbraSoloScreen(onBack: () -> Unit = {}) {
-    var selectedTab by remember { mutableIntStateOf(0) }
-    val s = remember { CoimbraState() }
+    val vm: CoimbraViewModel = viewModel()
+    var selectedTab by vm::selectedTab
+    val s = vm
 
     Scaffold(
         topBar = {
@@ -185,7 +157,7 @@ private fun CoiCounter(
 
 // ─── Tab Solitario ────────────────────────────────────────────────
 @Composable
-private fun CoiSoloTab(s: CoimbraState, modifier: Modifier = Modifier) {
+private fun CoiSoloTab(s: CoimbraViewModel, modifier: Modifier = Modifier) {
     val diceTable = listOf(
         Triple("1", "🟣", "Morado"),
         Triple("2", "🟢", "Verde"),
@@ -409,7 +381,7 @@ private fun CoiSoloTab(s: CoimbraState, modifier: Modifier = Modifier) {
 
 // ─── Tab Puntuación ───────────────────────────────────────────────
 @Composable
-private fun CoiScoreTab(s: CoimbraState, modifier: Modifier = Modifier) {
+private fun CoiScoreTab(s: CoimbraViewModel, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier.fillMaxSize().verticalScroll(rememberScrollState())
             .padding(horizontal = 16.dp, vertical = 12.dp),
