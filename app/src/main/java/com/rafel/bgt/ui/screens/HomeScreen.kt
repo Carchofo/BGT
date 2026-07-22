@@ -33,7 +33,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import com.rafel.bgt.BugReporter
+import com.rafel.bgt.CommunitySubmitter
 import com.rafel.bgt.R
 import com.rafel.bgt.ui.theme.*
 import com.rafel.bgt.ui.util.SoundSettings
@@ -114,7 +119,7 @@ private val GAMES = listOf(
         id = "friday", title = "Friday",
         subtitle = "Solo puro • Construye tu mazo para sobrevivir",
         hasBanner = false, available = true, route = "friday_solo", tag = "DISPONIBLE",
-        features = setOf(GameFeature.SOLO, GameFeature.RULES, GameFeature.SCORE)
+        features = setOf(GameFeature.SOLO, GameFeature.RULES, GameFeature.SCORING)
     ),
     GameItem(id = "g5", title = "Próximamente", subtitle = ""),
     GameItem(id = "g6", title = "Próximamente", subtitle = ""),
@@ -139,6 +144,7 @@ fun HomeScreen(
     var showFavoritesOnly by remember { mutableStateOf(false) }
     var activeFeatures by remember { mutableStateOf(emptySet<GameFeature>()) }
     var showBugDialog by remember { mutableStateOf(false) }
+    var showCommunityDialog by remember { mutableStateOf(false) }
     val keyboard = LocalSoftwareKeyboardController.current
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -210,6 +216,14 @@ fun HomeScreen(
                             modifier = Modifier.size(22.dp)
                         )
                     }
+                    IconButton(onClick = { showCommunityDialog = true }) {
+                        Icon(
+                            imageVector = Icons.Default.AddAPhoto,
+                            contentDescription = "Enviar aporte",
+                            tint = GhostWhite.copy(alpha = 0.45f),
+                            modifier = Modifier.size(22.dp)
+                        )
+                    }
                     IconButton(onClick = { showBugDialog = true }) {
                         Icon(
                             imageVector = Icons.Default.BugReport,
@@ -248,6 +262,15 @@ fun HomeScreen(
                 onSend = { game, msg ->
                     showBugDialog = false
                     scope.launch { BugReporter.send(context, game, msg) }
+                }
+            )
+        }
+        if (showCommunityDialog) {
+            CommunitySubmitDialog(
+                onDismiss = { showCommunityDialog = false },
+                onSend = { game, type, msg, imageUri ->
+                    showCommunityDialog = false
+                    scope.launch { CommunitySubmitter.send(context, game, type, msg, imageUri) }
                 }
             )
         }
@@ -325,7 +348,7 @@ private fun BugReportDialog(
     onDismiss: () -> Unit,
     onSend: (game: String, message: String) -> Unit
 ) {
-    val games = listOf("General", "Spooktacular", "Criaturas Maravillosas", "Tiletum", "Maracaibo", "Castle Combo", "Cascadia", "Coimbra")
+    val games = listOf("General", "Spooktacular", "Criaturas Maravillosas", "Tiletum", "Maracaibo", "Castle Combo", "Cascadia", "Coimbra", "Friday")
     var selectedGame by remember { mutableStateOf(games[0]) }
     var expanded by remember { mutableStateOf(false) }
     var message by remember { mutableStateOf("") }
@@ -379,6 +402,126 @@ private fun BugReportDialog(
         confirmButton = {
             Button(
                 onClick = { if (message.isNotBlank()) onSend(selectedGame, message) },
+                enabled = message.isNotBlank(),
+                colors = ButtonDefaults.buttonColors(containerColor = HalloweenOrange)
+            ) { Text("Enviar", fontWeight = FontWeight.Bold) }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) { Text("Cancelar", color = GhostWhite.copy(alpha = 0.6f)) }
+        },
+        containerColor = CardBackground
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun CommunitySubmitDialog(
+    onDismiss: () -> Unit,
+    onSend: (game: String, type: CommunitySubmitter.SubmissionType, message: String, imageUri: Uri?) -> Unit
+) {
+    val games = listOf("General", "Spooktacular", "Criaturas Maravillosas", "Tiletum", "Maracaibo", "Castle Combo", "Cascadia", "Coimbra", "Friday")
+    val types = listOf(
+        CommunitySubmitter.SubmissionType.PHOTO to "📷 Foto de cartas/componentes",
+        CommunitySubmitter.SubmissionType.FEEDBACK to "💬 Feedback / sugerencia",
+        CommunitySubmitter.SubmissionType.GAME_PROPOSAL to "🎲 Proponer juego nuevo"
+    )
+    var selectedGame by remember { mutableStateOf(games[0]) }
+    var gameExpanded by remember { mutableStateOf(false) }
+    var selectedType by remember { mutableStateOf(types[0]) }
+    var typeExpanded by remember { mutableStateOf(false) }
+    var message by remember { mutableStateOf("") }
+    var imageUri by remember { mutableStateOf<Uri?>(null) }
+
+    val pickImage = rememberLauncherForActivityResult(
+        ActivityResultContracts.PickVisualMedia()
+    ) { uri -> imageUri = uri }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("🤝 Aporte de la comunidad", fontWeight = FontWeight.Bold, color = GhostWhite) },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                ExposedDropdownMenuBox(expanded = typeExpanded, onExpandedChange = { typeExpanded = it }) {
+                    OutlinedTextField(
+                        value = selectedType.second,
+                        onValueChange = {},
+                        readOnly = true,
+                        label = { Text("Tipo de aporte", color = GhostWhite.copy(alpha = 0.6f)) },
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(typeExpanded) },
+                        modifier = Modifier.menuAnchor().fillMaxWidth(),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = HalloweenOrange,
+                            unfocusedBorderColor = CardBorder,
+                            focusedTextColor = GhostWhite,
+                            unfocusedTextColor = GhostWhite
+                        )
+                    )
+                    ExposedDropdownMenu(expanded = typeExpanded, onDismissRequest = { typeExpanded = false }) {
+                        types.forEach { t ->
+                            DropdownMenuItem(
+                                text = { Text(t.second) },
+                                onClick = { selectedType = t; typeExpanded = false }
+                            )
+                        }
+                    }
+                }
+                ExposedDropdownMenuBox(expanded = gameExpanded, onExpandedChange = { gameExpanded = it }) {
+                    OutlinedTextField(
+                        value = selectedGame,
+                        onValueChange = {},
+                        readOnly = true,
+                        label = { Text("Juego", color = GhostWhite.copy(alpha = 0.6f)) },
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(gameExpanded) },
+                        modifier = Modifier.menuAnchor().fillMaxWidth(),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = HalloweenOrange,
+                            unfocusedBorderColor = CardBorder,
+                            focusedTextColor = GhostWhite,
+                            unfocusedTextColor = GhostWhite
+                        )
+                    )
+                    ExposedDropdownMenu(expanded = gameExpanded, onDismissRequest = { gameExpanded = false }) {
+                        games.forEach { game ->
+                            DropdownMenuItem(
+                                text = { Text(game) },
+                                onClick = { selectedGame = game; gameExpanded = false }
+                            )
+                        }
+                    }
+                }
+                OutlinedTextField(
+                    value = message,
+                    onValueChange = { message = it },
+                    label = { Text("Comentario", color = GhostWhite.copy(alpha = 0.6f)) },
+                    modifier = Modifier.fillMaxWidth(),
+                    minLines = 3,
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = HalloweenOrange,
+                        unfocusedBorderColor = CardBorder,
+                        focusedTextColor = GhostWhite,
+                        unfocusedTextColor = GhostWhite,
+                        focusedContainerColor = CardBackground,
+                        unfocusedContainerColor = CardBackground
+                    )
+                )
+                OutlinedButton(
+                    onClick = {
+                        pickImage.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Icon(Icons.Default.AddAPhoto, null, modifier = Modifier.size(18.dp), tint = HalloweenOrange)
+                    Spacer(Modifier.width(8.dp))
+                    Text(
+                        if (imageUri == null) "Adjuntar foto (opcional)" else "✅ Foto adjuntada",
+                        color = GhostWhite
+                    )
+                }
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = { if (message.isNotBlank()) onSend(selectedGame, selectedType.first, message, imageUri) },
                 enabled = message.isNotBlank(),
                 colors = ButtonDefaults.buttonColors(containerColor = HalloweenOrange)
             ) { Text("Enviar", fontWeight = FontWeight.Bold) }

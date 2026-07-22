@@ -39,6 +39,7 @@ import com.rafel.bgt.ui.screens.HomeScreen
 import com.rafel.bgt.ui.screens.MonstersScreen
 import com.rafel.bgt.ui.screens.ScoreBoardScreen
 import com.rafel.bgt.ui.screens.SoloModeScreen
+import com.rafel.bgt.ui.theme.CardBackground
 import com.rafel.bgt.ui.theme.GhostWhite
 import com.rafel.bgt.ui.theme.HalloweenOrange
 import com.rafel.bgt.ui.theme.BGTTheme

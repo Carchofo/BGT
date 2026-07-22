@@ -452,8 +452,8 @@ fun TiletumSoloScreen(onBack: () -> Unit = {}, vm: TiletumViewModel = viewModel(
                         onRestart = { phase = TilPhase.SETUP }
                     )
                 }
-                1 -> TilScoringContent(tilScoring)
-                2 -> TilRulesContent()
+                2 -> TilScoringContent(tilScoring)
+                3 -> TilRulesContent()
             }
         }
     }
