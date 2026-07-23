@@ -27,9 +27,11 @@
     font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
     background-color:var(--cream);
     background-image:
-      linear-gradient(var(--cream-line) 1px, transparent 1px),
-      linear-gradient(90deg, var(--cream-line) 1px, transparent 1px);
-    background-size:64px 64px;
+      linear-gradient(rgba(249,246,236,.86), rgba(249,246,236,.86)),
+      url('assets/bg-fondo1.jpg');
+    background-size:cover, cover;
+    background-position:center top, center top;
+    background-repeat:no-repeat, no-repeat;
     color:var(--ink);
     line-height:1.6;
     min-height:100vh;
@@ -53,6 +55,7 @@
     color:var(--navy);
     font-weight:800;
     letter-spacing:-.01em;
+    text-shadow:0 2px 0 rgba(255,255,255,.6);
   }
   .hero .sub{font-size:1.05rem;color:var(--orange-dark);letter-spacing:.15em;text-transform:uppercase;font-weight:700;margin-bottom:.8rem}
   .hero .tagline{max-width:620px;margin:0 auto 2rem;color:var(--muted);font-size:1.15rem}
@@ -131,7 +134,12 @@
 
   /* COMMUNITY */
   .community{
-    background:#fff;
+    background-color:#fff;
+    background-image:
+      linear-gradient(rgba(255,255,255,.9), rgba(255,255,255,.9)),
+      url('assets/bg-lapiz.jpg');
+    background-size:cover, cover;
+    background-position:center, center;
     border-top:1px solid var(--cream-line);
     border-bottom:1px solid var(--cream-line);
   }
@@ -280,7 +288,7 @@
     </button>
     <div class="nav-links" id="nav-links">
       <a href="#juegos">Juegos</a>
-      <a href="#comunidad">Comunidad</a>
+      <a href="#" id="telegram-link-menu" aria-disabled="true">✈️ Únete a Telegram</a>
       <a href="https://github.com/Carchofo/BGT/discussions" target="_blank" rel="noopener">Foro</a>
       <a href="#pedir-juego">Sugerencias</a>
       <a href="#donaciones" class="cta">Apoyar el proyecto</a>
@@ -398,6 +406,14 @@
           <div class="tags"><span class="tag bot">Solitario</span><span class="tag rules">Reglas</span></div>
         </div>
       </div>
+
+      <a class="game-card add-game-card" href="#pedir-juego">
+        <div class="add-icon">+</div>
+        <div class="body">
+          <h3>Pide tu juego</h3>
+          <p>¿Tu juego favorito no está aquí? Cuéntanoslo y entrará en la cola de la comunidad.</p>
+        </div>
+      </a>
 
     </div>
   </div>
@@ -537,7 +553,7 @@
 // Cambia este valor si en el futuro se renombra o se crea uno nuevo dedicado a BGT.
 var TELEGRAM_BOT_USERNAME = 'Xeft_bot';
 (function () {
-  var links = [document.getElementById('telegram-link'), document.getElementById('telegram-link-hero')];
+  var links = [document.getElementById('telegram-link'), document.getElementById('telegram-link-hero'), document.getElementById('telegram-link-menu')];
   if (TELEGRAM_BOT_USERNAME) {
     links.forEach(function (link) {
       if (!link) return;
