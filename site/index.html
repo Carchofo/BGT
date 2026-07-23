@@ -567,9 +567,10 @@
         <p class="hint">📸 La foto del automa es <strong>obligatoria</strong> para poder investigarlo (no se distribuye su arte, solo se usa como referencia).</p>
       </div>
 
-      <!-- ── FOTO (común) ── -->
-      <label for="photo" id="photo-label">Adjuntar una foto <span class="opt">(opcional)</span></label>
-      <input type="file" id="photo" accept="image/*">
+      <!-- ── FOTOS / MATERIAL A APORTAR (común) ── -->
+      <label for="photo" id="photo-label">Adjuntar fotos <span class="opt">(opcional)</span></label>
+      <input type="file" id="photo" accept="image/*" multiple>
+      <p class="hint" id="photo-hint">Si tienes el automa físico, puedes fotografiar <strong>todas sus cartas</strong> (una por foto) además del tablero/tracker y la carta de referencia — cuantas más, mejor podemos digitalizarlo.</p>
       <div id="photo-name" class="hint" hidden></div>
 
       <button type="submit" id="submit-btn">Enviar petición</button>
@@ -716,9 +717,13 @@ var KOFI_USERNAME = null; // ej: 'carchofo'
   showGroups();
 
   photoInput.addEventListener('change', function () {
-    if (photoInput.files[0]) {
+    var n = photoInput.files.length;
+    if (n === 1) {
       photoName.hidden = false;
       photoName.textContent = '📎 ' + photoInput.files[0].name;
+    } else if (n > 1) {
+      photoName.hidden = false;
+      photoName.textContent = '📎 ' + n + ' fotos seleccionadas';
     } else { photoName.hidden = true; }
   });
 
@@ -774,9 +779,20 @@ var KOFI_USERNAME = null; // ej: 'carchofo'
     if (t === 'modify' && !d.fields.descripcion) return 'Describe el fallo o la mejora.';
     if (t === 'variant') {
       if (!d.fields.nombre_variante || !d.fields.autor || !d.fields.fuente) return 'Completa nombre de la variante, autor y fuente.';
-      if (!photoInput.files[0]) return 'La foto del automa es obligatoria en las variantes.';
+      if (!photoInput.files.length) return 'Al menos una foto del automa es obligatoria en las variantes.';
     }
     return null;
+  }
+
+  function sendOne(t, d, img, idx, total) {
+    var msg = d.message;
+    if (total > 1) msg += '\n[Foto ' + idx + ' de ' + total + ']';
+    var payload = { game: d.game, type: t, message: msg, fields: d.fields, source: 'web' };
+    if (img) payload.image = img;
+    return fetch('http://192.168.0.25:5678/webhook/bgt-community-submit', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    }).then(function (r) { if (!r.ok) throw new Error(r.status); });
   }
 
   form.addEventListener('submit', function (e) {
@@ -786,15 +802,16 @@ var KOFI_USERNAME = null; // ej: 'carchofo'
     status.className = '';
     if (err) { status.textContent = '❌ ' + err; status.className = 'err'; return; }
     btn.disabled = true;
-    readImage(photoInput.files[0]).then(function (img) {
-      var payload = { game: d.game, type: t, message: d.message, fields: d.fields, source: 'web' };
-      if (img) payload.image = img;
-      return fetch('http://192.168.0.25:5678/webhook/bgt-community-submit', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+    var files = Array.prototype.slice.call(photoInput.files);
+    var total = files.length;
+    var chain = total ? Promise.resolve() : sendOne(t, d, null, 0, 0);
+    files.forEach(function (file, i) {
+      chain = chain.then(function () {
+        status.textContent = total > 1 ? '⏳ Enviando foto ' + (i + 1) + ' de ' + total + '…' : '⏳ Enviando…';
+        return readImage(file).then(function (img) { return sendOne(t, d, img, i + 1, total); });
       });
-    }).then(function (r) {
-      if (!r.ok) throw new Error(r.status);
+    });
+    chain.then(function () {
       status.textContent = '✅ ¡Petición enviada! Gracias por tu aporte.';
       status.className = 'ok';
       form.reset(); showGroups(); photoName.hidden = true;
