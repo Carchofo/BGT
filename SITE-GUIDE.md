@@ -35,6 +35,7 @@ toque el archivo de forma significativa.
 
 ## Bloques JS (IIFEs, en orden de aparición)
 
+| — | Ordenar tarjetas (relevancia/alfabético) | Lee `assets/game-stats.json`, ordena `#games-grid` por botón activo, la tarjeta "+" siempre última |
 | Línea | Bloque | Qué hace |
 |-------|--------|----------|
 | 619 | Menú hamburguesa | Toggle del `.nav-links` en móvil |
@@ -79,6 +80,8 @@ hardcodeados antes de añadir más idiomas.
 - Tarjetas de juego enlazan a GitHub Discussions (comentarios + reacciones = puntuación,
   sin backend propio)
 - Despliegue automático a GitHub Pages configurado
+- Ordenar tarjetas por Relevancia/Alfabético (`assets/game-stats.json` + JS en
+  `#juegos`) — relevancia hoy a 0 hasta que existan los 8 hilos de Discussions
 
 ### ⏳ Pendiente (acción de Rafel, no delegable)
 - Activar Pages (Settings → Pages → Source: GitHub Actions)
@@ -90,6 +93,9 @@ hardcodeados antes de añadir más idiomas.
 ### 🔧 Pendiente (yo, cuando toque)
 - Crear los 8 hilos semilla de Discussions y cambiar los enlaces de búsqueda por la URL
   directa de cada hilo
+- Hacer que **BGT Forum Agent** escriba comentarios+reacciones reales en
+  `assets/game-stats.json` (necesita commitear el archivo desde n8n o exponerlo por un
+  endpoint público) — hoy el fichero existe pero con todo a 0
 - Aplicar la guía de tipos de automa al prompt de `variante_de_automa` — **con cuidado**,
   ver `bgt-games-vault/learnings/2026-07-22-game-request-extraction-bug.md` (el prompt ya
   tiene un problema de fiabilidad conocido, no añadir complejidad sin testear con

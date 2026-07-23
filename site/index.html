@@ -99,6 +99,21 @@
   }
   p.section-lead{text-align:center;max-width:680px;margin:0 auto 2.5rem;color:var(--muted)}
 
+  /* SORT BAR */
+  .sort-bar{
+    display:flex;flex-wrap:wrap;align-items:center;gap:.6rem;
+    justify-content:center;margin-bottom:1.6rem;
+  }
+  .sort-label{font-size:.85rem;color:var(--muted);font-weight:600}
+  .sort-btn{
+    font-family:inherit;font-size:.85rem;font-weight:700;cursor:pointer;
+    padding:.4rem 1rem;border-radius:999px;
+    border:1px solid var(--cream-line);background:#fff;color:var(--navy);
+    transition:background .15s ease,border-color .15s ease,color .15s ease;
+  }
+  .sort-btn:hover{border-color:var(--blue)}
+  .sort-btn.active{background:var(--navy);border-color:var(--navy);color:#fff}
+
   /* GAMES GRID */
   .games-grid{
     display:grid;gap:1.4rem;
@@ -358,9 +373,14 @@
   <div class="container">
     <h2 class="section-title">🎲 Juegos soportados</h2>
     <p class="section-lead">Cada juego incluye su propio módulo: bots con inteligencia propia para jugar en solitario, calculadoras de puntuación y resúmenes de reglas.</p>
-    <div class="games-grid">
+    <div class="sort-bar" role="group" aria-label="Ordenar juegos">
+      <span class="sort-label">Ordenar por:</span>
+      <button type="button" class="sort-btn active" data-sort="relevance">🔥 Relevancia</button>
+      <button type="button" class="sort-btn" data-sort="alpha">🔤 Alfabético</button>
+    </div>
+    <div class="games-grid" id="games-grid">
 
-      <div class="game-card">
+      <div class="game-card" data-game="Spooktacular">
         <img class="banner" src="assets/banner_spooktacular_new.jpg" alt="Banner de Spooktacular">
         <div class="body">
           <h3>Spooktacular</h3>
@@ -371,7 +391,7 @@
         </div>
       </div>
 
-      <div class="game-card">
+      <div class="game-card" data-game="Criaturas Maravillosas">
         <img class="banner" src="assets/banner_cm_new.jpg" alt="Banner de Criaturas Maravillosas">
         <div class="body">
           <h3>Criaturas Maravillosas</h3>
@@ -382,7 +402,7 @@
         </div>
       </div>
 
-      <div class="game-card">
+      <div class="game-card" data-game="Tiletum">
         <img class="banner" src="assets/banner_tiletum_img.jpg" alt="Banner de Tiletum">
         <div class="body">
           <h3>Tiletum</h3>
@@ -393,7 +413,7 @@
         </div>
       </div>
 
-      <div class="game-card">
+      <div class="game-card" data-game="Piratas de Maracaibo">
         <img class="banner" src="assets/banner_maracaibo.jpg" alt="Banner de Piratas de Maracaibo">
         <div class="body">
           <h3>Piratas de Maracaibo</h3>
@@ -404,7 +424,7 @@
         </div>
       </div>
 
-      <div class="game-card">
+      <div class="game-card" data-game="Castle Combo">
         <img class="banner" src="assets/banner_castle_combo.jpg" alt="Banner de Castle Combo">
         <div class="body">
           <h3>Castle Combo</h3>
@@ -415,7 +435,7 @@
         </div>
       </div>
 
-      <div class="game-card">
+      <div class="game-card" data-game="Coimbra">
         <img class="banner" src="assets/banner_coimbra.jpg" alt="Banner de Coimbra">
         <div class="body">
           <h3>Coimbra</h3>
@@ -426,7 +446,7 @@
         </div>
       </div>
 
-      <div class="game-card">
+      <div class="game-card" data-game="Cascadia">
         <img class="banner" src="assets/banner_cascadia.jpg" alt="Banner de Cascadia">
         <div class="body">
           <h3>Cascadia</h3>
@@ -437,7 +457,7 @@
         </div>
       </div>
 
-      <div class="game-card">
+      <div class="game-card" data-game="Viernes">
         <img class="banner" src="assets/banner_friday.jpg" alt="Banner de Viernes">
         <div class="body">
           <h3>Viernes</h3>
@@ -616,6 +636,49 @@
 </footer>
 
 <script>
+// ── Ordenar tarjetas de juego (relevancia / alfabético) ──
+(function () {
+  var grid = document.getElementById('games-grid');
+  var buttons = document.querySelectorAll('.sort-btn');
+  var addCard = grid.querySelector('.add-game-card'); // siempre al final
+  var cards = Array.prototype.slice.call(grid.querySelectorAll('.game-card[data-game]'));
+  var stats = {};
+
+  function applySort(mode) {
+    var sorted = cards.slice();
+    if (mode === 'alpha') {
+      sorted.sort(function (a, b) {
+        return a.dataset.game.localeCompare(b.dataset.game, 'es');
+      });
+    } else {
+      // relevancia: más comentarios/reacciones primero; empate -> orden alfabético estable
+      sorted.sort(function (a, b) {
+        var diff = (stats[b.dataset.game] || 0) - (stats[a.dataset.game] || 0);
+        return diff !== 0 ? diff : a.dataset.game.localeCompare(b.dataset.game, 'es');
+      });
+    }
+    sorted.forEach(function (card) { grid.appendChild(card); });
+    if (addCard) grid.appendChild(addCard); // la tarjeta "+" siempre última
+  }
+
+  buttons.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      buttons.forEach(function (b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      applySort(btn.dataset.sort);
+    });
+  });
+
+  fetch('assets/game-stats.json')
+    .then(function (r) { return r.ok ? r.json() : {}; })
+    .then(function (data) {
+      stats = data || {};
+      var activeBtn = document.querySelector('.sort-btn.active');
+      applySort(activeBtn ? activeBtn.dataset.sort : 'relevance');
+    })
+    .catch(function () { /* sin stats disponibles, se queda el orden del HTML */ });
+})();
+
 // ── Menú hamburguesa ──
 (function () {
   var toggle = document.getElementById('menu-toggle');
