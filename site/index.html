@@ -583,6 +583,7 @@
     </button>
     <div class="nav-links" id="nav-links">
       <a href="#juegos">Juegos</a>
+      <a href="#faq">FAQ</a>
       <a href="#" id="telegram-link-menu" aria-disabled="true">✈️ Únete a Telegram</a>
       <a href="https://github.com/Carchofo/BGT/discussions" target="_blank" rel="noopener">Foro</a>
       <a href="#pedir-juego">Sugerencias</a>
@@ -1052,7 +1053,12 @@
   fetch('assets/game-stats.json')
     .then(function (r) { return r.ok ? r.json() : {}; })
     .then(function (data) {
-      stats = data || {};
+      // cada entrada puede ser número plano (legacy) u objeto {score, bot_sum, bot_count}
+      Object.keys(data).forEach(function(k) {
+        if (k.startsWith('_')) return;
+        var v = data[k];
+        stats[k] = typeof v === 'object' ? (v.score || 0) : (v || 0);
+      });
       var activeBtn = document.querySelector('.sort-btn.active');
       applySort(activeBtn ? activeBtn.dataset.sort : 'relevance');
     })
@@ -1478,8 +1484,8 @@ var KOFI_USERNAME = null; // ej: 'carchofo'
   fetch('assets/game-stats.json')
     .then(function(r){ return r.ok ? r.json() : {}; })
     .then(function(d){
-      // game-stats tiene {GameName: score} para el sort; extendemos para bot_sum/bot_count si los hay
       Object.keys(d).forEach(function(k) {
+        if (k.startsWith('_')) return;
         if (typeof d[k] === 'object') botStatsData[k] = d[k];
       });
     }).catch(function(){});

@@ -1,11 +1,11 @@
 {
-  "_nota": "Comentarios+reacciones por hilo de GitHub Discussions. A 0 hasta que existan los 8 hilos semilla. Lo actualiza BGT Forum Agent (n8n).",
-  "Spooktacular": 0,
-  "Criaturas Maravillosas": 0,
-  "Tiletum": 0,
-  "Piratas de Maracaibo": 0,
-  "Castle Combo": 0,
-  "Coimbra": 0,
-  "Cascadia": 0,
-  "Viernes": 0
+  "_nota": "Stats por juego. 'score' = comentarios+reacciones de GitHub Discussions (lo actualiza BGT Forum Agent). 'bot_sum' y 'bot_count' = votos de rating del bot desde la web (los acumula n8n al recibir type=bot_rating). Todo a 0 hasta que existan los 8 hilos semilla y lleguen los primeros votos.",
+  "Spooktacular":        { "score": 0, "bot_sum": 0, "bot_count": 0 },
+  "Criaturas Maravillosas": { "score": 0, "bot_sum": 0, "bot_count": 0 },
+  "Tiletum":             { "score": 0, "bot_sum": 0, "bot_count": 0 },
+  "Piratas de Maracaibo":{ "score": 0, "bot_sum": 0, "bot_count": 0 },
+  "Castle Combo":        { "score": 0, "bot_sum": 0, "bot_count": 0 },
+  "Coimbra":             { "score": 0, "bot_sum": 0, "bot_count": 0 },
+  "Cascadia":            { "score": 0, "bot_sum": 0, "bot_count": 0 },
+  "Viernes":             { "score": 0, "bot_sum": 0, "bot_count": 0 }
 }
