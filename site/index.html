@@ -91,6 +91,19 @@
   }
   .feature-strip span{white-space:nowrap}
 
+  /* EVOLVING BANNER */
+  .evolving-banner{
+    display:flex;align-items:flex-start;gap:.8rem;
+    margin:1.6rem auto 0;max-width:620px;
+    background:linear-gradient(135deg,rgba(21,51,86,.06),rgba(27,107,170,.07));
+    border:1px solid var(--blue);border-radius:14px;
+    padding:.9rem 1.2rem;text-align:left;font-size:.93rem;color:var(--ink);
+  }
+  .evolving-icon{font-size:1.5rem;flex-shrink:0;margin-top:.1rem}
+  .evolving-banner strong{color:var(--navy)}
+  .evolving-banner a{color:var(--blue);font-weight:700;text-decoration:none}
+  .evolving-banner a:hover{text-decoration:underline}
+
   /* SECTIONS */
   section{padding:3.5rem 0}
   h2.section-title{
@@ -492,24 +505,32 @@
   <img class="logo" src="assets/logo-icon.png" alt="Logo de BGT">
   <h1>BGT</h1>
   <div class="sub">Board Game Tools</div>
-  <p class="tagline">Bots solitario, calculadoras de puntuación y ayudas de juego para tus juegos de mesa favoritos. Gratis, sin anuncios y hecha por un fan para fans.</p>
+  <p class="tagline">¿Sin rival? No hay problema. BGT añade un bot automático a tus juegos favoritos para que puedas jugar en solitario sin gestionar al rival tú mismo.</p>
   <div class="hero-ctas">
     <a class="btn-download" href="https://github.com/Carchofo/BGT/releases/latest" id="download-btn">
-      ⬇ Descargar APK
+      ⬇ Descargar APK gratis
       <small id="version-label">última versión</small>
     </a>
     <a class="btn-telegram" href="#" id="telegram-link-hero" aria-disabled="true">
-      ✈️ Únete al grupo
+      ✈️ Únete a la comunidad
       <small>pide juegos, reporta fallos, comenta</small>
     </a>
   </div>
   <div class="release-meta" id="release-meta"></div>
-  <div class="badge-free">🎲 100% gratuita · Android · Fan-made</div>
+  <div class="badge-free">🎲 100% gratuita · Android · Sin anuncios · Fan-made</div>
   <div class="feature-strip">
+    <span>🤖 Bots con IA local</span>
+    <span>🧮 Calculadoras de puntuación</span>
+    <span>📖 Reglas en pantalla</span>
     <span>🔄 Se actualiza sola</span>
     <span>📴 Sin cuenta ni registro</span>
-    <span>🚫 Sin anuncios</span>
-    <span>🤖 IA local, no tus datos en la nube</span>
+  </div>
+  <div class="evolving-banner">
+    <span class="evolving-icon">🌱</span>
+    <div>
+      <strong>App en evolución constante</strong> — cada juego nuevo, fix o variante lo propone y vota la comunidad.
+      <a href="#juegos">Ver juegos disponibles</a> o <a href="#pedir-juego">pedir el tuyo</a>.
+    </div>
   </div>
 </header>
 
@@ -792,9 +813,30 @@
         <button class="modal-close" id="modal-close" aria-label="Cerrar">✕</button>
       </div>
       <p class="modal-desc" id="modal-desc"></p>
+
+      <div class="bot-rating-row">
+        <span class="bot-rating-label">¿Qué tal funciona?</span>
+        <div class="stars" id="modal-bot-stars"></div>
+        <span class="star-avg" id="modal-bot-avg"></span>
+        <span class="star-voted" id="modal-bot-voted"></span>
+      </div>
+
       <div class="modal-tools">
         <div class="modal-tools-title">Herramientas incluidas</div>
         <div class="tags" id="modal-tags"></div>
+      </div>
+
+      <button type="button" class="bug-report-btn" id="bug-report-toggle">🐛 Reportar fallo o mejora</button>
+      <div class="bug-report-form" id="bug-report-form">
+        <select id="br-tipo">
+          <option value="bug">🐞 Algo no funciona</option>
+          <option value="regla">📖 Errata en las reglas</option>
+          <option value="falta">🧩 Falta contenido (carta, componente…)</option>
+          <option value="mejora">✨ Sugerencia de mejora</option>
+        </select>
+        <textarea id="br-desc" maxlength="800" placeholder="Descríbelo con detalle — cuanto más claro, más fácil de arreglar"></textarea>
+        <button type="submit" id="br-submit">Enviar reporte</button>
+        <div class="bug-report-status" id="br-status"></div>
       </div>
 
       <div class="modal-section-title">🎮 Modos solitario fan-made</div>
