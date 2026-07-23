@@ -6,6 +6,10 @@ Contexto para cualquier agente (Claude Code, qwen via n8n) que trabaje en este r
 App Android **BGT — Board Game Tools** (Kotlin + Jetpack Compose, package `com.rafel.bgt`).
 Bots solitario fan-made y calculadoras para juegos de mesa. Distribución por GitHub releases con autoupdate OTA (`UpdateChecker` + `ApkInstaller`).
 
+**Landing page (`site/index.html`)**: antes de tocarla, leer **`SITE-GUIDE.md`** (raíz del
+repo) — mapa de secciones/CSS/JS/assets y checklist hecho/pendiente. Actualizarlo tras
+cualquier cambio significativo del sitio.
+
 ## Regla de producto: no solapar solitarios (2026-07-22)
 Cuando un juego YA está implementado y aparece un automa/solitario ALTERNATIVO para ese
 mismo juego (comunidad, investigación, o petición vía Telegram): **nunca** duplicar el
