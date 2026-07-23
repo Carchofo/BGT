@@ -132,6 +132,17 @@
   .tag.calc{border-color:#2e6b3a;color:#2e6b3a}
   .tag.rules{border-color:var(--blue);color:var(--blue)}
 
+  .add-game-card{
+    text-decoration:none;color:inherit;cursor:pointer;
+    border:2px dashed var(--blue);
+  }
+  .add-game-card:hover{border-color:var(--orange)}
+  .add-game-card .add-icon{
+    background:linear-gradient(135deg,var(--navy),var(--blue));
+    color:#fff;font-size:2.6rem;font-weight:800;
+  }
+  .add-game-card h3{color:var(--navy)}
+
   /* COMMUNITY */
   .community{
     background-color:#fff;
@@ -180,6 +191,13 @@
   }
   .request-form button:hover{filter:brightness(1.15)}
   .request-form button:disabled{opacity:.6;cursor:wait}
+  .request-form .opt{font-weight:400;color:var(--muted);font-size:.85em}
+  .request-form .hint{font-size:.85rem;color:var(--muted);margin-top:.5rem}
+  .request-form .check-row{display:flex;flex-direction:column;gap:.5rem;margin-top:.3rem}
+  .request-form .chk{display:flex;align-items:center;gap:.55rem;font-weight:400;color:var(--ink);margin:0}
+  .request-form .chk input{width:auto;margin:0}
+  .request-form input[type="file"]{padding:.55rem;background:var(--cream);cursor:pointer}
+  .type-group[hidden]{display:none}
   .form-note{
     margin-top:1rem;font-size:.85rem;color:var(--muted);text-align:center;
     border:1px dashed var(--cream-line);border-radius:10px;padding:.6rem .9rem;
@@ -219,10 +237,20 @@
   footer a{color:var(--blue)}
 
   /* TOPNAV */
+  body{padding-top:56px}
   .topnav{
-    position:sticky;top:0;z-index:100;
+    position:fixed;top:0;left:0;right:0;z-index:100;
     background:rgba(249,246,236,.92);backdrop-filter:blur(6px);
     border-bottom:1px solid var(--cream-line);
+    transition:box-shadow .2s ease, border-color .2s ease;
+  }
+  .topnav.bump{
+    animation:navBump .4s ease;
+  }
+  @keyframes navBump{
+    0%{box-shadow:0 0 0 rgba(243,130,34,0)}
+    30%{box-shadow:0 4px 14px rgba(243,130,34,.35);border-color:var(--orange)}
+    100%{box-shadow:0 0 0 rgba(243,130,34,0);border-color:var(--cream-line)}
   }
   .topnav-inner{
     max-width:1100px;margin:0 auto;padding:.7rem 1.25rem;
@@ -408,10 +436,12 @@
       </div>
 
       <a class="game-card add-game-card" href="#pedir-juego">
-        <div class="add-icon">+</div>
+        <div class="banner placeholder add-icon" role="img" aria-label="Pedir juego">+</div>
         <div class="body">
-          <h3>Pide tu juego</h3>
-          <p>¿Tu juego favorito no está aquí? Cuéntanoslo y entrará en la cola de la comunidad.</p>
+          <h3>¿Falta el tuyo?</h3>
+          <div class="bot-name">🗳️ Petición de juego</div>
+          <p>Cuéntanos qué juego quieres ver en BGT y entrará en la cola de la comunidad.</p>
+          <div class="tags"><span class="tag rules">Pedir ahora</span></div>
         </div>
       </a>
 
@@ -463,17 +493,85 @@
 <section id="pedir-juego">
   <div class="container">
     <h2 class="section-title">🗳️ Sugerencias y peticiones</h2>
-    <p class="section-lead">¿Quieres un bot para un juego que no está en la app, o has encontrado un fallo en uno de los que ya existen? Elige qué es y cuéntanoslo.</p>
+    <p class="section-lead">¿Quieres un bot para un juego nuevo, has encontrado un fallo en uno ya implementado, o conoces un automa alternativo? Elige qué es y cuéntanoslo con detalle.</p>
     <form class="request-form" id="request-form">
+
       <label for="req-type">¿Qué nos quieres pedir?</label>
       <select id="req-type" name="req-type">
         <option value="game">🎲 Un juego nuevo que no está en BGT</option>
         <option value="modify">🐛 Un fallo o mejora en un juego ya implementado</option>
+        <option value="variant">🔄 Un automa alternativo para un juego que ya está</option>
       </select>
-      <label for="game">Nombre del juego</label>
-      <input type="text" id="game" name="game" required maxlength="120" placeholder="Ej: Ark Nova">
-      <label for="message" id="message-label">¿Por qué te gustaría verlo en BGT?</label>
-      <textarea id="message" name="message" required maxlength="1000" placeholder="Ej: su modo solitario oficial es muy farragoso y un bot automático lo arreglaría…"></textarea>
+
+      <!-- ── JUEGO NUEVO ── -->
+      <div class="type-group" data-for="game">
+        <label for="g-name">Nombre del juego</label>
+        <input type="text" id="g-name" maxlength="120" placeholder="Ej: Ark Nova">
+
+        <label for="g-bgg">ID de BoardGameGeek <span class="opt">(opcional)</span></label>
+        <input type="number" id="g-bgg" min="1" placeholder="Ej: 342942">
+
+        <label for="g-motivo">¿Por qué te gustaría verlo en BGT?</label>
+        <textarea id="g-motivo" maxlength="1000" placeholder="Ej: su modo solitario oficial es muy farragoso y un bot automático lo arreglaría…"></textarea>
+
+        <label for="g-fisico">¿Ya existe un automa/bot físico fan-made para este juego?</label>
+        <select id="g-fisico">
+          <option value="">— Elige —</option>
+          <option value="si">Sí, existe uno</option>
+          <option value="no">No / no lo sé</option>
+        </select>
+
+        <div class="type-group" data-for="game-assets" hidden>
+          <label>¿Qué material de ese automa podrías fotografiar? <span class="opt">(marca lo que tengas)</span></label>
+          <div class="check-row">
+            <label class="chk"><input type="checkbox" id="a-cartas"> Cartas del automa</label>
+            <label class="chk"><input type="checkbox" id="a-tablero"> Tablero / tracker</label>
+            <label class="chk"><input type="checkbox" id="a-ref"> Carta de referencia</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── MODIFICACIÓN ── -->
+      <div class="type-group" data-for="modify" hidden>
+        <label for="m-game">¿Qué juego ya implementado?</label>
+        <select id="m-game" class="game-list"></select>
+
+        <label for="m-tipo">Tipo de problema</label>
+        <select id="m-tipo">
+          <option value="bug">🐞 Fallo / algo no funciona</option>
+          <option value="regla">📖 Errata en las reglas</option>
+          <option value="falta">🧩 Falta contenido (carta/componente)</option>
+          <option value="mejora">✨ Sugerencia de mejora</option>
+        </select>
+
+        <label for="m-desc">Descríbelo con detalle</label>
+        <textarea id="m-desc" maxlength="1000" placeholder="Ej: en dificultad Terrorífico el track de acciones no muestra nada…"></textarea>
+      </div>
+
+      <!-- ── VARIANTE DE AUTOMA ── -->
+      <div class="type-group" data-for="variant" hidden>
+        <label for="v-game">¿Para qué juego ya implementado?</label>
+        <select id="v-game" class="game-list"></select>
+
+        <label for="v-name">Nombre del automa / variante</label>
+        <input type="text" id="v-name" maxlength="120" placeholder="Ej: Automa Soluvi">
+
+        <label for="v-author">Autor original del automa</label>
+        <input type="text" id="v-author" maxlength="120" placeholder="Ej: @jdoe / Nombre Apellido">
+
+        <label for="v-source">Fuente o enlace (BGG, PDF, foro…)</label>
+        <input type="url" id="v-source" maxlength="300" placeholder="https://boardgamegeek.com/filepage/…">
+
+        <label for="v-desc">¿En qué se diferencia del automa actual? <span class="opt">(opcional)</span></label>
+        <textarea id="v-desc" maxlength="1000" placeholder="Ej: usa un mazo de cartas en vez de dados; escala mejor a experto…"></textarea>
+        <p class="hint">📸 La foto del automa es <strong>obligatoria</strong> para poder investigarlo (no se distribuye su arte, solo se usa como referencia).</p>
+      </div>
+
+      <!-- ── FOTO (común) ── -->
+      <label for="photo" id="photo-label">Adjuntar una foto <span class="opt">(opcional)</span></label>
+      <input type="file" id="photo" accept="image/*">
+      <div id="photo-name" class="hint" hidden></div>
+
       <button type="submit" id="submit-btn">Enviar petición</button>
       <div id="form-status"></div>
       <div class="form-note">⚠️ Este formulario solo funciona en la red local del desarrollador todavía. <strong>Usa el bot de Telegram (botón "Únete al grupo" arriba)</strong> — funciona ya mismo desde cualquier sitio y es la vía recomendada.</div>
@@ -583,50 +681,148 @@ var KOFI_USERNAME = null; // ej: 'carchofo'
 })();
 
 // ── Formulario "Sugerencias y peticiones" ──
-var reqTypeSelect = document.getElementById('req-type');
-var messageLabel = document.getElementById('message-label');
-var messageBox = document.getElementById('message');
-function updateFormCopy() {
-  if (reqTypeSelect.value === 'modify') {
-    messageLabel.textContent = '¿Qué falla o qué le falta?';
-    messageBox.placeholder = 'Ej: en dificultad Terrorífico el track de acciones no muestra nada…';
-  } else {
-    messageLabel.textContent = '¿Por qué te gustaría verlo en BGT?';
-    messageBox.placeholder = 'Ej: su modo solitario oficial es muy farragoso y un bot automático lo arreglaría…';
-  }
-}
-reqTypeSelect.addEventListener('change', updateFormCopy);
-updateFormCopy();
+(function () {
+  var GAMES = ['Spooktacular','Criaturas Maravillosas','Tiletum','Piratas de Maracaibo',
+               'Castle Combo','Coimbra','Cascadia','Friday'];
+  document.querySelectorAll('select.game-list').forEach(function (sel) {
+    sel.innerHTML = '<option value="">— Elige un juego —</option>' +
+      GAMES.map(function (g) { return '<option value="' + g + '">' + g + '</option>'; }).join('');
+  });
 
-document.getElementById('request-form').addEventListener('submit', function (e) {
-  e.preventDefault();
-  var btn = document.getElementById('submit-btn');
+  var form = document.getElementById('request-form');
+  var typeSel = document.getElementById('req-type');
   var status = document.getElementById('form-status');
-  var payload = {
-    game: document.getElementById('game').value.trim(),
-    type: reqTypeSelect.value,
-    message: document.getElementById('message').value.trim()
-  };
-  if (!payload.game || !payload.message) return;
-  btn.disabled = true;
-  status.className = '';
-  fetch('http://192.168.0.25:5678/webhook/bgt-community-submit', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  })
-    .then(function (r) {
+  var btn = document.getElementById('submit-btn');
+  var photoInput = document.getElementById('photo');
+  var photoName = document.getElementById('photo-name');
+  var photoLabel = document.getElementById('photo-label');
+  var fisicoSel = document.getElementById('g-fisico');
+
+  function showGroups() {
+    var t = typeSel.value;
+    document.querySelectorAll('.type-group[data-for]').forEach(function (g) {
+      var key = g.getAttribute('data-for');
+      if (key === 'game-assets') return;
+      g.hidden = (key !== t);
+    });
+    document.querySelector('[data-for="game-assets"]').hidden =
+      !(t === 'game' && fisicoSel.value === 'si');
+    photoLabel.innerHTML = (t === 'variant')
+      ? 'Foto del automa <span class="opt">(obligatoria)</span>'
+      : 'Adjuntar una foto <span class="opt">(opcional)</span>';
+  }
+  typeSel.addEventListener('change', showGroups);
+  fisicoSel.addEventListener('change', showGroups);
+  showGroups();
+
+  photoInput.addEventListener('change', function () {
+    if (photoInput.files[0]) {
+      photoName.hidden = false;
+      photoName.textContent = '📎 ' + photoInput.files[0].name;
+    } else { photoName.hidden = true; }
+  });
+
+  function readImage(file) {
+    return new Promise(function (resolve) {
+      if (!file) return resolve(null);
+      var r = new FileReader();
+      r.onload = function () { resolve(String(r.result).split(',')[1] || null); };
+      r.onerror = function () { resolve(null); };
+      r.readAsDataURL(file);
+    });
+  }
+
+  function val(id) { var el = document.getElementById(id); return el ? el.value.trim() : ''; }
+
+  function build() {
+    var t = typeSel.value, fields = {}, game = '', lines = [];
+    if (t === 'game') {
+      game = val('g-name');
+      fields = {
+        nombre_juego: game, bgg_id: val('g-bgg'), motivo: val('g-motivo'),
+        tiene_bot_fisico: fisicoSel.value
+      };
+      if (fisicoSel.value === 'si') {
+        fields.assets = [];
+        if (document.getElementById('a-cartas').checked) fields.assets.push('cartas_automa');
+        if (document.getElementById('a-tablero').checked) fields.assets.push('tablero');
+        if (document.getElementById('a-ref').checked) fields.assets.push('carta_referencia');
+      }
+      lines = ['PETICIÓN DE JUEGO NUEVO', 'Juego: ' + game,
+        fields.bgg_id ? 'BGG ID: ' + fields.bgg_id : '', 'Motivo: ' + fields.motivo,
+        'Automa físico existente: ' + (fisicoSel.value || 'sin especificar'),
+        fields.assets && fields.assets.length ? 'Assets a pedir: ' + fields.assets.join(', ') : ''];
+    } else if (t === 'modify') {
+      game = val('m-game');
+      fields = { juego: game, tipo_problema: val('m-tipo'), descripcion: val('m-desc') };
+      lines = ['REPORTE SOBRE JUEGO IMPLEMENTADO', 'Juego: ' + game,
+        'Tipo: ' + fields.tipo_problema, 'Descripción: ' + fields.descripcion];
+    } else {
+      game = val('v-game');
+      fields = { juego: game, nombre_variante: val('v-name'), autor: val('v-author'),
+        fuente: val('v-source'), descripcion: val('v-desc') };
+      lines = ['VARIANTE DE AUTOMA', 'Juego: ' + game, 'Variante: ' + fields.nombre_variante,
+        'Autor: ' + fields.autor, 'Fuente: ' + fields.fuente,
+        fields.descripcion ? 'Descripción: ' + fields.descripcion : ''];
+    }
+    return { game: game, fields: fields, message: lines.filter(Boolean).join('\n') };
+  }
+
+  function validate(t, d) {
+    if (!d.game) return 'Indica el nombre del juego.';
+    if (t === 'game' && (!d.fields.motivo || !fisicoSel.value)) return 'Completa el motivo y si existe un automa físico.';
+    if (t === 'modify' && !d.fields.descripcion) return 'Describe el fallo o la mejora.';
+    if (t === 'variant') {
+      if (!d.fields.nombre_variante || !d.fields.autor || !d.fields.fuente) return 'Completa nombre de la variante, autor y fuente.';
+      if (!photoInput.files[0]) return 'La foto del automa es obligatoria en las variantes.';
+    }
+    return null;
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var t = typeSel.value, d = build();
+    var err = validate(t, d);
+    status.className = '';
+    if (err) { status.textContent = '❌ ' + err; status.className = 'err'; return; }
+    btn.disabled = true;
+    readImage(photoInput.files[0]).then(function (img) {
+      var payload = { game: d.game, type: t, message: d.message, fields: d.fields, source: 'web' };
+      if (img) payload.image = img;
+      return fetch('http://192.168.0.25:5678/webhook/bgt-community-submit', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+    }).then(function (r) {
       if (!r.ok) throw new Error(r.status);
       status.textContent = '✅ ¡Petición enviada! Gracias por tu aporte.';
       status.className = 'ok';
-      document.getElementById('request-form').reset();
-    })
-    .catch(function () {
+      form.reset(); showGroups(); photoName.hidden = true;
+    }).catch(function () {
       status.textContent = '❌ No se pudo enviar. Recuerda que por ahora solo funciona en la red local.';
       status.className = 'err';
-    })
-    .finally(function () { btn.disabled = false; });
-});
+    }).finally(function () { btn.disabled = false; });
+  });
+})();
+
+// ── Indicador de límite de scroll (arriba/abajo) ──
+(function () {
+  var nav = document.querySelector('.topnav');
+  var lastState = '';
+  function checkEdge() {
+    var atTop = window.scrollY <= 2;
+    var atBottom = (window.innerHeight + window.scrollY) >= (document.body.scrollHeight - 2);
+    var state = atTop ? 'top' : atBottom ? 'bottom' : '';
+    if (state && state !== lastState) {
+      nav.classList.remove('bump');
+      void nav.offsetWidth; // reinicia la animación
+      nav.classList.add('bump');
+    }
+    lastState = state;
+  }
+  window.addEventListener('scroll', checkEdge, { passive: true });
+  checkEdge();
+})();
 </script>
 
 </body>
