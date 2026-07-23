@@ -421,11 +421,50 @@
   .variant-add-status.ok{display:block;color:#2e6b3a}
   .variant-add-status.err{display:block;color:#c0392b}
   /* Discusiones link en modal */
-  .modal-discuss-link{
-    display:inline-flex;align-items:center;gap:.4rem;margin-top:.6rem;
-    font-size:.85rem;font-weight:700;color:var(--blue);text-decoration:none;
+  /* Comentarios en modal */
+  .comment-list{display:flex;flex-direction:column;gap:.6rem;margin-bottom:.8rem}
+  .comment-item{
+    background:var(--cream);border:1px solid var(--cream-line);
+    border-radius:10px;padding:.7rem .9rem;
   }
-  .modal-discuss-link:hover{text-decoration:underline}
+  .comment-author{font-weight:700;color:var(--navy);font-size:.88rem}
+  .comment-date{color:var(--muted);font-size:.78rem;margin-left:.4rem}
+  .comment-text{color:var(--ink);font-size:.9rem;margin-top:.2rem;line-height:1.5}
+  .comment-empty{
+    color:var(--muted);font-size:.88rem;font-style:italic;
+    padding:.5rem 0;margin-bottom:.6rem;
+  }
+  .comment-form{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.1rem}
+  .comment-form input,.comment-form textarea{
+    padding:.6rem .8rem;border-radius:9px;
+    border:1px solid var(--cream-line);background:#fff;
+    color:var(--ink);font-family:inherit;font-size:.92rem;
+  }
+  .comment-form input:focus,.comment-form textarea:focus{outline:2px solid var(--orange)}
+  .comment-form textarea{min-height:70px;resize:vertical}
+  .comment-form button{
+    align-self:flex-end;
+    background:var(--navy);color:#fff;font-weight:700;font-size:.9rem;
+    border:none;border-radius:9px;padding:.55rem 1.3rem;cursor:pointer;
+    transition:filter .15s ease;
+  }
+  .comment-form button:hover{filter:brightness(1.2)}
+  .comment-form button:disabled{opacity:.6;cursor:wait}
+  .comment-status{font-size:.83rem;font-weight:600;display:none}
+  .comment-status.ok{display:block;color:#2e6b3a}
+  .comment-status.err{display:block;color:#c0392b}
+  /* Foro link */
+  .modal-forum-row{
+    border-top:1px solid var(--cream-line);
+    padding-top:.9rem;margin-top:.4rem;
+  }
+  .modal-forum-link{
+    display:inline-flex;align-items:center;gap:.4rem;
+    font-size:.88rem;font-weight:700;color:var(--blue);text-decoration:none;
+    padding:.45rem 1rem;border-radius:999px;border:1px solid var(--blue);
+    transition:background .15s ease;
+  }
+  .modal-forum-link:hover{background:rgba(27,107,170,.08)}
 </style>
 </head>
 <body>
@@ -777,7 +816,18 @@
         <div class="variant-add-status" id="vf-status"></div>
       </div>
 
-      <a class="modal-discuss-link" id="modal-discuss" href="#" target="_blank" rel="noopener">💬 Ver comentarios y debate en el foro →</a>
+      <div class="modal-section-title">💬 Comentarios</div>
+      <div class="comment-list" id="modal-comments"></div>
+      <form class="comment-form" id="comment-form">
+        <input type="text" id="cf-author" maxlength="60" placeholder="Tu nombre o nick" autocomplete="off">
+        <textarea id="cf-text" maxlength="500" placeholder="Escribe un comentario sobre este juego…"></textarea>
+        <button type="submit" id="cf-submit">Enviar comentario</button>
+        <div class="comment-status" id="cf-status"></div>
+      </form>
+
+      <div class="modal-forum-row">
+        <a class="modal-forum-link" id="modal-discuss" href="#" target="_blank" rel="noopener">🗣️ Ver debate completo en el foro →</a>
+      </div>
     </div>
   </div>
 </div>
@@ -1113,13 +1163,78 @@ var KOFI_USERNAME = null; // ej: 'carchofo'
   var variantForm = document.getElementById('variant-add-form');
   var vfStatus = document.getElementById('vf-status');
   var vfSubmit = document.getElementById('vf-submit');
+  var commentList = document.getElementById('modal-comments');
+  var cfAuthor = document.getElementById('cf-author');
+  var cfText = document.getElementById('cf-text');
+  var cfSubmit = document.getElementById('cf-submit');
+  var cfStatus = document.getElementById('cf-status');
   var currentGame = null;
   var variantsData = {};
+  var commentsData = {};
 
   fetch('assets/game-variants.json')
     .then(function(r){ return r.ok ? r.json() : {}; })
     .then(function(d){ variantsData = d || {}; })
     .catch(function(){});
+
+  fetch('assets/game-comments.json')
+    .then(function(r){ return r.ok ? r.json() : {}; })
+    .then(function(d){ commentsData = d || {}; })
+    .catch(function(){});
+
+  function renderComments(game) {
+    commentList.innerHTML = '';
+    var list = (commentsData[game] || []).slice().reverse(); // más recientes primero
+    if (!list.length) {
+      var empty = document.createElement('div');
+      empty.className = 'comment-empty';
+      empty.textContent = 'Aún no hay comentarios. ¡Sé el primero!';
+      commentList.appendChild(empty);
+      return;
+    }
+    list.forEach(function(c) {
+      var item = document.createElement('div');
+      item.className = 'comment-item';
+      var d = c.date ? new Date(c.date).toLocaleDateString('es-ES') : '';
+      item.innerHTML =
+        '<div><span class="comment-author">' + escHtml(c.author || 'Anónimo') + '</span>' +
+        (d ? '<span class="comment-date">' + d + '</span>' : '') + '</div>' +
+        '<div class="comment-text">' + escHtml(c.text || '') + '</div>';
+      commentList.appendChild(item);
+    });
+  }
+
+  function escHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  document.getElementById('comment-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var author = cfAuthor.value.trim();
+    var text = cfText.value.trim();
+    cfStatus.className = 'comment-status';
+    if (!text) { cfStatus.textContent = '❌ Escribe algo antes de enviar.'; cfStatus.className = 'comment-status err'; return; }
+    cfSubmit.disabled = true;
+    fetch('http://192.168.0.25:5678/webhook/bgt-community-submit', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        game: currentGame, type: 'comment', source: 'web',
+        message: 'COMENTARIO\nJuego: ' + currentGame + '\nAutor: ' + (author||'Anónimo') + '\n' + text,
+        fields: { juego: currentGame, autor: author || 'Anónimo', texto: text }
+      })
+    })
+    .then(function(r){ if(!r.ok) throw new Error(r.status); })
+    .then(function(){
+      cfStatus.textContent = '✅ ¡Comentario enviado! Aparecerá pronto.';
+      cfStatus.className = 'comment-status ok';
+      cfAuthor.value = ''; cfText.value = '';
+    })
+    .catch(function(){
+      cfStatus.textContent = '❌ No se pudo enviar (solo funciona en la red local por ahora).';
+      cfStatus.className = 'comment-status err';
+    })
+    .finally(function(){ cfSubmit.disabled = false; });
+  });
 
   function buildStars(variantId, game, initialAvg, voteCount) {
     var stored = localStorage.getItem('bgt-vote-' + game + '-' + variantId);
@@ -1223,9 +1338,12 @@ var KOFI_USERNAME = null; // ej: 'carchofo'
     document.getElementById('modal-discuss').href =
       'https://github.com/Carchofo/BGT/discussions?discussions_q=' + g.discussions;
     renderVariants(gameKey);
+    renderComments(gameKey);
     variantForm.classList.remove('open');
     variantToggle.textContent = '+ Aportar un solitario fan-made';
     vfStatus.className = 'variant-add-status';
+    cfStatus.className = 'comment-status';
+    cfAuthor.value = ''; cfText.value = '';
     overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
   }
