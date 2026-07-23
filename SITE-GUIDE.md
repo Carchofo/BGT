@@ -77,11 +77,20 @@ hardcodeados antes de añadir más idiomas.
 - Paleta y logo armonizados con el diseño de Gemini
 - Menú fijo con animación de límite de scroll
 - Formulario de 3 tipos con multi-foto (Opus diseñó los campos)
-- Tarjetas de juego enlazan a GitHub Discussions (comentarios + reacciones = puntuación,
-  sin backend propio)
+- Tarjetas de juego **clickables** → modal con banner, descripción, tools, variantes fan-made, comentarios, rating bot y bug report
+- Modal: **valoración del bot (2-5★)** guardada en localStorage + enviada al webhook n8n
+- Modal: **formulario de bug/mejora** colapsable → envía a `/webhook/bgt-bug`
+- Modal: **comentarios rápidos** (de `assets/game-comments.json`) + form → webhook
+- Modal: **link separado al foro** (GitHub Discussions) distinto de los comentarios rápidos
+- Modal: **variantes fan-made** con estrellas por variante individual
 - Despliegue automático a GitHub Pages configurado
 - Ordenar tarjetas por Relevancia/Alfabético (`assets/game-stats.json` + JS en
   `#juegos`) — relevancia hoy a 0 hasta que existan los 8 hilos de Discussions
+- Sección **¿Cómo funciona?** (3 pasos) entre el hero y los juegos
+- Hero copy reescrito: enfocado en el problema del solo mode
+- Banner **"App en evolución constante"** en el hero
+- Meta tags OG + Twitter Card para compartir en redes
+- Backup: `site/index.backup-20260723.html`
 
 ### ⏳ Pendiente (acción de Rafel, no delegable)
 - Activar Pages (Settings → Pages → Source: GitHub Actions)

@@ -269,6 +269,17 @@
   #form-status.ok{display:block;color:#2e6b3a}
   #form-status.err{display:block;color:#c0392b}
 
+  /* FAQ */
+  .faq-grid{display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+  .faq-item{
+    background:#fff;border:1px solid var(--cream-line);border-radius:14px;
+    padding:1.2rem 1.3rem;
+  }
+  .faq-q{font-weight:700;color:var(--navy);margin-bottom:.4rem;font-size:.97rem}
+  .faq-q::before{content:'Q  ';color:var(--orange);font-weight:800}
+  .faq-a{color:var(--muted);font-size:.92rem;line-height:1.6}
+  .faq-a a{color:var(--blue);font-weight:600}
+
   /* DONATIONS */
   .donate-buttons{display:flex;flex-wrap:wrap;gap:1rem;justify-content:center}
   .donate-btn{
@@ -881,6 +892,30 @@
       <div id="form-status"></div>
       <div class="form-note">⚠️ Este formulario solo funciona en la red local del desarrollador todavía. <strong>Usa el bot de Telegram (botón "Únete al grupo" arriba)</strong> — funciona ya mismo desde cualquier sitio y es la vía recomendada.</div>
     </form>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="container">
+    <h2 class="section-title">Preguntas frecuentes</h2>
+    <div class="faq-grid">
+      <div class="faq-item">
+        <div class="faq-q">¿Necesito el juego físico?</div>
+        <div class="faq-a">Sí. BGT es una herramienta de apoyo, no una copia del juego. Necesitas tener el juego físico original para jugar — la app gestiona el bot rival y la puntuación, tú juegas con tus propias cartas y tablero.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">¿Funciona sin conexión a internet?</div>
+        <div class="faq-a">Sí, completamente. Los bots corren en local, sin servidores ni nube. Solo necesitas internet para descargar la app o las actualizaciones.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">¿Es segura? ¿Qué permisos pide?</div>
+        <div class="faq-a">No pide permisos de red en el modo normal, ni acceso a cámara ni micrófono. El código fuente es público en GitHub — puedes revisarlo tú mismo antes de instalar.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">¿Puedo pedir que añadan mi juego favorito?</div>
+        <div class="faq-a">Sí, y de hecho así es como crece la app. Usa el formulario de <a href="#pedir-juego">Sugerencias</a> o el <a href="https://github.com/Carchofo/BGT/discussions" target="_blank" rel="noopener">foro</a>. Los juegos más pedidos por la comunidad son los siguientes en implementarse.</div>
+      </div>
+    </div>
   </div>
 </section>
 
