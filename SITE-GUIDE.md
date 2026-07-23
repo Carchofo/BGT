@@ -57,8 +57,11 @@ toque el archivo de forma significativa.
 | `bg-fondo1.jpg`, `bg-lapiz.jpg` | Fondos hechos por Rafel (Gemini) | body / sección Comunidad, atenuados con overlay |
 | `banner_*.jpg` | Assets reales de la app Android (drawables) | tarjetas de juego — **NO buscar sustitutos en Google Images, ver AGENTS.md regla 7** |
 | `ic_launcher.webp` | Icono viejo de la app | ya no se usa en el HTML, queda por si acaso |
+| `banner_friday.jpg` | Foto propia de Rafel (portada española real, confirmado que es suya) | tarjeta de Viernes |
 
-Friday no tiene banner (no existe el asset en la app, no es un descuido).
+"Friday" se renombró a **"Viernes"** en toda la app y la web (2026-07-23) — es el nombre
+real de la edición española. Ver nota de deuda técnica en `AGENTS.md` sobre nombres
+hardcodeados antes de añadir más idiomas.
 
 ## Workflows de GitHub Actions relacionados
 

@@ -116,9 +116,10 @@ private val GAMES = listOf(
         features = setOf(GameFeature.SOLO, GameFeature.RULES)
     ),
     GameItem(
-        id = "friday", title = "Friday",
+        id = "friday", title = "Viernes",
         subtitle = "Solo puro • Construye tu mazo para sobrevivir",
-        hasBanner = false, available = true, route = "friday_solo", tag = "DISPONIBLE",
+        hasBanner = true, available = true, route = "friday_solo", tag = "DISPONIBLE",
+        bannerRes = R.drawable.banner_friday,
         features = setOf(GameFeature.SOLO, GameFeature.RULES, GameFeature.SCORING)
     ),
     GameItem(id = "g5", title = "Próximamente", subtitle = ""),
@@ -348,7 +349,7 @@ private fun BugReportDialog(
     onDismiss: () -> Unit,
     onSend: (game: String, message: String) -> Unit
 ) {
-    val games = listOf("General", "Spooktacular", "Criaturas Maravillosas", "Tiletum", "Maracaibo", "Castle Combo", "Cascadia", "Coimbra", "Friday")
+    val games = listOf("General", "Spooktacular", "Criaturas Maravillosas", "Tiletum", "Maracaibo", "Castle Combo", "Cascadia", "Coimbra", "Viernes")
     var selectedGame by remember { mutableStateOf(games[0]) }
     var expanded by remember { mutableStateOf(false) }
     var message by remember { mutableStateOf("") }
@@ -419,7 +420,7 @@ private fun CommunitySubmitDialog(
     onDismiss: () -> Unit,
     onSend: (game: String, type: CommunitySubmitter.SubmissionType, message: String, imageUri: Uri?) -> Unit
 ) {
-    val games = listOf("General", "Spooktacular", "Criaturas Maravillosas", "Tiletum", "Maracaibo", "Castle Combo", "Cascadia", "Coimbra", "Friday")
+    val games = listOf("General", "Spooktacular", "Criaturas Maravillosas", "Tiletum", "Maracaibo", "Castle Combo", "Cascadia", "Coimbra", "Viernes")
     val types = listOf(
         CommunitySubmitter.SubmissionType.PHOTO to "📷 Foto de cartas/componentes",
         CommunitySubmitter.SubmissionType.FEEDBACK to "💬 Feedback / sugerencia",

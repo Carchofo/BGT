@@ -10,6 +10,14 @@ Bots solitario fan-made y calculadoras para juegos de mesa. Distribución por Gi
 repo) — mapa de secciones/CSS/JS/assets y checklist hecho/pendiente. Actualizarlo tras
 cualquier cambio significativo del sitio.
 
+## Deuda técnica: nombres de juego hardcodeados (2026-07-23)
+Los títulos de `GAMES` en `HomeScreen.kt` (Spooktacular, Viernes, etc.) están hardcodeados
+en Kotlin, no en `strings.xml` — incumple la regla 5 de abajo. Se ha priorizado así hasta
+ahora porque los nombres de juego no cambian por idioma en la mayoría de casos (nombres
+propios). Excepción real ya encontrada: "Friday" se vende en España como "Viernes" (caja
+oficial confirmada). **Antes de añadir idiomas de verdad**, mover todos los títulos a
+recursos de string por locale (uno por idioma: es/en/fr/de/it), no solo Viernes/Friday.
+
 ## Regla de producto: no solapar solitarios (2026-07-22)
 Cuando un juego YA está implementado y aparece un automa/solitario ALTERNATIVO para ese
 mismo juego (comunidad, investigación, o petición vía Telegram): **nunca** duplicar el
