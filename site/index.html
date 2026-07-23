@@ -106,6 +106,14 @@
     padding:.55rem 1rem;letter-spacing:.01em;
   }
 
+  /* LANG SELECTOR */
+  .lang-selector{display:flex;gap:.3rem;align-items:center;margin-left:.4rem}
+  .lang-btn{background:none;border:1px solid rgba(255,255,255,.3);color:#fff;
+    font-size:.7rem;font-weight:700;padding:.18rem .42rem;border-radius:4px;cursor:pointer;
+    transition:background .15s,border-color .15s;letter-spacing:.04em;line-height:1.4}
+  .lang-btn:hover,.lang-btn.active{background:var(--orange);border-color:var(--orange)}
+  @media(max-width:700px){.lang-selector{display:none}}
+
   /* EVOLVING BANNER */
   .evolving-banner{
     display:flex;align-items:flex-start;gap:.8rem;
@@ -596,7 +604,7 @@
 </head>
 <body>
 
-<div class="platform-bar">
+<div class="platform-bar" data-i18n="platform_bar">
   🚀 Plataforma en constante evolución — gracias a la comunidad, seguiremos creciendo juntos
 </div>
 
@@ -610,12 +618,19 @@
       <span></span><span></span><span></span>
     </button>
     <div class="nav-links" id="nav-links">
-      <a href="#juegos">Juegos</a>
-      <a href="#faq">FAQ</a>
-      <a href="#" id="telegram-link-menu" aria-disabled="true">✈️ Únete a Telegram</a>
-      <a href="https://github.com/Carchofo/BGT/discussions" target="_blank" rel="noopener">Foro</a>
-      <a href="#pedir-juego">Sugerencias</a>
-      <a href="#donaciones" class="cta">Apoyar el proyecto</a>
+      <a href="#juegos" data-i18n="nav.games">Juegos</a>
+      <a href="#faq" data-i18n="nav.faq">FAQ</a>
+      <a href="#" id="telegram-link-menu" aria-disabled="true" data-i18n="nav.telegram">✈️ Únete a Telegram</a>
+      <a href="https://github.com/Carchofo/BGT/discussions" target="_blank" rel="noopener" data-i18n="nav.forum">Foro</a>
+      <a href="#pedir-juego" data-i18n="nav.suggest">Sugerencias</a>
+      <div class="lang-selector" id="lang-selector">
+        <button class="lang-btn active" data-lang="es">ES</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+        <button class="lang-btn" data-lang="fr">FR</button>
+        <button class="lang-btn" data-lang="de">DE</button>
+        <button class="lang-btn" data-lang="it">IT</button>
+      </div>
+      <a href="#donaciones" class="cta" data-i18n="nav.support">Apoyar el proyecto</a>
     </div>
   </div>
 </nav>
@@ -624,57 +639,57 @@
   <img class="logo" src="assets/logo-icon.png" alt="Logo de BGT">
   <h1>BGT</h1>
   <div class="sub">Board Game Tools</div>
-  <p class="tagline">¿Sin rival? No hay problema. BGT añade un bot automático a tus juegos favoritos para que puedas jugar en solitario sin gestionar al rival tú mismo.</p>
+  <p class="tagline" data-i18n="hero.tagline">¿Sin rival? No hay problema. BGT añade un bot automático a tus juegos favoritos para que puedas jugar en solitario sin gestionar al rival tú mismo.</p>
   <div class="hero-ctas">
     <a class="btn-download" href="https://github.com/Carchofo/BGT/releases/latest" id="download-btn">
-      ⬇ Descargar APK gratis
-      <small id="version-label">última versión</small>
+      <span data-i18n="hero.download">⬇ Descargar APK gratis</span>
+      <small id="version-label" data-i18n="hero.latest">última versión</small>
     </a>
     <a class="btn-telegram" href="#" id="telegram-link-hero" aria-disabled="true">
-      ✈️ Únete a la comunidad
-      <small>pide juegos, reporta fallos, comenta</small>
+      <span data-i18n="hero.community">✈️ Únete a la comunidad</span>
+      <small data-i18n="hero.community_sub">pide juegos, reporta fallos, comenta</small>
     </a>
   </div>
   <div class="release-meta" id="release-meta"></div>
-  <div class="badge-free">🎲 100% gratuita · Android · Sin anuncios · Fan-made</div>
+  <div class="badge-free" data-i18n="hero.badge">🎲 100% gratuita · Android · Sin anuncios · Fan-made</div>
   <div class="feature-strip">
-    <span>🤖 Bots con IA local</span>
-    <span>🧮 Calculadoras de puntuación</span>
-    <span>📖 Reglas en pantalla</span>
-    <span>🔄 Se actualiza sola</span>
-    <span>📴 Sin cuenta ni registro</span>
+    <span data-i18n="hero.f1">🤖 Bots con IA local</span>
+    <span data-i18n="hero.f2">🧮 Calculadoras de puntuación</span>
+    <span data-i18n="hero.f3">📖 Reglas en pantalla</span>
+    <span data-i18n="hero.f4">🔄 Se actualiza sola</span>
+    <span data-i18n="hero.f5">📴 Sin cuenta ni registro</span>
   </div>
   <div class="evolving-banner">
     <span class="evolving-icon">🌱</span>
     <div>
-      <strong>App en evolución constante</strong> — cada juego nuevo, fix o variante lo propone y vota la comunidad.
-      <a href="#juegos">Ver juegos disponibles</a> o <a href="#pedir-juego">pedir el tuyo</a>.
+      <strong data-i18n="hero.evolving_title">App en evolución constante</strong> — <span data-i18n="hero.evolving_body">cada juego nuevo, fix o variante lo propone y vota la comunidad.</span>
+      <a href="#juegos" data-i18n="hero.see_games">Ver juegos disponibles</a> o <a href="#pedir-juego" data-i18n="hero.request_yours">pedir el tuyo</a>.
     </div>
   </div>
 </header>
 
 <section id="como-funciona" class="how-it-works">
   <div class="container">
-    <h2 class="section-title">¿Cómo funciona?</h2>
-    <p class="section-lead">Prueba tus juegos en solitario con automas fanmade u oficiales.</p>
+    <h2 class="section-title" data-i18n="how.title">¿Cómo funciona?</h2>
+    <p class="section-lead" data-i18n="how.lead">Prueba tus juegos en solitario con automas fanmade u oficiales.</p>
     <div class="steps-grid">
       <div class="step-card">
         <div class="step-num">1</div>
         <div class="step-icon">⬇️</div>
-        <h3>Descarga la app</h3>
-        <p>Un APK gratuito para Android. Sin tienda, sin suscripción, sin anuncios. Instala y listo.</p>
+        <h3 data-i18n="how.s1_title">Descarga la app</h3>
+        <p data-i18n="how.s1_body">Un APK gratuito para Android. Sin tienda, sin suscripción, sin anuncios. Instala y listo.</p>
       </div>
       <div class="step-card">
         <div class="step-num">2</div>
         <div class="step-icon">🎲</div>
-        <h3>Elige tu juego</h3>
-        <p>Selecciona uno de los 8 juegos soportados. Cada uno tiene su propio bot con comportamiento fiel a las reglas.</p>
+        <h3 data-i18n="how.s2_title">Elige tu juego</h3>
+        <p data-i18n="how.s2_body">Selecciona uno de los 8 juegos soportados. Cada uno tiene su propio bot con comportamiento fiel a las reglas.</p>
       </div>
       <div class="step-card">
         <div class="step-num">3</div>
         <div class="step-icon">🎯</div>
-        <h3>Juega en solitario o añade jugadores a tus partidas</h3>
-        <p>El automa gestiona su turno solo. Tú juegas el tuyo. Sin necesidad de un segundo jugador.</p>
+        <h3 data-i18n="how.s3_title">Juega en solitario o añade jugadores a tus partidas</h3>
+        <p data-i18n="how.s3_body">El automa gestiona su turno solo. Tú juegas el tuyo. Sin necesidad de un segundo jugador.</p>
       </div>
     </div>
   </div>
@@ -682,12 +697,12 @@
 
 <section id="juegos">
   <div class="container">
-    <h2 class="section-title">🎲 Juegos soportados</h2>
-    <p class="section-lead">¿No está el tuyo? <a href="#pedir-juego">Pídelo a la comunidad</a> y lo añadimos — la biblioteca crece con los votos de los jugadores.</p>
+    <h2 class="section-title" data-i18n="games.title">🎲 Juegos soportados</h2>
+    <p class="section-lead" data-i18n-html="games.lead">¿No está el tuyo? <a href="#pedir-juego">Pídelo a la comunidad</a> y lo añadimos — la biblioteca crece con los votos de los jugadores.</p>
     <div class="sort-bar" role="group" aria-label="Ordenar juegos">
-      <span class="sort-label">Ordenar por:</span>
-      <button type="button" class="sort-btn active" data-sort="relevance">🔥 Relevancia</button>
-      <button type="button" class="sort-btn" data-sort="alpha">🔤 Alfabético</button>
+      <span class="sort-label" data-i18n="games.sort_label">Ordenar por:</span>
+      <button type="button" class="sort-btn active" data-sort="relevance" data-i18n="games.sort_rel">🔥 Relevancia</button>
+      <button type="button" class="sort-btn" data-sort="alpha" data-i18n="games.sort_alpha">🔤 Alfabético</button>
     </div>
     <div class="games-grid" id="games-grid">
 
@@ -696,8 +711,8 @@
         <div class="body">
           <h3>Spooktacular</h3>
           <div class="bot-name">🤖 Bot: Killtron-3000</div>
-          <p>Enfréntate al robot asesino del cine: tres mazos de programa (A→B→C) que se ejecutan cada turno de forma automática.</p>
-          <div class="tags"><span class="tag bot">Bot solitario</span><span class="tag rules">Reglas</span></div>
+          <p data-i18n="game.spooktacular.desc">Enfréntate al robot asesino del cine: tres mazos de programa (A→B→C) que se ejecutan cada turno de forma automática.</p>
+          <div class="tags"><span class="tag bot" data-i18n="tag.bot">Bot solitario</span><span class="tag rules" data-i18n="tag.rules">Reglas</span></div>
         </div>
         <div class="card-footer">
           <button class="like-btn" data-game="Spooktacular"><span class="like-heart">♡</span> <span class="like-count">0</span></button>
@@ -710,8 +725,8 @@
         <div class="body">
           <h3>Criaturas Maravillosas</h3>
           <div class="bot-name">🦋 Bot: Tingent</div>
-          <p>Un rival artificial con tracker propio de zonas y puntuación. Roba cartas, ocupa zonas y compite contigo hasta el recuento final.</p>
-          <div class="tags"><span class="tag bot">Bot solitario</span><span class="tag calc">Puntuación</span><span class="tag rules">Reglas</span></div>
+          <p data-i18n="game.cm.desc">Un rival artificial con tracker propio de zonas y puntuación. Roba cartas, ocupa zonas y compite contigo hasta el recuento final.</p>
+          <div class="tags"><span class="tag bot" data-i18n="tag.bot">Bot solitario</span><span class="tag calc" data-i18n="tag.calc">Puntuación</span><span class="tag rules" data-i18n="tag.rules">Reglas</span></div>
         </div>
         <div class="card-footer">
           <button class="like-btn" data-game="Criaturas Maravillosas"><span class="like-heart">♡</span> <span class="like-count">0</span></button>
@@ -724,8 +739,8 @@
         <div class="body">
           <h3>Tiletum</h3>
           <div class="bot-name">🏛️ Bot: Titus</div>
-          <p>El mercader automático que recorre Europa: mazo de decisiones propio para jugar el modo solitario sin gestionar tú al rival.</p>
-          <div class="tags"><span class="tag bot">Bot solitario</span><span class="tag rules">Reglas</span></div>
+          <p data-i18n="game.tiletum.desc">El mercader automático que recorre Europa: mazo de decisiones propio para jugar el modo solitario sin gestionar tú al rival.</p>
+          <div class="tags"><span class="tag bot" data-i18n="tag.bot">Bot solitario</span><span class="tag rules" data-i18n="tag.rules">Reglas</span></div>
         </div>
         <div class="card-footer">
           <button class="like-btn" data-game="Tiletum"><span class="like-heart">♡</span> <span class="like-count">0</span></button>
@@ -738,8 +753,8 @@
         <div class="body">
           <h3>Piratas de Maracaibo</h3>
           <div class="bot-name">🏴‍☠️ Bot: Jordán</div>
-          <p>Un pirata automático que navega el Caribe por ti: gestiona su ruta y sus acciones para que solo te preocupes de tu turno.</p>
-          <div class="tags"><span class="tag bot">Bot solitario</span><span class="tag rules">Reglas</span></div>
+          <p data-i18n="game.maracaibo.desc">Un pirata automático que navega el Caribe por ti: gestiona su ruta y sus acciones para que solo te preocupes de tu turno.</p>
+          <div class="tags"><span class="tag bot" data-i18n="tag.bot">Bot solitario</span><span class="tag rules" data-i18n="tag.rules">Reglas</span></div>
         </div>
         <div class="card-footer">
           <button class="like-btn" data-game="Piratas de Maracaibo"><span class="like-heart">♡</span> <span class="like-count">0</span></button>
@@ -752,8 +767,8 @@
         <div class="body">
           <h3>Castle Combo</h3>
           <div class="bot-name">🏰 Bot: Anton</div>
-          <p>El rival automático para el modo solitario: elige cartas, construye su castillo y puntúa contra ti.</p>
-          <div class="tags"><span class="tag bot">Bot solitario</span><span class="tag rules">Reglas</span></div>
+          <p data-i18n="game.castlecombo.desc">El rival automático para el modo solitario: elige cartas, construye su castillo y puntúa contra ti.</p>
+          <div class="tags"><span class="tag bot" data-i18n="tag.bot">Bot solitario</span><span class="tag rules" data-i18n="tag.rules">Reglas</span></div>
         </div>
         <div class="card-footer">
           <button class="like-btn" data-game="Castle Combo"><span class="like-heart">♡</span> <span class="like-count">0</span></button>
@@ -766,8 +781,8 @@
         <div class="body">
           <h3>Coimbra</h3>
           <div class="bot-name">🎓 Bot solitario</div>
-          <p>Automatiza al rival en la ciudad universitaria portuguesa: dados, influencia y viajes gestionados por la app.</p>
-          <div class="tags"><span class="tag bot">Bot solitario</span><span class="tag rules">Reglas</span></div>
+          <p data-i18n="game.coimbra.desc">Automatiza al rival en la ciudad universitaria portuguesa: dados, influencia y viajes gestionados por la app.</p>
+          <div class="tags"><span class="tag bot" data-i18n="tag.bot">Bot solitario</span><span class="tag rules" data-i18n="tag.rules">Reglas</span></div>
         </div>
         <div class="card-footer">
           <button class="like-btn" data-game="Coimbra"><span class="like-heart">♡</span> <span class="like-count">0</span></button>
@@ -780,8 +795,8 @@
         <div class="body">
           <h3>Cascadia</h3>
           <div class="bot-name">🌲 Calculadora de puntuación</div>
-          <p>Introduce tus cartas de fauna y hábitats y obtén el desglose completo de puntos al instante, para cualquier número de jugadores.</p>
-          <div class="tags"><span class="tag calc">Calculadora</span></div>
+          <p data-i18n="game.cascadia.desc">Introduce tus cartas de fauna y hábitats y obtén el desglose completo de puntos al instante, para cualquier número de jugadores.</p>
+          <div class="tags"><span class="tag calc" data-i18n="tag.calc_short">Calculadora</span></div>
         </div>
         <div class="card-footer">
           <button class="like-btn" data-game="Cascadia"><span class="like-heart">♡</span> <span class="like-count">0</span></button>
@@ -794,8 +809,8 @@
         <div class="body">
           <h3>Viernes</h3>
           <div class="bot-name">🧭 Ayuda de juego solitario</div>
-          <p>Asistente para el clásico solitario de Friedemann Friese: gestiona fases, peligros y puntuación de tu aventura con Robinson.</p>
-          <div class="tags"><span class="tag bot">Solitario</span><span class="tag rules">Reglas</span></div>
+          <p data-i18n="game.viernes.desc">Asistente para el clásico solitario de Friedemann Friese: gestiona fases, peligros y puntuación de tu aventura con Robinson.</p>
+          <div class="tags"><span class="tag bot" data-i18n="tag.solo">Solitario</span><span class="tag rules" data-i18n="tag.rules">Reglas</span></div>
         </div>
         <div class="card-footer">
           <button class="like-btn" data-game="Viernes"><span class="like-heart">♡</span> <span class="like-count">0</span></button>
@@ -806,10 +821,10 @@
       <a class="game-card add-game-card" href="#pedir-juego">
         <div class="banner placeholder add-icon" role="img" aria-label="Pedir juego">+</div>
         <div class="body">
-          <h3>¿Falta el tuyo?</h3>
-          <div class="bot-name">🗳️ Petición de juego</div>
-          <p>Cuéntanos qué juego quieres ver en BGT y entrará en la cola de la comunidad.</p>
-          <div class="tags"><span class="tag rules">Pedir ahora</span></div>
+          <h3 data-i18n="games.missing_title">¿Falta el tuyo?</h3>
+          <div class="bot-name" data-i18n="games.missing_sub">🗳️ Petición de juego</div>
+          <p data-i18n="games.missing_desc">Cuéntanos qué juego quieres ver en BGT y entrará en la cola de la comunidad.</p>
+          <div class="tags"><span class="tag rules" data-i18n="games.missing_btn">Pedir ahora</span></div>
         </div>
       </a>
 
@@ -819,35 +834,35 @@
 
 <section class="community" id="comunidad">
   <div class="container">
-    <h2 class="section-title">🧡 Hecho por y para la comunidad</h2>
-    <p class="section-lead">BGT crece gracias a sus usuarios. Desde la propia app puedes aportar contenido y ayudar a mejorarla, sin salir de la partida.</p>
+    <h2 class="section-title" data-i18n="comm.title">🧡 Hecho por y para la comunidad</h2>
+    <p class="section-lead" data-i18n="comm.lead">BGT crece gracias a sus usuarios. Desde la propia app puedes aportar contenido y ayudar a mejorarla, sin salir de la partida.</p>
     <div class="community-grid">
       <div class="community-card">
         <span class="emoji">📸</span>
-        <h3>Envía fotos de cartas y componentes</h3>
-        <p>¿Falta una carta o un componente de tu juego? Hazle una foto desde la app y súbela directamente. Así se completan los mazos de los bots.</p>
+        <h3 data-i18n="comm.c1_title">Envía fotos de cartas y componentes</h3>
+        <p data-i18n="comm.c1_body">¿Falta una carta o un componente de tu juego? Hazle una foto desde la app y súbela directamente. Así se completan los mazos de los bots.</p>
       </div>
       <div class="community-card">
         <span class="emoji">💬</span>
-        <h3>Feedback y reporte de bugs</h3>
-        <p>Sugerencias, erratas en reglas o fallos del bot: repórtalos con dos toques desde la propia app. Todo aporte cuenta.</p>
+        <h3 data-i18n="comm.c2_title">Feedback y reporte de bugs</h3>
+        <p data-i18n="comm.c2_body">Sugerencias, erratas en reglas o fallos del bot: repórtalos con dos toques desde la propia app. Todo aporte cuenta.</p>
       </div>
       <div class="community-card">
         <span class="emoji">🤖</span>
-        <h3>Agentes de IA locales</h3>
-        <p>Los aportes se procesan con agentes de IA que corren en local: leen las fotos, clasifican el feedback y preparan las mejoras para la siguiente versión.</p>
+        <h3 data-i18n="comm.c3_title">Agentes de IA locales</h3>
+        <p data-i18n="comm.c3_body">Los aportes se procesan con agentes de IA que corren en local: leen las fotos, clasifican el feedback y preparan las mejoras para la siguiente versión.</p>
       </div>
       <div class="community-card">
         <span class="emoji">✈️</span>
-        <h3>Bot de Telegram</h3>
-        <p><code>/juego_nuevo</code> para pedir un juego, <code>/modificar</code> para reportar un fallo en uno ya implementado, <code>/update</code> para la última versión. Todo con conversación guiada, sin formularios.</p>
-        <a href="#" id="telegram-link" class="tg-btn" aria-disabled="true">Próximamente en Telegram</a>
+        <h3 data-i18n="comm.c4_title">Bot de Telegram</h3>
+        <p data-i18n-html="comm.c4_body"><code>/juego_nuevo</code> para pedir un juego, <code>/modificar</code> para reportar un fallo en uno ya implementado, <code>/update</code> para la última versión. Todo con conversación guiada, sin formularios.</p>
+        <a href="#" id="telegram-link" class="tg-btn" aria-disabled="true" data-i18n="comm.tg_btn">Próximamente en Telegram</a>
       </div>
       <div class="community-card">
         <span class="emoji">💭</span>
-        <h3>Foro de discusión</h3>
-        <p>Debate reglas, comparte automas alternativos y sube archivos directamente. Nuestros agentes leen el foro y lo incorporan al desarrollo.</p>
-        <a href="https://github.com/Carchofo/BGT/discussions" target="_blank" rel="noopener" class="tg-btn active">Abrir el foro</a>
+        <h3 data-i18n="comm.c5_title">Foro de discusión</h3>
+        <p data-i18n="comm.c5_body">Debate reglas, comparte automas alternativos y sube archivos directamente. Nuestros agentes leen el foro y lo incorporan al desarrollo.</p>
+        <a href="https://github.com/Carchofo/BGT/discussions" target="_blank" rel="noopener" class="tg-btn active" data-i18n="comm.forum_btn">Abrir el foro</a>
       </div>
     </div>
   </div>
@@ -945,23 +960,23 @@
 
 <section id="faq">
   <div class="container">
-    <h2 class="section-title">Preguntas frecuentes</h2>
+    <h2 class="section-title" data-i18n="faq.title">Preguntas frecuentes</h2>
     <div class="faq-grid">
       <div class="faq-item">
-        <div class="faq-q">¿Necesito el juego físico?</div>
-        <div class="faq-a">Sí. BGT es una herramienta de apoyo, no una copia del juego. Necesitas tener el juego físico original para jugar — la app gestiona el bot rival y la puntuación, tú juegas con tus propias cartas y tablero.</div>
+        <div class="faq-q" data-i18n="faq.q1">¿Necesito el juego físico?</div>
+        <div class="faq-a" data-i18n="faq.a1">Sí. BGT es una herramienta de apoyo, no una copia del juego. Necesitas tener el juego físico original para jugar — la app gestiona el bot rival y la puntuación, tú juegas con tus propias cartas y tablero.</div>
       </div>
       <div class="faq-item">
-        <div class="faq-q">¿Funciona sin conexión a internet?</div>
-        <div class="faq-a">Sí, completamente. Los bots corren en local, sin servidores ni nube. Solo necesitas internet para descargar la app o las actualizaciones.</div>
+        <div class="faq-q" data-i18n="faq.q2">¿Funciona sin conexión a internet?</div>
+        <div class="faq-a" data-i18n="faq.a2">Sí, completamente. Los bots corren en local, sin servidores ni nube. Solo necesitas internet para descargar la app o las actualizaciones.</div>
       </div>
       <div class="faq-item">
-        <div class="faq-q">¿Es segura? ¿Qué permisos pide?</div>
-        <div class="faq-a">No pide permisos de red en el modo normal, ni acceso a cámara ni micrófono. El código fuente es público en GitHub — puedes revisarlo tú mismo antes de instalar.</div>
+        <div class="faq-q" data-i18n="faq.q3">¿Es segura? ¿Qué permisos pide?</div>
+        <div class="faq-a" data-i18n="faq.a3">No pide permisos de red en el modo normal, ni acceso a cámara ni micrófono. El código fuente es público en GitHub — puedes revisarlo tú mismo antes de instalar.</div>
       </div>
       <div class="faq-item">
-        <div class="faq-q">¿Puedo pedir que añadan mi juego favorito?</div>
-        <div class="faq-a">Sí, y de hecho así es como crece la app. Usa el formulario de <a href="#pedir-juego">Sugerencias</a> o el <a href="https://github.com/Carchofo/BGT/discussions" target="_blank" rel="noopener">foro</a>. Los juegos más pedidos por la comunidad son los siguientes en implementarse.</div>
+        <div class="faq-q" data-i18n="faq.q4">¿Puedo pedir que añadan mi juego favorito?</div>
+        <div class="faq-a" data-i18n-html="faq.a4">Sí, y de hecho así es como crece la app. Usa el formulario de <a href="#pedir-juego">Sugerencias</a> o el <a href="https://github.com/Carchofo/BGT/discussions" target="_blank" rel="noopener">foro</a>. Los juegos más pedidos por la comunidad son los siguientes en implementarse.</div>
       </div>
     </div>
   </div>
@@ -969,8 +984,8 @@
 
 <section class="community" id="donaciones">
   <div class="container">
-    <h2 class="section-title">☕ Apoya el proyecto</h2>
-    <p class="section-lead" id="donate-lead">BGT es y será siempre gratuita, sin anuncios ni funciones de pago. Si te ha ahorrado partidas frustrantes, puedes invitar al desarrollador a un café.</p>
+    <h2 class="section-title" data-i18n="donate.title">☕ Apoya el proyecto</h2>
+    <p class="section-lead" id="donate-lead" data-i18n="donate.lead">BGT es y será siempre gratuita, sin anuncios ni funciones de pago. Si te ha ahorrado partidas frustrantes, puedes invitar al desarrollador a un café.</p>
     <div class="donate-buttons">
       <a href="#" id="kofi-link" class="donate-btn kofi" aria-disabled="true" onclick="return false">❤️ Ko-fi <small>· próximamente</small></a>
       <a href="https://github.com/sponsors/Carchofo" id="sponsors-link" class="donate-btn sponsors" target="_blank" rel="noopener">🐙 GitHub Sponsors</a>
@@ -1004,60 +1019,60 @@
       <p class="modal-desc" id="modal-desc"></p>
 
       <div class="bot-rating-row">
-        <span class="bot-rating-label">¿Qué tal funciona?</span>
+        <span class="bot-rating-label" data-i18n="modal.rating_label">¿Qué tal funciona?</span>
         <div class="stars" id="modal-bot-stars"></div>
         <span class="star-avg" id="modal-bot-avg"></span>
         <span class="star-voted" id="modal-bot-voted"></span>
       </div>
 
       <div class="modal-tools">
-        <div class="modal-tools-title">Herramientas incluidas</div>
+        <div class="modal-tools-title" data-i18n="modal.tools_title">Herramientas incluidas</div>
         <div class="tags" id="modal-tags"></div>
       </div>
 
-      <button type="button" class="bug-report-btn" id="bug-report-toggle">🐛 Reportar fallo o mejora</button>
+      <button type="button" class="bug-report-btn" id="bug-report-toggle" data-i18n="modal.bug_btn">🐛 Reportar fallo o mejora</button>
       <form class="bug-report-form" id="bug-report-form">
         <select id="br-tipo">
-          <option value="bug">🐞 Algo no funciona</option>
-          <option value="regla">📖 Errata en las reglas</option>
-          <option value="falta">🧩 Falta contenido (carta, componente…)</option>
-          <option value="mejora">✨ Sugerencia de mejora</option>
+          <option value="bug" data-i18n="modal.bug_opt1">🐞 Algo no funciona</option>
+          <option value="regla" data-i18n="modal.bug_opt2">📖 Errata en las reglas</option>
+          <option value="falta" data-i18n="modal.bug_opt3">🧩 Falta contenido (carta, componente…)</option>
+          <option value="mejora" data-i18n="modal.bug_opt4">✨ Sugerencia de mejora</option>
         </select>
-        <textarea id="br-desc" maxlength="800" placeholder="Descríbelo con detalle — cuanto más claro, más fácil de arreglar"></textarea>
-        <button type="submit" id="br-submit">Enviar reporte</button>
+        <textarea id="br-desc" maxlength="800" data-i18n-placeholder="modal.bug_placeholder" placeholder="Descríbelo con detalle — cuanto más claro, más fácil de arreglar"></textarea>
+        <button type="submit" id="br-submit" data-i18n="modal.bug_submit">Enviar reporte</button>
         <div class="bug-report-status" id="br-status"></div>
       </form>
 
-      <div class="modal-section-title">🎮 Modos solitario fan-made</div>
+      <div class="modal-section-title" data-i18n="modal.solo_title">🎮 Modos solitario fan-made</div>
       <div class="variant-list" id="modal-variants"></div>
 
-      <button type="button" class="variant-add-btn" id="variant-add-toggle">+ Aportar un solitario fan-made</button>
+      <button type="button" class="variant-add-btn" id="variant-add-toggle" data-i18n="modal.variant_add_btn">+ Aportar un solitario fan-made</button>
       <div class="variant-add-form" id="variant-add-form">
-        <label>Nombre del automa / variante</label>
-        <input type="text" id="vf-name" maxlength="120" placeholder="Ej: Automa Soluvi">
+        <label data-i18n="modal.vf_name_label">Nombre del automa / variante</label>
+        <input type="text" id="vf-name" maxlength="120" data-i18n-placeholder="modal.vf_name_ph" placeholder="Ej: Automa Soluvi">
         <div class="form-row">
-          <input type="text" id="vf-author" maxlength="120" placeholder="Autor (nick o nombre)">
-          <input type="url" id="vf-source" maxlength="300" placeholder="Enlace (BGG, PDF, foro…)">
+          <input type="text" id="vf-author" maxlength="120" data-i18n-placeholder="modal.vf_author_ph" placeholder="Autor (nick o nombre)">
+          <input type="url" id="vf-source" maxlength="300" data-i18n-placeholder="modal.vf_source_ph" placeholder="Enlace (BGG, PDF, foro…)">
         </div>
-        <label>¿En qué se diferencia del oficial? <span class="opt" style="font-weight:400;color:var(--muted);font-size:.85em">(opcional)</span></label>
-        <textarea id="vf-desc" maxlength="800" placeholder="Ej: usa mazo de cartas en vez de dados, escala mejor a experto…"></textarea>
-        <label>Foto del automa (obligatoria)</label>
+        <label data-i18n="modal.vf_diff_label">¿En qué se diferencia del oficial? <span class="opt" style="font-weight:400;color:var(--muted);font-size:.85em">(opcional)</span></label>
+        <textarea id="vf-desc" maxlength="800" data-i18n-placeholder="modal.vf_diff_ph" placeholder="Ej: usa mazo de cartas en vez de dados, escala mejor a experto…"></textarea>
+        <label data-i18n="modal.vf_photo_label">Foto del automa (obligatoria)</label>
         <input type="file" id="vf-photo" accept="image/*">
-        <button type="submit" id="vf-submit">Enviar variante</button>
+        <button type="submit" id="vf-submit" data-i18n="modal.vf_submit">Enviar variante</button>
         <div class="variant-add-status" id="vf-status"></div>
       </div>
 
-      <div class="modal-section-title">💬 Comentarios</div>
+      <div class="modal-section-title" data-i18n="modal.comments_title">💬 Comentarios</div>
       <div class="comment-list" id="modal-comments"></div>
       <form class="comment-form" id="comment-form">
-        <input type="text" id="cf-author" maxlength="60" placeholder="Tu nombre o nick" autocomplete="off">
-        <textarea id="cf-text" maxlength="500" placeholder="Escribe un comentario sobre este juego…"></textarea>
-        <button type="submit" id="cf-submit">Enviar comentario</button>
+        <input type="text" id="cf-author" maxlength="60" data-i18n-placeholder="modal.cf_author_ph" placeholder="Tu nombre o nick" autocomplete="off">
+        <textarea id="cf-text" maxlength="500" data-i18n-placeholder="modal.cf_text_ph" placeholder="Escribe un comentario sobre este juego…"></textarea>
+        <button type="submit" id="cf-submit" data-i18n="modal.cf_submit">Enviar comentario</button>
         <div class="comment-status" id="cf-status"></div>
       </form>
 
       <div class="modal-forum-row">
-        <a class="modal-forum-link" id="modal-discuss" href="#" target="_blank" rel="noopener">🗣️ Ver debate completo en el foro →</a>
+        <a class="modal-forum-link" id="modal-discuss" href="#" target="_blank" rel="noopener" data-i18n="modal.forum_link">🗣️ Ver debate completo en el foro →</a>
       </div>
     </div>
   </div>
@@ -1869,5 +1884,397 @@ var KOFI_USERNAME = null; // ej: 'carchofo'
 })();
 </script>
 
+
+<script>
+// ── i18n ──────────────────────────────────────────────
+var BGT_TRANS = {
+  es: {
+    platform_bar: '🚀 Plataforma en constante evolución — gracias a la comunidad, seguiremos creciendo juntos',
+    'nav.games': 'Juegos', 'nav.faq': 'Preguntas frecuentes', 'nav.telegram': '✈️ Únete a Telegram',
+    'nav.forum': 'Foro', 'nav.suggest': 'Sugerencias', 'nav.support': 'Apoyar el proyecto',
+    'hero.tagline': '¿Sin rival? No hay problema. BGT añade un bot automático a tus juegos favoritos para que puedas jugar en solitario sin gestionar al rival tú mismo.',
+    'hero.download': '⬇ Descargar APK gratis', 'hero.latest': 'última versión',
+    'hero.community': '✈️ Únete a la comunidad', 'hero.community_sub': 'pide juegos, reporta fallos, comenta',
+    'hero.badge': '🎲 100% gratuita · Android · Sin anuncios · Fan-made',
+    'hero.f1': '🤖 Bots con IA local', 'hero.f2': '🧮 Calculadoras de puntuación',
+    'hero.f3': '📖 Reglas en pantalla', 'hero.f4': '🔄 Se actualiza sola', 'hero.f5': '📴 Sin cuenta ni registro',
+    'hero.evolving_title': 'App en evolución constante',
+    'hero.evolving_body': 'cada juego nuevo, fix o variante lo propone y vota la comunidad.',
+    'hero.see_games': 'Ver juegos disponibles', 'hero.request_yours': 'pedir el tuyo',
+    'how.title': '¿Cómo funciona?', 'how.lead': 'Prueba tus juegos en solitario con automas fanmade u oficiales.',
+    'how.s1_title': 'Descarga la app', 'how.s1_body': 'Un APK gratuito para Android. Sin tienda, sin suscripción, sin anuncios. Instala y listo.',
+    'how.s2_title': 'Elige tu juego', 'how.s2_body': 'Selecciona uno de los 8 juegos soportados. Cada uno tiene su propio bot con comportamiento fiel a las reglas.',
+    'how.s3_title': 'Juega en solitario o añade jugadores a tus partidas', 'how.s3_body': 'El automa gestiona su turno solo. Tú juegas el tuyo. Sin necesidad de un segundo jugador.',
+    'games.title': '🎲 Juegos soportados',
+    'games.lead': '¿No está el tuyo? <a href="#pedir-juego">Pídelo a la comunidad</a> y lo añadimos — la biblioteca crece con los votos de los jugadores.',
+    'games.sort_label': 'Ordenar por:', 'games.sort_rel': '🔥 Relevancia', 'games.sort_alpha': '🔤 Alfabético',
+    'games.missing_title': '¿Falta el tuyo?', 'games.missing_sub': '🗳️ Petición de juego',
+    'games.missing_desc': 'Cuéntanos qué juego quieres ver en BGT y entrará en la cola de la comunidad.',
+    'games.missing_btn': 'Pedir ahora',
+    'tag.bot': 'Bot solitario', 'tag.rules': 'Reglas', 'tag.calc': 'Puntuación', 'tag.calc_short': 'Calculadora', 'tag.solo': 'Solitario',
+    'game.spooktacular.desc': 'Enfréntate al robot asesino del cine: tres mazos de programa (A→B→C) que se ejecutan cada turno de forma automática.',
+    'game.cm.desc': 'Un rival artificial con tracker propio de zonas y puntuación. Roba cartas, ocupa zonas y compite contigo hasta el recuento final.',
+    'game.tiletum.desc': 'El mercader automático que recorre Europa: mazo de decisiones propio para jugar el modo solitario sin gestionar tú al rival.',
+    'game.maracaibo.desc': 'Un pirata automático que navega el Caribe por ti: gestiona su ruta y sus acciones para que solo te preocupes de tu turno.',
+    'game.castlecombo.desc': 'El rival automático para el modo solitario: elige cartas, construye su castillo y puntúa contra ti.',
+    'game.coimbra.desc': 'Automatiza al rival en la ciudad universitaria portuguesa: dados, influencia y viajes gestionados por la app.',
+    'game.cascadia.desc': 'Introduce tus cartas de fauna y hábitats y obtén el desglose completo de puntos al instante, para cualquier número de jugadores.',
+    'game.viernes.desc': 'Asistente para el clásico solitario de Friedemann Friese: gestiona fases, peligros y puntuación de tu aventura con Robinson.',
+    'comm.title': '🧡 Hecho por y para la comunidad',
+    'comm.lead': 'BGT crece gracias a sus usuarios. Desde la propia app puedes aportar contenido y ayudar a mejorarla, sin salir de la partida.',
+    'comm.c1_title': 'Envía fotos de cartas y componentes', 'comm.c1_body': '¿Falta una carta o un componente de tu juego? Hazle una foto desde la app y súbela directamente. Así se completan los mazos de los bots.',
+    'comm.c2_title': 'Feedback y reporte de bugs', 'comm.c2_body': 'Sugerencias, erratas en reglas o fallos del bot: repórtalos con dos toques desde la propia app. Todo aporte cuenta.',
+    'comm.c3_title': 'Agentes de IA locales', 'comm.c3_body': 'Los aportes se procesan con agentes de IA que corren en local: leen las fotos, clasifican el feedback y preparan las mejoras para la siguiente versión.',
+    'comm.c4_title': 'Bot de Telegram', 'comm.c4_body': '<code>/juego_nuevo</code> para pedir un juego, <code>/modificar</code> para reportar un fallo, <code>/update</code> para la última versión.',
+    'comm.tg_btn': 'Próximamente en Telegram', 'comm.forum_btn': 'Abrir el foro',
+    'comm.c5_title': 'Foro de discusión', 'comm.c5_body': 'Debate reglas, comparte automas alternativos y sube archivos directamente. Nuestros agentes leen el foro y lo incorporan al desarrollo.',
+    'faq.title': 'Preguntas frecuentes',
+    'faq.q1': '¿Necesito el juego físico?', 'faq.a1': 'Sí. BGT es una herramienta de apoyo, no una copia del juego. Necesitas el juego físico original — la app gestiona el bot rival y la puntuación.',
+    'faq.q2': '¿Funciona sin conexión a internet?', 'faq.a2': 'Sí, completamente. Los bots corren en local, sin servidores ni nube. Solo necesitas internet para descargar la app.',
+    'faq.q3': '¿Es segura? ¿Qué permisos pide?', 'faq.a3': 'No pide permisos de red, ni acceso a cámara ni micrófono. El código fuente es público en GitHub — puedes revisarlo antes de instalar.',
+    'faq.q4': '¿Puedo pedir que añadan mi juego favorito?', 'faq.a4': 'Sí, y así es como crece la app. Usa el formulario de <a href="#pedir-juego">Sugerencias</a> o el <a href="https://github.com/Carchofo/BGT/discussions" target="_blank" rel="noopener">foro</a>.',
+    'donate.title': '☕ Apoya el proyecto', 'donate.lead': 'BGT es y será siempre gratuita, sin anuncios ni funciones de pago. Si te ha ahorrado partidas frustrantes, puedes invitar al desarrollador a un café.',
+    'modal.rating_label': '¿Qué tal funciona?', 'modal.tools_title': 'Herramientas incluidas',
+    'modal.bug_btn': '🐛 Reportar fallo o mejora', 'modal.bug_btn_cancel': '✕ Cancelar reporte',
+    'modal.bug_opt1': '🐞 Algo no funciona', 'modal.bug_opt2': '📖 Errata en las reglas',
+    'modal.bug_opt3': '🧩 Falta contenido (carta, componente…)', 'modal.bug_opt4': '✨ Sugerencia de mejora',
+    'modal.bug_placeholder': 'Descríbelo con detalle — cuanto más claro, más fácil de arreglar',
+    'modal.bug_submit': 'Enviar reporte',
+    'modal.solo_title': '🎮 Modos solitario fan-made', 'modal.variant_add_btn': '+ Aportar un solitario fan-made',
+    'modal.vf_name_label': 'Nombre del automa / variante', 'modal.vf_name_ph': 'Ej: Automa Soluvi',
+    'modal.vf_author_ph': 'Autor (nick o nombre)', 'modal.vf_source_ph': 'Enlace (BGG, PDF, foro…)',
+    'modal.vf_diff_label': '¿En qué se diferencia del oficial?', 'modal.vf_diff_ph': 'Ej: usa mazo de cartas en vez de dados…',
+    'modal.vf_photo_label': 'Foto del automa (obligatoria)', 'modal.vf_submit': 'Enviar variante',
+    'modal.comments_title': '💬 Comentarios', 'modal.cf_author_ph': 'Tu nombre o nick',
+    'modal.cf_text_ph': 'Escribe un comentario sobre este juego…', 'modal.cf_submit': 'Enviar comentario',
+    'modal.forum_link': '🗣️ Ver debate completo en el foro →',
+    'modal.no_comments': 'Aún no hay comentarios. ¡Sé el primero!',
+    'modal.comment_sending': '⏳ Enviando…', 'modal.comment_ok': '✅ ¡Comentario enviado! Aparecerá pronto.',
+    'modal.comment_err': '❌ No se pudo enviar (solo funciona en la red local por ahora).',
+    'modal.comment_empty': '❌ Escribe algo antes de enviar.',
+    'modal.bug_ok': '✅ Reporte enviado. ¡Gracias!', 'modal.bug_err': '❌ No se pudo enviar.',
+    'modal.bug_empty': '❌ Describe el problema antes de enviar.',
+  },
+  en: {
+    platform_bar: '🚀 Constantly evolving platform — thanks to the community, we keep growing together',
+    'nav.games': 'Games', 'nav.faq': 'FAQ', 'nav.telegram': '✈️ Join Telegram',
+    'nav.forum': 'Forum', 'nav.suggest': 'Suggestions', 'nav.support': 'Support the project',
+    'hero.tagline': 'No opponent? No problem. BGT adds an automatic bot to your favourite games so you can play solo without managing the rival yourself.',
+    'hero.download': '⬇ Download APK free', 'hero.latest': 'latest version',
+    'hero.community': '✈️ Join the community', 'hero.community_sub': 'request games, report bugs, comment',
+    'hero.badge': '🎲 100% free · Android · No ads · Fan-made',
+    'hero.f1': '🤖 Local AI bots', 'hero.f2': '🧮 Score calculators',
+    'hero.f3': '📖 Rules on screen', 'hero.f4': '🔄 Self-updating', 'hero.f5': '📴 No account needed',
+    'hero.evolving_title': 'App in constant evolution',
+    'hero.evolving_body': 'every new game, fix or variant is proposed and voted by the community.',
+    'hero.see_games': 'See available games', 'hero.request_yours': 'request yours',
+    'how.title': 'How does it work?', 'how.lead': 'Try your games solo with fan-made or official automata.',
+    'how.s1_title': 'Download the app', 'how.s1_body': 'A free APK for Android. No store, no subscription, no ads. Install and go.',
+    'how.s2_title': 'Pick your game', 'how.s2_body': 'Choose from 8 supported games. Each has its own bot with behaviour faithful to the rules.',
+    'how.s3_title': 'Play solo or add players to your games', 'how.s3_body': 'The automa manages its turn automatically. You play yours. No second player needed.',
+    'games.title': '🎲 Supported games',
+    'games.lead': 'Not there yet? <a href="#pedir-juego">Request it from the community</a> and we\'ll add it — the library grows with player votes.',
+    'games.sort_label': 'Sort by:', 'games.sort_rel': '🔥 Relevance', 'games.sort_alpha': '🔤 Alphabetical',
+    'games.missing_title': 'Missing yours?', 'games.missing_sub': '🗳️ Game request',
+    'games.missing_desc': 'Tell us which game you want in BGT and it will enter the community queue.',
+    'games.missing_btn': 'Request now',
+    'tag.bot': 'Solo bot', 'tag.rules': 'Rules', 'tag.calc': 'Score', 'tag.calc_short': 'Calculator', 'tag.solo': 'Solo',
+    'game.spooktacular.desc': 'Face the killer movie robot: three program decks (A→B→C) that execute automatically each turn.',
+    'game.cm.desc': 'An artificial rival with its own zone and score tracker. Draws cards, occupies zones and competes until the final count.',
+    'game.tiletum.desc': 'The automatic merchant travelling Europe: its own decision deck so you play solo without managing the rival yourself.',
+    'game.maracaibo.desc': 'An automatic pirate sailing the Caribbean: manages its route and actions so you only focus on your turn.',
+    'game.castlecombo.desc': 'The automatic solo rival: picks cards, builds its castle and scores against you.',
+    'game.coimbra.desc': 'Automate the rival in the Portuguese university city: dice, influence and travels managed by the app.',
+    'game.cascadia.desc': 'Enter your wildlife and habitat cards and get a full score breakdown instantly, for any number of players.',
+    'game.viernes.desc': 'Assistant for Friedemann Friese\'s classic solo game: manages phases, hazards and Robinson\'s score.',
+    'comm.title': '🧡 Made by and for the community',
+    'comm.lead': 'BGT grows thanks to its users. From the app itself you can contribute content and help improve it, without leaving your game.',
+    'comm.c1_title': 'Send card and component photos', 'comm.c1_body': 'Missing a card or component? Take a photo from the app and upload it directly. That\'s how bot decks get completed.',
+    'comm.c2_title': 'Feedback & bug reports', 'comm.c2_body': 'Suggestions, rule errata or bot bugs: report them in two taps from the app. Every contribution counts.',
+    'comm.c3_title': 'Local AI agents', 'comm.c3_body': 'Contributions are processed by local AI agents: they read the photos, classify feedback and prepare improvements for the next version.',
+    'comm.c4_title': 'Telegram bot', 'comm.c4_body': '<code>/new_game</code> to request a game, <code>/modify</code> to report a bug, <code>/update</code> for the latest version.',
+    'comm.tg_btn': 'Coming soon on Telegram', 'comm.forum_btn': 'Open the forum',
+    'comm.c5_title': 'Discussion forum', 'comm.c5_body': 'Debate rules, share alternative automata and upload files directly. Our agents read the forum and incorporate it into development.',
+    'faq.title': 'Frequently asked questions',
+    'faq.q1': 'Do I need the physical game?', 'faq.a1': 'Yes. BGT is a companion tool, not a copy of the game. You need the original physical game — the app manages the bot rival and scoring.',
+    'faq.q2': 'Does it work offline?', 'faq.a2': 'Yes, completely. Bots run locally, no servers or cloud. You only need internet to download the app or updates.',
+    'faq.q3': 'Is it safe? What permissions does it need?', 'faq.a3': 'No network permissions, no camera or microphone access. The source code is public on GitHub — you can review it before installing.',
+    'faq.q4': 'Can I request my favourite game?', 'faq.a4': 'Yes, and that\'s exactly how the app grows. Use the <a href="#pedir-juego">Suggestions</a> form or the <a href="https://github.com/Carchofo/BGT/discussions" target="_blank" rel="noopener">forum</a>.',
+    'donate.title': '☕ Support the project', 'donate.lead': 'BGT is and will always be free, with no ads or paid features. If it saved you frustrating sessions, you can buy the developer a coffee.',
+    'modal.rating_label': 'How does it work?', 'modal.tools_title': 'Included tools',
+    'modal.bug_btn': '🐛 Report bug or suggestion', 'modal.bug_btn_cancel': '✕ Cancel report',
+    'modal.bug_opt1': '🐞 Something is broken', 'modal.bug_opt2': '📖 Rule errata',
+    'modal.bug_opt3': '🧩 Missing content (card, component…)', 'modal.bug_opt4': '✨ Improvement suggestion',
+    'modal.bug_placeholder': 'Describe it in detail — the clearer, the easier to fix',
+    'modal.bug_submit': 'Send report',
+    'modal.solo_title': '🎮 Fan-made solo modes', 'modal.variant_add_btn': '+ Contribute a fan-made solo mode',
+    'modal.vf_name_label': 'Automa / variant name', 'modal.vf_name_ph': 'E.g. Soluvi Automa',
+    'modal.vf_author_ph': 'Author (handle or name)', 'modal.vf_source_ph': 'Link (BGG, PDF, forum…)',
+    'modal.vf_diff_label': 'How is it different from the official?', 'modal.vf_diff_ph': 'E.g. uses a card deck instead of dice…',
+    'modal.vf_photo_label': 'Automa photo (required)', 'modal.vf_submit': 'Submit variant',
+    'modal.comments_title': '💬 Comments', 'modal.cf_author_ph': 'Your name or handle',
+    'modal.cf_text_ph': 'Write a comment about this game…', 'modal.cf_submit': 'Post comment',
+    'modal.forum_link': '🗣️ See full discussion in the forum →',
+    'modal.no_comments': 'No comments yet. Be the first!',
+    'modal.comment_sending': '⏳ Sending…', 'modal.comment_ok': '✅ Comment sent! It will appear soon.',
+    'modal.comment_err': '❌ Could not send (only works on local network for now).',
+    'modal.comment_empty': '❌ Write something before sending.',
+    'modal.bug_ok': '✅ Report sent. Thanks!', 'modal.bug_err': '❌ Could not send.',
+    'modal.bug_empty': '❌ Describe the problem before sending.',
+  },
+  fr: {
+    platform_bar: '🚀 Plateforme en constante évolution — grâce à la communauté, nous continuons à grandir ensemble',
+    'nav.games': 'Jeux', 'nav.faq': 'FAQ', 'nav.telegram': '✈️ Rejoindre Telegram',
+    'nav.forum': 'Forum', 'nav.suggest': 'Suggestions', 'nav.support': 'Soutenir le projet',
+    'hero.tagline': 'Pas d\'adversaire ? Pas de problème. BGT ajoute un bot automatique à vos jeux préférés pour jouer en solo sans gérer l\'adversaire vous-même.',
+    'hero.download': '⬇ Télécharger l\'APK gratuit', 'hero.latest': 'dernière version',
+    'hero.community': '✈️ Rejoindre la communauté', 'hero.community_sub': 'demandez des jeux, signalez des bugs, commentez',
+    'hero.badge': '🎲 100% gratuit · Android · Sans pub · Fan-made',
+    'hero.f1': '🤖 Bots IA locaux', 'hero.f2': '🧮 Calculateurs de score',
+    'hero.f3': '📖 Règles à l\'écran', 'hero.f4': '🔄 Mise à jour automatique', 'hero.f5': '📴 Sans compte requis',
+    'hero.evolving_title': 'Application en évolution constante',
+    'hero.evolving_body': 'chaque nouveau jeu, correctif ou variante est proposé et voté par la communauté.',
+    'hero.see_games': 'Voir les jeux disponibles', 'hero.request_yours': 'demandez le vôtre',
+    'how.title': 'Comment ça marche ?', 'how.lead': 'Essayez vos jeux en solo avec des automates fan-made ou officiels.',
+    'how.s1_title': 'Téléchargez l\'app', 'how.s1_body': 'Un APK gratuit pour Android. Sans boutique, sans abonnement, sans pub. Installez et c\'est parti.',
+    'how.s2_title': 'Choisissez votre jeu', 'how.s2_body': 'Sélectionnez parmi 8 jeux supportés. Chacun a son propre bot fidèle aux règles.',
+    'how.s3_title': 'Jouez en solo ou ajoutez des joueurs à vos parties', 'how.s3_body': 'L\'automate gère son tour seul. Vous jouez le vôtre. Pas besoin d\'un deuxième joueur.',
+    'games.title': '🎲 Jeux supportés',
+    'games.lead': 'Pas le vôtre ? <a href="#pedir-juego">Demandez-le à la communauté</a> et on l\'ajoute — la bibliothèque grandit avec les votes.',
+    'games.sort_label': 'Trier par :', 'games.sort_rel': '🔥 Pertinence', 'games.sort_alpha': '🔤 Alphabétique',
+    'games.missing_title': 'Il manque le vôtre ?', 'games.missing_sub': '🗳️ Demande de jeu',
+    'games.missing_desc': 'Dites-nous quel jeu vous souhaitez voir dans BGT et il entrera dans la file de la communauté.',
+    'games.missing_btn': 'Demander maintenant',
+    'tag.bot': 'Bot solo', 'tag.rules': 'Règles', 'tag.calc': 'Score', 'tag.calc_short': 'Calculateur', 'tag.solo': 'Solo',
+    'game.spooktacular.desc': 'Affrontez le robot tueur du cinéma : trois decks de programme (A→B→C) qui s\'exécutent automatiquement à chaque tour.',
+    'game.cm.desc': 'Un adversaire artificiel avec son propre suivi de zones et de score. Pioche des cartes, occupe des zones et vous affronte jusqu\'au décompte final.',
+    'game.tiletum.desc': 'Le marchand automatique qui traverse l\'Europe : son propre deck de décisions pour jouer en solo sans gérer l\'adversaire.',
+    'game.maracaibo.desc': 'Un pirate automatique qui navigue dans les Caraïbes : gère sa route et ses actions pour que vous vous concentriez sur votre tour.',
+    'game.castlecombo.desc': 'L\'adversaire automatique pour le solo : choisit des cartes, construit son château et marque des points contre vous.',
+    'game.coimbra.desc': 'Automatisez l\'adversaire dans la ville universitaire portugaise : dés, influence et voyages gérés par l\'app.',
+    'game.cascadia.desc': 'Entrez vos cartes faune et habitats et obtenez le détail complet des points instantanément, pour n\'importe quel nombre de joueurs.',
+    'game.viernes.desc': 'Assistant pour le classique solo de Friedemann Friese : gère les phases, les dangers et le score de votre aventure avec Robinson.',
+    'comm.title': '🧡 Fait par et pour la communauté',
+    'comm.lead': 'BGT grandit grâce à ses utilisateurs. Depuis l\'app vous pouvez contribuer du contenu et aider à l\'améliorer, sans quitter votre partie.',
+    'comm.c1_title': 'Envoyez des photos de cartes et composants', 'comm.c1_body': 'Il manque une carte ? Prenez une photo depuis l\'app et téléchargez-la directement. C\'est ainsi que les decks de bots se complètent.',
+    'comm.c2_title': 'Retours et signalement de bugs', 'comm.c2_body': 'Suggestions, erreurs de règles ou bugs du bot : signalez-les en deux taps depuis l\'app. Chaque contribution compte.',
+    'comm.c3_title': 'Agents IA locaux', 'comm.c3_body': 'Les contributions sont traitées par des agents IA locaux : ils lisent les photos, classifient les retours et préparent les améliorations.',
+    'comm.c4_title': 'Bot Telegram', 'comm.c4_body': '<code>/nouveau_jeu</code> pour demander un jeu, <code>/modifier</code> pour signaler un bug, <code>/update</code> pour la dernière version.',
+    'comm.tg_btn': 'Bientôt sur Telegram', 'comm.forum_btn': 'Ouvrir le forum',
+    'comm.c5_title': 'Forum de discussion', 'comm.c5_body': 'Débattez des règles, partagez des automates alternatifs et envoyez des fichiers directement. Nos agents lisent le forum et l\'intègrent au développement.',
+    'faq.title': 'Questions fréquentes',
+    'faq.q1': 'Ai-je besoin du jeu physique ?', 'faq.a1': 'Oui. BGT est un outil compagnon, pas une copie du jeu. Vous avez besoin du jeu physique original — l\'app gère le bot adversaire et le score.',
+    'faq.q2': 'Fonctionne-t-il hors ligne ?', 'faq.a2': 'Oui, complètement. Les bots tournent en local, sans serveurs ni cloud. Internet est requis uniquement pour télécharger l\'app.',
+    'faq.q3': 'Est-elle sécurisée ? Quelles permissions demande-t-elle ?', 'faq.a3': 'Aucune permission réseau, ni accès caméra ou micro. Le code source est public sur GitHub — vous pouvez le vérifier avant d\'installer.',
+    'faq.q4': 'Puis-je demander mon jeu préféré ?', 'faq.a4': 'Oui, et c\'est ainsi que l\'app grandit. Utilisez le formulaire <a href="#pedir-juego">Suggestions</a> ou le <a href="https://github.com/Carchofo/BGT/discussions" target="_blank" rel="noopener">forum</a>.',
+    'donate.title': '☕ Soutenir le projet', 'donate.lead': 'BGT est et sera toujours gratuite, sans pub ni fonctions payantes. Si elle vous a évité des parties frustrantes, vous pouvez offrir un café au développeur.',
+    'modal.rating_label': 'Comment ça fonctionne ?', 'modal.tools_title': 'Outils inclus',
+    'modal.bug_btn': '🐛 Signaler un bug ou une suggestion', 'modal.bug_btn_cancel': '✕ Annuler',
+    'modal.bug_opt1': '🐞 Quelque chose ne fonctionne pas', 'modal.bug_opt2': '📖 Erreur dans les règles',
+    'modal.bug_opt3': '🧩 Contenu manquant', 'modal.bug_opt4': '✨ Suggestion d\'amélioration',
+    'modal.bug_placeholder': 'Décrivez en détail — plus c\'est clair, plus c\'est facile à corriger',
+    'modal.bug_submit': 'Envoyer le rapport',
+    'modal.solo_title': '🎮 Modes solo fan-made', 'modal.variant_add_btn': '+ Contribuer un mode solo fan-made',
+    'modal.vf_name_label': 'Nom de l\'automate / variante', 'modal.vf_name_ph': 'Ex : Automate Soluvi',
+    'modal.vf_author_ph': 'Auteur (pseudo ou nom)', 'modal.vf_source_ph': 'Lien (BGG, PDF, forum…)',
+    'modal.vf_diff_label': 'En quoi diffère-t-il de l\'officiel ?', 'modal.vf_diff_ph': 'Ex : utilise un deck de cartes au lieu de dés…',
+    'modal.vf_photo_label': 'Photo de l\'automate (obligatoire)', 'modal.vf_submit': 'Envoyer la variante',
+    'modal.comments_title': '💬 Commentaires', 'modal.cf_author_ph': 'Votre nom ou pseudo',
+    'modal.cf_text_ph': 'Écrivez un commentaire sur ce jeu…', 'modal.cf_submit': 'Publier le commentaire',
+    'modal.forum_link': '🗣️ Voir la discussion complète sur le forum →',
+    'modal.no_comments': 'Pas encore de commentaires. Soyez le premier !',
+    'modal.comment_sending': '⏳ Envoi…', 'modal.comment_ok': '✅ Commentaire envoyé !',
+    'modal.comment_err': '❌ Impossible d\'envoyer.',
+    'modal.comment_empty': '❌ Écrivez quelque chose avant d\'envoyer.',
+    'modal.bug_ok': '✅ Rapport envoyé. Merci !', 'modal.bug_err': '❌ Impossible d\'envoyer.',
+    'modal.bug_empty': '❌ Décrivez le problème avant d\'envoyer.',
+  },
+  de: {
+    platform_bar: '🚀 Ständig wachsende Plattform — dank der Community wachsen wir gemeinsam weiter',
+    'nav.games': 'Spiele', 'nav.faq': 'FAQ', 'nav.telegram': '✈️ Telegram beitreten',
+    'nav.forum': 'Forum', 'nav.suggest': 'Vorschläge', 'nav.support': 'Projekt unterstützen',
+    'hero.tagline': 'Kein Gegner? Kein Problem. BGT fügt deinen Lieblingsspielen einen automatischen Bot hinzu, damit du solo spielen kannst, ohne den Gegner selbst zu verwalten.',
+    'hero.download': '⬇ APK kostenlos herunterladen', 'hero.latest': 'neueste Version',
+    'hero.community': '✈️ Der Community beitreten', 'hero.community_sub': 'Spiele anfragen, Bugs melden, kommentieren',
+    'hero.badge': '🎲 100% kostenlos · Android · Keine Werbung · Fan-made',
+    'hero.f1': '🤖 Lokale KI-Bots', 'hero.f2': '🧮 Punkterechner',
+    'hero.f3': '📖 Regeln auf dem Bildschirm', 'hero.f4': '🔄 Selbstaktualisierend', 'hero.f5': '📴 Kein Konto nötig',
+    'hero.evolving_title': 'App in ständiger Entwicklung',
+    'hero.evolving_body': 'jedes neue Spiel, jeder Fix oder jede Variante wird von der Community vorgeschlagen und abgestimmt.',
+    'hero.see_games': 'Verfügbare Spiele ansehen', 'hero.request_yours': 'deins anfragen',
+    'how.title': 'Wie funktioniert es?', 'how.lead': 'Probiere deine Spiele solo mit fan-made oder offiziellen Automaten.',
+    'how.s1_title': 'App herunterladen', 'how.s1_body': 'Eine kostenlose APK für Android. Kein Store, kein Abo, keine Werbung. Installieren und losspielen.',
+    'how.s2_title': 'Dein Spiel wählen', 'how.s2_body': 'Wähle aus 8 unterstützten Spielen. Jedes hat seinen eigenen Bot, der den Regeln treu ist.',
+    'how.s3_title': 'Solo spielen oder Mitspieler zu deinen Partien hinzufügen', 'how.s3_body': 'Der Automat verwaltet seinen Zug selbst. Du spielst deinen. Kein zweiter Spieler nötig.',
+    'games.title': '🎲 Unterstützte Spiele',
+    'games.lead': 'Deins noch nicht dabei? <a href="#pedir-juego">Frag die Community</a> und wir fügen es hinzu — die Bibliothek wächst mit den Abstimmungen.',
+    'games.sort_label': 'Sortieren nach:', 'games.sort_rel': '🔥 Relevanz', 'games.sort_alpha': '🔤 Alphabetisch',
+    'games.missing_title': 'Deins fehlt?', 'games.missing_sub': '🗳️ Spielanfrage',
+    'games.missing_desc': 'Sag uns, welches Spiel du in BGT sehen möchtest, und es kommt in die Community-Warteschlange.',
+    'games.missing_btn': 'Jetzt anfragen',
+    'tag.bot': 'Solo-Bot', 'tag.rules': 'Regeln', 'tag.calc': 'Punkte', 'tag.calc_short': 'Rechner', 'tag.solo': 'Solo',
+    'game.spooktacular.desc': 'Kämpfe gegen den Killer-Roboter aus dem Kino: drei Programmdecks (A→B→C), die jeden Zug automatisch ausgeführt werden.',
+    'game.cm.desc': 'Ein künstlicher Gegner mit eigenem Zonen- und Punktetracker. Zieht Karten, besetzt Zonen und konkurriert bis zur Abrechnung.',
+    'game.tiletum.desc': 'Der automatische Händler, der Europa bereist: eigenes Entscheidungsdeck für Solo-Spiele ohne Gegner-Verwaltung.',
+    'game.maracaibo.desc': 'Ein automatischer Pirat, der die Karibik besegelt: verwaltet seine Route und Aktionen, damit du dich nur auf deinen Zug konzentrierst.',
+    'game.castlecombo.desc': 'Der automatische Solo-Gegner: wählt Karten, baut seine Burg und punktet gegen dich.',
+    'game.coimbra.desc': 'Automatisiere den Gegner in der portugiesischen Universitätsstadt: Würfel, Einfluss und Reisen von der App verwaltet.',
+    'game.cascadia.desc': 'Gib deine Wildtier- und Habitatkarten ein und erhalte sofort eine vollständige Punkteübersicht für beliebig viele Spieler.',
+    'game.viernes.desc': 'Assistent für Friedemann Frieses klassisches Solo-Spiel: verwaltet Phasen, Gefahren und Robinsons Punkte.',
+    'comm.title': '🧡 Von und für die Community gemacht',
+    'comm.lead': 'BGT wächst dank seiner Nutzer. Direkt aus der App kannst du Inhalte beitragen und bei der Verbesserung helfen.',
+    'comm.c1_title': 'Karten- und Komponentenfotos einsenden', 'comm.c1_body': 'Fehlt eine Karte? Fotografiere sie in der App und lade sie direkt hoch. So werden Bot-Decks vervollständigt.',
+    'comm.c2_title': 'Feedback & Bug-Meldungen', 'comm.c2_body': 'Vorschläge, Regelirrtümer oder Bot-Fehler: melde sie mit zwei Taps aus der App. Jeder Beitrag zählt.',
+    'comm.c3_title': 'Lokale KI-Agenten', 'comm.c3_body': 'Beiträge werden von lokalen KI-Agenten verarbeitet: sie lesen Fotos, klassifizieren Feedback und bereiten Verbesserungen vor.',
+    'comm.c4_title': 'Telegram-Bot', 'comm.c4_body': '<code>/neues_spiel</code> für Anfragen, <code>/ändern</code> für Bug-Meldungen, <code>/update</code> für die neueste Version.',
+    'comm.tg_btn': 'Demnächst auf Telegram', 'comm.forum_btn': 'Forum öffnen',
+    'comm.c5_title': 'Diskussionsforum', 'comm.c5_body': 'Diskutiere Regeln, teile alternative Automaten und lade Dateien direkt hoch. Unsere Agenten lesen das Forum und integrieren es in die Entwicklung.',
+    'faq.title': 'Häufige Fragen',
+    'faq.q1': 'Brauche ich das physische Spiel?', 'faq.a1': 'Ja. BGT ist ein Begleittool, keine Kopie des Spiels. Du brauchst das originale physische Spiel — die App verwaltet den Bot-Gegner und die Punkte.',
+    'faq.q2': 'Funktioniert es offline?', 'faq.a2': 'Ja, vollständig. Bots laufen lokal, ohne Server oder Cloud. Internet wird nur zum Herunterladen der App benötigt.',
+    'faq.q3': 'Ist es sicher? Welche Berechtigungen werden benötigt?', 'faq.a3': 'Keine Netzwerkberechtigungen, kein Kamera- oder Mikrozugriff. Der Quellcode ist öffentlich auf GitHub — du kannst ihn vor der Installation prüfen.',
+    'faq.q4': 'Kann ich mein Lieblingsspiel anfragen?', 'faq.a4': 'Ja, und genau so wächst die App. Nutze das <a href="#pedir-juego">Vorschlagsformular</a> oder das <a href="https://github.com/Carchofo/BGT/discussions" target="_blank" rel="noopener">Forum</a>.',
+    'donate.title': '☕ Projekt unterstützen', 'donate.lead': 'BGT ist und bleibt kostenlos, ohne Werbung oder kostenpflichtige Funktionen. Wenn es dir frustrierende Spielrunden erspart hat, kannst du dem Entwickler einen Kaffee spendieren.',
+    'modal.rating_label': 'Wie funktioniert es?', 'modal.tools_title': 'Enthaltene Tools',
+    'modal.bug_btn': '🐛 Bug oder Verbesserung melden', 'modal.bug_btn_cancel': '✕ Abbrechen',
+    'modal.bug_opt1': '🐞 Etwas funktioniert nicht', 'modal.bug_opt2': '📖 Regelfehler',
+    'modal.bug_opt3': '🧩 Fehlender Inhalt', 'modal.bug_opt4': '✨ Verbesserungsvorschlag',
+    'modal.bug_placeholder': 'Beschreibe es detailliert — je klarer, desto leichter zu beheben',
+    'modal.bug_submit': 'Bericht senden',
+    'modal.solo_title': '🎮 Fan-made Solo-Modi', 'modal.variant_add_btn': '+ Fan-made Solo-Modus beitragen',
+    'modal.vf_name_label': 'Automat / Varianten-Name', 'modal.vf_name_ph': 'Z.B. Soluvi-Automat',
+    'modal.vf_author_ph': 'Autor (Nickname oder Name)', 'modal.vf_source_ph': 'Link (BGG, PDF, Forum…)',
+    'modal.vf_diff_label': 'Wie unterscheidet er sich vom offiziellen?', 'modal.vf_diff_ph': 'Z.B. verwendet ein Kartendeck statt Würfeln…',
+    'modal.vf_photo_label': 'Foto des Automaten (erforderlich)', 'modal.vf_submit': 'Variante einreichen',
+    'modal.comments_title': '💬 Kommentare', 'modal.cf_author_ph': 'Dein Name oder Nickname',
+    'modal.cf_text_ph': 'Schreibe einen Kommentar zu diesem Spiel…', 'modal.cf_submit': 'Kommentar senden',
+    'modal.forum_link': '🗣️ Vollständige Diskussion im Forum →',
+    'modal.no_comments': 'Noch keine Kommentare. Sei der Erste!',
+    'modal.comment_sending': '⏳ Wird gesendet…', 'modal.comment_ok': '✅ Kommentar gesendet!',
+    'modal.comment_err': '❌ Konnte nicht gesendet werden.',
+    'modal.comment_empty': '❌ Schreibe etwas, bevor du sendest.',
+    'modal.bug_ok': '✅ Bericht gesendet. Danke!', 'modal.bug_err': '❌ Konnte nicht gesendet werden.',
+    'modal.bug_empty': '❌ Beschreibe das Problem vor dem Senden.',
+  },
+  it: {
+    platform_bar: '🚀 Piattaforma in costante evoluzione — grazie alla community, continueremo a crescere insieme',
+    'nav.games': 'Giochi', 'nav.faq': 'FAQ', 'nav.telegram': '✈️ Unisciti a Telegram',
+    'nav.forum': 'Forum', 'nav.suggest': 'Suggerimenti', 'nav.support': 'Supporta il progetto',
+    'hero.tagline': 'Nessun avversario? Nessun problema. BGT aggiunge un bot automatico ai tuoi giochi preferiti per giocare in solitario senza gestire l\'avversario da solo.',
+    'hero.download': '⬇ Scarica APK gratis', 'hero.latest': 'ultima versione',
+    'hero.community': '✈️ Unisciti alla community', 'hero.community_sub': 'richiedi giochi, segnala bug, commenta',
+    'hero.badge': '🎲 100% gratuita · Android · Senza pubblicità · Fan-made',
+    'hero.f1': '🤖 Bot IA locali', 'hero.f2': '🧮 Calcolatori di punteggio',
+    'hero.f3': '📖 Regole sullo schermo', 'hero.f4': '🔄 Si aggiorna da sola', 'hero.f5': '📴 Senza account',
+    'hero.evolving_title': 'App in costante evoluzione',
+    'hero.evolving_body': 'ogni nuovo gioco, fix o variante è proposto e votato dalla community.',
+    'hero.see_games': 'Vedi i giochi disponibili', 'hero.request_yours': 'richiedi il tuo',
+    'how.title': 'Come funziona?', 'how.lead': 'Prova i tuoi giochi in solitario con automi fan-made o ufficiali.',
+    'how.s1_title': 'Scarica l\'app', 'how.s1_body': 'Un APK gratuito per Android. Senza store, senza abbonamento, senza pubblicità. Installa e gioca.',
+    'how.s2_title': 'Scegli il tuo gioco', 'how.s2_body': 'Seleziona uno degli 8 giochi supportati. Ognuno ha il proprio bot fedele alle regole.',
+    'how.s3_title': 'Gioca in solitario o aggiungi giocatori alle tue partite', 'how.s3_body': 'L\'automa gestisce il suo turno da solo. Tu giochi il tuo. Senza bisogno di un secondo giocatore.',
+    'games.title': '🎲 Giochi supportati',
+    'games.lead': 'Non c\'è il tuo? <a href="#pedir-juego">Richiedilo alla community</a> e lo aggiungiamo — la libreria cresce con i voti dei giocatori.',
+    'games.sort_label': 'Ordina per:', 'games.sort_rel': '🔥 Rilevanza', 'games.sort_alpha': '🔤 Alfabetico',
+    'games.missing_title': 'Manca il tuo?', 'games.missing_sub': '🗳️ Richiesta gioco',
+    'games.missing_desc': 'Dicci quale gioco vuoi vedere in BGT e entrerà nella coda della community.',
+    'games.missing_btn': 'Richiedi ora',
+    'tag.bot': 'Bot solitario', 'tag.rules': 'Regole', 'tag.calc': 'Punteggio', 'tag.calc_short': 'Calcolatore', 'tag.solo': 'Solitario',
+    'game.spooktacular.desc': 'Affrontate il robot assassino del cinema: tre deck di programma (A→B→C) che si eseguono automaticamente ogni turno.',
+    'game.cm.desc': 'Un avversario artificiale con tracker proprio di zone e punteggio. Pesca carte, occupa zone e compete fino al conteggio finale.',
+    'game.tiletum.desc': 'Il mercante automatico che percorre l\'Europa: deck di decisioni proprio per giocare in solitario senza gestire l\'avversario.',
+    'game.maracaibo.desc': 'Un pirata automatico che naviga i Caraibi: gestisce il suo percorso e le sue azioni così ti concentri solo sul tuo turno.',
+    'game.castlecombo.desc': 'L\'avversario automatico per il solitario: sceglie carte, costruisce il suo castello e segna punti contro di te.',
+    'game.coimbra.desc': 'Automatizza l\'avversario nella città universitaria portoghese: dadi, influenza e viaggi gestiti dall\'app.',
+    'game.cascadia.desc': 'Inserisci le tue carte fauna e habitat e ottieni il dettaglio completo dei punti istantaneamente, per qualsiasi numero di giocatori.',
+    'game.viernes.desc': 'Assistente per il classico solitario di Friedemann Friese: gestisce fasi, pericoli e punteggio della tua avventura con Robinson.',
+    'comm.title': '🧡 Fatto dalla e per la community',
+    'comm.lead': 'BGT cresce grazie ai suoi utenti. Dall\'app stessa puoi contribuire contenuti e aiutare a migliorarla, senza interrompere la partita.',
+    'comm.c1_title': 'Invia foto di carte e componenti', 'comm.c1_body': 'Manca una carta? Fotografala dall\'app e caricala direttamente. Così si completano i deck dei bot.',
+    'comm.c2_title': 'Feedback e segnalazione bug', 'comm.c2_body': 'Suggerimenti, errori nelle regole o bug del bot: segnalali in due tap dall\'app. Ogni contributo conta.',
+    'comm.c3_title': 'Agenti IA locali', 'comm.c3_body': 'I contributi vengono elaborati da agenti IA locali: leggono le foto, classificano il feedback e preparano i miglioramenti.',
+    'comm.c4_title': 'Bot Telegram', 'comm.c4_body': '<code>/nuovo_gioco</code> per richiedere un gioco, <code>/modifica</code> per segnalare un bug, <code>/update</code> per l\'ultima versione.',
+    'comm.tg_btn': 'Prossimamente su Telegram', 'comm.forum_btn': 'Apri il forum',
+    'comm.c5_title': 'Forum di discussione', 'comm.c5_body': 'Discuti le regole, condividi automi alternativi e carica file direttamente. I nostri agenti leggono il forum e lo incorporano nello sviluppo.',
+    'faq.title': 'Domande frequenti',
+    'faq.q1': 'Ho bisogno del gioco fisico?', 'faq.a1': 'Sì. BGT è uno strumento di supporto, non una copia del gioco. Hai bisogno del gioco fisico originale — l\'app gestisce il bot avversario e il punteggio.',
+    'faq.q2': 'Funziona senza connessione internet?', 'faq.a2': 'Sì, completamente. I bot girano in locale, senza server o cloud. Internet serve solo per scaricare l\'app.',
+    'faq.q3': 'È sicura? Quali permessi richiede?', 'faq.a3': 'Nessun permesso di rete, né accesso a fotocamera o microfono. Il codice sorgente è pubblico su GitHub — puoi verificarlo prima di installare.',
+    'faq.q4': 'Posso richiedere il mio gioco preferito?', 'faq.a4': 'Sì, ed è così che l\'app cresce. Usa il modulo <a href="#pedir-juego">Suggerimenti</a> o il <a href="https://github.com/Carchofo/BGT/discussions" target="_blank" rel="noopener">forum</a>.',
+    'donate.title': '☕ Supporta il progetto', 'donate.lead': 'BGT è e sarà sempre gratuita, senza pubblicità né funzioni a pagamento. Se ti ha risparmiato partite frustranti, puoi offrire un caffè allo sviluppatore.',
+    'modal.rating_label': 'Come funziona?', 'modal.tools_title': 'Strumenti inclusi',
+    'modal.bug_btn': '🐛 Segnala bug o miglioramento', 'modal.bug_btn_cancel': '✕ Annulla',
+    'modal.bug_opt1': '🐞 Qualcosa non funziona', 'modal.bug_opt2': '📖 Errata nelle regole',
+    'modal.bug_opt3': '🧩 Contenuto mancante', 'modal.bug_opt4': '✨ Suggerimento di miglioramento',
+    'modal.bug_placeholder': 'Descrivi in dettaglio — più è chiaro, più è facile da correggere',
+    'modal.bug_submit': 'Invia segnalazione',
+    'modal.solo_title': '🎮 Modalità solitario fan-made', 'modal.variant_add_btn': '+ Contribuisci una modalità solitario fan-made',
+    'modal.vf_name_label': 'Nome dell\'automa / variante', 'modal.vf_name_ph': 'Es: Automa Soluvi',
+    'modal.vf_author_ph': 'Autore (nick o nome)', 'modal.vf_source_ph': 'Link (BGG, PDF, forum…)',
+    'modal.vf_diff_label': 'In cosa si differenzia dall\'ufficiale?', 'modal.vf_diff_ph': 'Es: usa un mazzo di carte invece di dadi…',
+    'modal.vf_photo_label': 'Foto dell\'automa (obbligatoria)', 'modal.vf_submit': 'Invia variante',
+    'modal.comments_title': '💬 Commenti', 'modal.cf_author_ph': 'Il tuo nome o nick',
+    'modal.cf_text_ph': 'Scrivi un commento su questo gioco…', 'modal.cf_submit': 'Invia commento',
+    'modal.forum_link': '🗣️ Vedi la discussione completa nel forum →',
+    'modal.no_comments': 'Nessun commento ancora. Sii il primo!',
+    'modal.comment_sending': '⏳ Invio…', 'modal.comment_ok': '✅ Commento inviato!',
+    'modal.comment_err': '❌ Impossibile inviare.',
+    'modal.comment_empty': '❌ Scrivi qualcosa prima di inviare.',
+    'modal.bug_ok': '✅ Segnalazione inviata. Grazie!', 'modal.bug_err': '❌ Impossibile inviare.',
+    'modal.bug_empty': '❌ Descrivi il problema prima di inviare.',
+  }
+};
+
+var BGT_LANG = 'es';
+
+function t(key) {
+  var lang = BGT_TRANS[BGT_LANG] || BGT_TRANS['es'];
+  return (lang[key] !== undefined ? lang[key] : (BGT_TRANS['es'][key] || key));
+}
+
+function applyLang(lang) {
+  BGT_LANG = lang;
+  try { localStorage.setItem('bgt_lang', lang); } catch(e) {}
+
+  document.querySelectorAll('[data-i18n]').forEach(function(el) {
+    var key = el.getAttribute('data-i18n');
+    var val = t(key);
+    if (val) el.textContent = val;
+  });
+  document.querySelectorAll('[data-i18n-html]').forEach(function(el) {
+    var key = el.getAttribute('data-i18n-html');
+    var val = t(key);
+    if (val) el.innerHTML = val;
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(function(el) {
+    var key = el.getAttribute('data-i18n-placeholder');
+    var val = t(key);
+    if (val) el.placeholder = val;
+  });
+
+  // Actualizar botones del selector
+  document.querySelectorAll('.lang-btn').forEach(function(btn) {
+    btn.classList.toggle('active', btn.dataset.lang === lang);
+  });
+
+  // Actualizar lang del html para accesibilidad
+  document.documentElement.lang = lang;
+}
+
+(function() {
+  // Detectar idioma preferido
+  var saved = null;
+  try { saved = localStorage.getItem('bgt_lang'); } catch(e) {}
+  var nav = (navigator.language || navigator.userLanguage || 'es').split('-')[0].toLowerCase();
+  var supported = ['es','en','fr','de','it'];
+  var initial = saved || (supported.indexOf(nav) >= 0 ? nav : 'es');
+  applyLang(initial);
+
+  document.getElementById('lang-selector').addEventListener('click', function(e) {
+    var btn = e.target.closest('.lang-btn');
+    if (btn && btn.dataset.lang) applyLang(btn.dataset.lang);
+  });
+})();
+</script>
 </body>
 </html>
