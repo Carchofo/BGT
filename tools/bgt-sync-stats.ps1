@@ -46,6 +46,25 @@ Get-ChildItem $SharedDir -Filter "*.md" | Where-Object {
             }
         }
     }
+    elseif ($content -match "type.*like|^LIKE\b") {
+        $game = if ($content -match "juego[:\s]+([^\n]+)") { $matches[1].Trim() } else { $null }
+        if ($game) {
+            $gameProp = $stats.PSObject.Properties[$game]
+            if ($gameProp) {
+                $entry = $gameProp.Value
+                if ($entry -is [int] -or $entry -is [long]) {
+                    $entry = [PSCustomObject]@{ score = $entry; bot_sum = 0; bot_count = 0; likes = 0 }
+                }
+                if (-not $entry.PSObject.Properties['likes']) {
+                    $entry | Add-Member -NotePropertyName 'likes' -NotePropertyValue 0
+                }
+                $entry.likes = ($entry.likes -as [int]) + 1
+                $stats.$game = $entry
+                $changed = $true
+                Write-Host "  like: $game (total $($entry.likes))"
+            }
+        }
+    }
     elseif ($content -match "type.*comment|COMENTARIO") {
         $game   = if ($content -match "juego[:\s]+([^\n]+)")  { $matches[1].Trim() } else { $null }
         $author = if ($content -match "autor[:\s]+([^\n]+)")  { $matches[1].Trim() } else { "Anónimo" }

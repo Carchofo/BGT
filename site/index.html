@@ -1058,6 +1058,26 @@
 </div>
 
 <script>
+// ══════════════════════════════════════════════════════
+//  BGT CONFIG — cambia estas URLs cuando tengas el bridge público
+//  (cloudflare tunnel, VPS, ngrok…) para que funcionen en producción.
+//  En local usa 192.168.0.25:5678 directamente.
+// ══════════════════════════════════════════════════════
+var BGT_API = (function() {
+  // Detecta si estamos en local o en producción
+  var isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1'
+             || location.hostname === '192.168.0.25';
+  var base = isLocal
+    ? 'http://192.168.0.25:5678'
+    : null; // ← PON AQUÍ TU URL PÚBLICA cuando tengas el tunnel:
+            //   'https://bgt.tudominio.com' o 'https://XXXX.trycloudflare.com'
+  return {
+    submit : base ? (base + '/webhook/bgt-community-submit') : null,
+    bug    : base ? (base + '/webhook/bgt-bug')              : null,
+    active : !!base
+  };
+})();
+
 // ── Ordenar tarjetas de juego (relevancia / alfabético) ──
 (function () {
   var grid = document.getElementById('games-grid');
@@ -1292,7 +1312,7 @@ var KOFI_USERNAME = null; // ej: 'carchofo'
     if (total > 1) msg += '\n[Foto ' + idx + ' de ' + total + ']';
     var payload = { game: d.game, type: t, message: msg, fields: d.fields, source: 'web' };
     if (img) payload.image = img;
-    return fetch('http://192.168.0.25:5678/webhook/bgt-community-submit', {
+    return BGT_API.active && fetch(BGT_API.submit, {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     }).then(function (r) { if (!r.ok) throw new Error(r.status); });
@@ -1445,7 +1465,7 @@ var KOFI_USERNAME = null; // ej: 'carchofo'
     cfStatus.className = 'comment-status';
     if (!text) { cfStatus.textContent = '❌ Escribe algo antes de enviar.'; cfStatus.className = 'comment-status err'; return; }
     cfSubmit.disabled = true;
-    fetch('http://192.168.0.25:5678/webhook/bgt-community-submit', {
+    BGT_API.active && fetch(BGT_API.submit, {
       method: 'POST', headers: {'Content-Type':'application/json'},
       body: JSON.stringify({
         game: currentGame, type: 'comment', source: 'web',
@@ -1509,7 +1529,7 @@ var KOFI_USERNAME = null; // ej: 'carchofo'
         });
         span.addEventListener('click', function() {
           saveBotRating(game, stars);
-          fetch('http://192.168.0.25:5678/webhook/bgt-community-submit', {
+          BGT_API.active && fetch(BGT_API.submit, {
             method: 'POST', headers: {'Content-Type':'application/json'},
             body: JSON.stringify({game: game, type: 'bot_rating', source: 'web',
               message: 'VOTO BOT\nJuego: ' + game + '\nEstrellas: ' + stars,
@@ -1549,7 +1569,7 @@ var KOFI_USERNAME = null; // ej: 'carchofo'
     brStatus.className = 'bug-report-status';
     if (!desc) { brStatus.textContent = '❌ Describe el problema antes de enviar.'; brStatus.className = 'bug-report-status err'; return; }
     brSubmit.disabled = true;
-    fetch('http://192.168.0.25:5678/webhook/bgt-bug', {
+    BGT_API.active && fetch(BGT_API.bug, {
       method: 'POST', headers: {'Content-Type':'application/json'},
       body: JSON.stringify({
         game: currentGame, tipo: tipo, descripcion: desc, source: 'web-modal',
@@ -1618,7 +1638,7 @@ var KOFI_USERNAME = null; // ej: 'carchofo'
       stars.forEach(function(s){ s.classList.toggle('filled', parseInt(s.dataset.val,10) <= val); });
       votedEl.style.display = 'inline';
       // enviar voto al webhook (best-effort)
-      fetch('http://192.168.0.25:5678/webhook/bgt-community-submit', {
+      BGT_API.active && fetch(BGT_API.submit, {
         method:'POST', headers:{'Content-Type':'application/json'},
         body: JSON.stringify({ game: game, type: 'star_vote', source: 'web',
           fields: { variant_id: variantId, stars: val } })
@@ -1739,7 +1759,7 @@ var KOFI_USERNAME = null; // ej: 'carchofo'
     var r = new FileReader();
     r.onload = function() {
       var img = String(r.result).split(',')[1] || null;
-      fetch('http://192.168.0.25:5678/webhook/bgt-community-submit', {
+      BGT_API.active && fetch(BGT_API.submit, {
         method:'POST', headers:{'Content-Type':'application/json'},
         body: JSON.stringify({
           game: currentGame, type: 'variant', source: 'web',
@@ -1788,48 +1808,56 @@ var KOFI_USERNAME = null; // ej: 'carchofo'
 // ── Likes en tarjetas de juego ──
 (function () {
   var LIKES_KEY = 'bgt_card_likes';
-  function getLikes() {
+  function getLocal() {
     try { return JSON.parse(localStorage.getItem(LIKES_KEY) || '{}'); } catch(e) { return {}; }
   }
-  function saveLike(game, count) {
-    var l = getLikes(); l[game] = count;
-    try { localStorage.setItem(LIKES_KEY, JSON.stringify(l)); } catch(e) {}
+
+  var baseLikes = {}; // se rellena desde game-stats.json
+  var local = getLocal();
+
+  function renderAll() {
+    document.querySelectorAll('.like-btn').forEach(function(btn) {
+      var game = btn.dataset.game;
+      var liked = !!local[game + '_liked'];
+      var total = (baseLikes[game] || 0) + (liked ? 1 : 0);
+      btn.querySelector('.like-count').textContent = total;
+      btn.querySelector('.like-heart').textContent = liked ? '❤️' : '♡';
+      btn.classList.toggle('liked', liked);
+    });
   }
 
-  var likesData = getLikes();
+  // Cargar base desde game-stats.json (cache-buster para que no sirva versión antigua)
+  fetch('assets/game-stats.json?v=' + Math.floor(Date.now()/300000))
+    .then(function(r){ return r.ok ? r.json() : {}; })
+    .then(function(d){
+      Object.keys(d).forEach(function(k){
+        if (k.startsWith('_')) return;
+        var v = d[k];
+        baseLikes[k] = typeof v === 'object' ? (v.likes || 0) : 0;
+      });
+      renderAll();
+    })
+    .catch(renderAll);
+
+  renderAll(); // render inmediato con base 0 mientras carga
 
   document.querySelectorAll('.like-btn').forEach(function(btn) {
-    var game = btn.dataset.game;
-    var countEl = btn.querySelector('.like-count');
-    var heartEl = btn.querySelector('.like-heart');
-    var liked = !!likesData[game + '_liked'];
-    var count = likesData[game] || 0;
-
-    function render() {
-      countEl.textContent = count;
-      heartEl.textContent = liked ? '❤️' : '♡';
-      btn.classList.toggle('liked', liked);
-    }
-    render();
-
     btn.addEventListener('click', function(e) {
-      e.stopPropagation(); // no abrir el modal
+      e.stopPropagation();
+      var game = btn.dataset.game;
+      var liked = !!local[game + '_liked'];
       if (liked) {
-        liked = false; count = Math.max(0, count - 1);
+        local[game + '_liked'] = false;
       } else {
-        liked = true; count++;
-        // enviar al webhook (fire-and-forget)
-        fetch('http://192.168.0.25:5678/webhook/bgt-community-submit', {
+        local[game + '_liked'] = true;
+        BGT_API.active && fetch(BGT_API.submit, {
           method: 'POST', headers: {'Content-Type':'application/json'},
           body: JSON.stringify({game: game, type: 'like', source: 'web',
             message: 'LIKE\nJuego: ' + game, fields: {juego: game}})
         }).catch(function(){});
       }
-      var l = getLikes();
-      l[game] = count;
-      l[game + '_liked'] = liked;
-      try { localStorage.setItem(LIKES_KEY, JSON.stringify(l)); } catch(e) {}
-      render();
+      try { localStorage.setItem(LIKES_KEY, JSON.stringify(local)); } catch(e) {}
+      renderAll();
     });
   });
 })();
