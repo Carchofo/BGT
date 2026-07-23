@@ -4,7 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BGT — Board Game Tools</title>
-<meta name="description" content="Bots solitario y herramientas gratuitas para tus juegos de mesa favoritos. App Android fan-made, hecha por y para la comunidad.">
+<meta name="description" content="Añade un bot automático a tus juegos de mesa favoritos y juega en solitario sin gestionar al rival tú mismo. Gratis, sin anuncios, Android.">
+<meta property="og:title" content="BGT — Board Game Tools">
+<meta property="og:description" content="¿Sin rival? No hay problema. BGT añade un bot automático a tus juegos favoritos para que puedas jugar en solitario. Gratis, sin anuncios, Android.">
+<meta property="og:image" content="https://carchofo.github.io/BGT/assets/logo-icon.png">
+<meta property="og:url" content="https://carchofo.github.io/BGT/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="BGT — Board Game Tools">
+<meta name="twitter:description" content="Bots solitario para juegos de mesa. Gratis, sin anuncios, Android.">
 <link rel="icon" type="image/png" href="assets/logo-icon.png">
 <style>
   :root{
@@ -111,6 +119,28 @@
     color:var(--navy);margin-bottom:.5rem;font-weight:800;
   }
   p.section-lead{text-align:center;max-width:680px;margin:0 auto 2.5rem;color:var(--muted)}
+
+  /* HOW IT WORKS */
+  .how-it-works{background:#fff;border-bottom:1px solid var(--cream-line)}
+  .steps-grid{
+    display:grid;gap:1.4rem;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    counter-reset:steps;
+  }
+  .step-card{
+    background:var(--cream);border:1px solid var(--cream-line);
+    border-radius:16px;padding:1.6rem 1.4rem;text-align:center;
+    position:relative;
+  }
+  .step-num{
+    position:absolute;top:-14px;left:50%;transform:translateX(-50%);
+    background:var(--navy);color:#fff;font-weight:800;font-size:.85rem;
+    width:28px;height:28px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .step-icon{font-size:2.2rem;margin-bottom:.6rem;display:block}
+  .step-card h3{color:var(--navy);font-size:1.05rem;font-weight:700;margin-bottom:.4rem}
+  .step-card p{color:var(--muted);font-size:.92rem;line-height:1.55}
 
   /* SORT BAR */
   .sort-bar{
@@ -466,6 +496,55 @@
   .comment-status{font-size:.83rem;font-weight:600;display:none}
   .comment-status.ok{display:block;color:#2e6b3a}
   .comment-status.err{display:block;color:#c0392b}
+  /* Bot rating row */
+  .bot-rating-row{
+    display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;
+    padding:.65rem .9rem;border-radius:12px;
+    background:linear-gradient(135deg,rgba(243,130,34,.07),rgba(243,130,34,.03));
+    border:1px solid rgba(243,130,34,.25);
+    margin-bottom:1.1rem;
+  }
+  .bot-rating-label{font-size:.88rem;font-weight:700;color:var(--navy)}
+  .bot-rating-row .stars{display:flex;gap:3px}
+  .bot-rating-row .star{font-size:1.3rem;cursor:pointer;color:var(--cream-line);transition:color .1s,transform .1s;user-select:none}
+  .bot-rating-row .star.filled{color:#F38222}
+  .bot-rating-row .star:hover,.bot-rating-row .star:hover ~ .star{color:var(--cream-line)}
+  .bot-rating-row .stars:hover .star{color:#F38222}
+  .bot-rating-row .stars .star:hover ~ .star{color:var(--cream-line)}
+  #modal-bot-avg{font-size:.82rem;color:var(--muted)}
+  #modal-bot-voted{font-size:.82rem;font-weight:700;color:var(--orange-dark);display:none}
+  /* Bug report */
+  .bug-report-btn{
+    display:inline-flex;align-items:center;gap:.4rem;
+    font-size:.85rem;font-weight:700;cursor:pointer;
+    color:#c0392b;background:none;border:1px solid rgba(192,57,43,.3);
+    padding:.4rem .9rem;border-radius:999px;margin-bottom:.8rem;
+    transition:background .15s ease,border-color .15s ease;
+  }
+  .bug-report-btn:hover{background:rgba(192,57,43,.06);border-color:rgba(192,57,43,.6)}
+  .bug-report-form{
+    background:#fff8f7;border:1px solid rgba(192,57,43,.2);border-radius:14px;
+    padding:1rem;margin-bottom:1rem;display:none;flex-direction:column;gap:.5rem;
+  }
+  .bug-report-form.open{display:flex}
+  .bug-report-form select,.bug-report-form textarea{
+    padding:.6rem .8rem;border-radius:9px;
+    border:1px solid var(--cream-line);background:#fff;
+    color:var(--ink);font-family:inherit;font-size:.92rem;width:100%;
+  }
+  .bug-report-form select:focus,.bug-report-form textarea:focus{outline:2px solid #c0392b}
+  .bug-report-form textarea{min-height:80px;resize:vertical}
+  .bug-report-form button[type="submit"]{
+    align-self:flex-end;
+    background:#c0392b;color:#fff;font-weight:700;font-size:.9rem;
+    border:none;border-radius:9px;padding:.5rem 1.3rem;cursor:pointer;
+    transition:filter .15s ease;
+  }
+  .bug-report-form button[type="submit"]:hover{filter:brightness(1.15)}
+  .bug-report-form button[type="submit"]:disabled{opacity:.6;cursor:wait}
+  .bug-report-status{font-size:.83rem;font-weight:600;display:none}
+  .bug-report-status.ok{display:block;color:#2e6b3a}
+  .bug-report-status.err{display:block;color:#c0392b}
   /* Foro link */
   .modal-forum-row{
     border-top:1px solid var(--cream-line);
@@ -533,6 +612,33 @@
     </div>
   </div>
 </header>
+
+<section id="como-funciona" class="how-it-works">
+  <div class="container">
+    <h2 class="section-title">¿Cómo funciona?</h2>
+    <p class="section-lead">Sin cuentas, sin configuración. En tres pasos estás jugando.</p>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <div class="step-icon">⬇️</div>
+        <h3>Descarga la app</h3>
+        <p>Un APK gratuito para Android. Sin tienda, sin suscripción, sin anuncios. Instala y listo.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <div class="step-icon">🎲</div>
+        <h3>Elige tu juego</h3>
+        <p>Selecciona uno de los 8 juegos soportados. Cada uno tiene su propio bot con comportamiento fiel a las reglas.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <div class="step-icon">🤖</div>
+        <h3>El bot juega por ti</h3>
+        <p>Tú decides tu turno. El bot ejecuta el suyo automáticamente. Solo tienes que disfrutar la partida.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
 <section id="juegos">
   <div class="container">
@@ -1278,6 +1384,114 @@ var KOFI_USERNAME = null; // ej: 'carchofo'
     .finally(function(){ cfSubmit.disabled = false; });
   });
 
+  // ── Bot rating ──
+  var botRatingsKey = 'bgt_bot_ratings';
+  function getBotRatings() {
+    try { return JSON.parse(localStorage.getItem(botRatingsKey) || '{}'); } catch(e) { return {}; }
+  }
+  function saveBotRating(game, stars) {
+    var r = getBotRatings(); r[game] = stars;
+    try { localStorage.setItem(botRatingsKey, JSON.stringify(r)); } catch(e) {}
+  }
+
+  function renderBotRating(game) {
+    var starsEl = document.getElementById('modal-bot-stars');
+    var avgEl   = document.getElementById('modal-bot-avg');
+    var votedEl = document.getElementById('modal-bot-voted');
+    starsEl.innerHTML = '';
+    var myVote = getBotRatings()[game] || 0;
+    var stats   = botStatsData[game] || {};
+    var sum     = (stats.sum || 0) + myVote;
+    var count   = (stats.count || 0) + (myVote ? 1 : 0);
+    var avg     = count ? (sum / count) : 0;
+    avgEl.textContent = count ? ('★ ' + avg.toFixed(1) + ' (' + count + ' voto' + (count !== 1 ? 's' : '') + ')') : 'Sin votos aún';
+    votedEl.style.display = myVote ? 'inline' : 'none';
+    votedEl.textContent = '✓ Votado ' + myVote + '★';
+
+    for (var s = 2; s <= 5; s++) {
+      (function(stars) {
+        var span = document.createElement('span');
+        span.className = 'star' + (stars <= myVote ? ' filled' : '');
+        span.textContent = '★';
+        span.title = stars + ' estrellas';
+        span.addEventListener('mouseenter', function() {
+          starsEl.querySelectorAll('.star').forEach(function(st, i) {
+            st.classList.toggle('filled', i + 2 <= stars);
+          });
+        });
+        span.addEventListener('mouseleave', function() {
+          var cur = getBotRatings()[game] || 0;
+          starsEl.querySelectorAll('.star').forEach(function(st, i) {
+            st.classList.toggle('filled', i + 2 <= cur);
+          });
+        });
+        span.addEventListener('click', function() {
+          saveBotRating(game, stars);
+          fetch('http://192.168.0.25:5678/webhook/bgt-community-submit', {
+            method: 'POST', headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({game: game, type: 'bot_rating', source: 'web',
+              message: 'VOTO BOT\nJuego: ' + game + '\nEstrellas: ' + stars,
+              fields: {juego: game, estrellas: stars}})
+          }).catch(function(){});
+          renderBotRating(game);
+        });
+        starsEl.appendChild(span);
+      })(s);
+    }
+  }
+  var botStatsData = {};
+  fetch('assets/game-stats.json')
+    .then(function(r){ return r.ok ? r.json() : {}; })
+    .then(function(d){
+      // game-stats tiene {GameName: score} para el sort; extendemos para bot_sum/bot_count si los hay
+      Object.keys(d).forEach(function(k) {
+        if (typeof d[k] === 'object') botStatsData[k] = d[k];
+      });
+    }).catch(function(){});
+
+  // ── Bug report toggle + submit ──
+  var bugToggle = document.getElementById('bug-report-toggle');
+  var bugForm   = document.getElementById('bug-report-form');
+  var brSubmit  = document.getElementById('br-submit');
+  var brStatus  = document.getElementById('br-status');
+
+  bugToggle.addEventListener('click', function() {
+    var open = bugForm.classList.toggle('open');
+    bugToggle.textContent = open ? '✕ Cancelar reporte' : '🐛 Reportar fallo o mejora';
+  });
+
+  bugForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    var tipo = document.getElementById('br-tipo').value;
+    var desc = document.getElementById('br-desc').value.trim();
+    brStatus.className = 'bug-report-status';
+    if (!desc) { brStatus.textContent = '❌ Describe el problema antes de enviar.'; brStatus.className = 'bug-report-status err'; return; }
+    brSubmit.disabled = true;
+    fetch('http://192.168.0.25:5678/webhook/bgt-bug', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        game: currentGame, tipo: tipo, descripcion: desc, source: 'web-modal',
+        message: 'BUG/MEJORA WEB\nJuego: ' + currentGame + '\nTipo: ' + tipo + '\n' + desc
+      })
+    })
+    .then(function(r){ if(!r.ok) throw new Error(r.status); })
+    .then(function(){
+      brStatus.textContent = '✅ Reporte enviado. ¡Gracias!';
+      brStatus.className = 'bug-report-status ok';
+      document.getElementById('br-desc').value = '';
+      setTimeout(function(){
+        bugForm.classList.remove('open');
+        bugToggle.textContent = '🐛 Reportar fallo o mejora';
+        brStatus.className = 'bug-report-status';
+      }, 2500);
+    })
+    .catch(function(){
+      brStatus.textContent = '❌ No se pudo enviar (solo funciona en la red local por ahora).';
+      brStatus.className = 'bug-report-status err';
+    })
+    .finally(function(){ brSubmit.disabled = false; });
+  });
+
   function buildStars(variantId, game, initialAvg, voteCount) {
     var stored = localStorage.getItem('bgt-vote-' + game + '-' + variantId);
     var userVote = stored ? parseInt(stored, 10) : 0;
@@ -1381,11 +1595,16 @@ var KOFI_USERNAME = null; // ej: 'carchofo'
       'https://github.com/Carchofo/BGT/discussions?discussions_q=' + g.discussions;
     renderVariants(gameKey);
     renderComments(gameKey);
+    renderBotRating(gameKey);
     variantForm.classList.remove('open');
     variantToggle.textContent = '+ Aportar un solitario fan-made';
     vfStatus.className = 'variant-add-status';
     cfStatus.className = 'comment-status';
     cfAuthor.value = ''; cfText.value = '';
+    // reset bug report
+    document.getElementById('bug-report-form').classList.remove('open');
+    document.getElementById('br-desc').value = '';
+    document.getElementById('br-status').className = 'bug-report-status';
     overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
   }
