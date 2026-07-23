@@ -321,6 +321,111 @@
     section{padding:2.5rem 0}
     .request-form{padding:1.4rem}
   }
+
+  /* ── MODAL DE JUEGO ── */
+  .modal-overlay{
+    display:none;position:fixed;inset:0;z-index:200;
+    background:rgba(21,51,86,.55);backdrop-filter:blur(4px);
+    align-items:center;justify-content:center;padding:1rem;
+  }
+  .modal-overlay.open{display:flex}
+  .modal-box{
+    background:var(--cream-card);border-radius:20px;
+    width:100%;max-width:660px;max-height:90vh;
+    overflow-y:auto;box-shadow:0 24px 64px rgba(21,51,86,.35);
+    display:flex;flex-direction:column;
+    animation:modalIn .2s ease;
+  }
+  @keyframes modalIn{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}
+  .modal-banner{width:100%;height:220px;object-fit:cover;flex-shrink:0;border-radius:20px 20px 0 0}
+  .modal-body{padding:1.5rem 1.6rem;flex:1}
+  .modal-header{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:.4rem}
+  .modal-title{font-size:1.45rem;font-weight:800;color:var(--navy)}
+  .modal-close{
+    flex-shrink:0;width:36px;height:36px;border-radius:50%;border:1px solid var(--cream-line);
+    background:#fff;cursor:pointer;font-size:1.2rem;display:flex;align-items:center;justify-content:center;
+    color:var(--muted);transition:background .15s ease;
+  }
+  .modal-close:hover{background:var(--cream)}
+  .modal-bot-name{color:var(--orange-dark);font-size:.9rem;font-weight:700;margin-bottom:.9rem}
+  .modal-desc{color:var(--ink);font-size:.97rem;margin-bottom:1.1rem;line-height:1.65}
+  .modal-tools{margin-bottom:1.2rem}
+  .modal-tools-title{font-size:.78rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.45rem}
+  .modal-tools .tags{gap:.4rem}
+  .modal-section-title{
+    font-size:.78rem;font-weight:700;color:var(--muted);text-transform:uppercase;
+    letter-spacing:.08em;margin-bottom:.7rem;padding-top:1.1rem;
+    border-top:1px solid var(--cream-line);
+  }
+  /* Lista de variantes fan-made */
+  .variant-list{display:flex;flex-direction:column;gap:.7rem;margin-bottom:.8rem}
+  .variant-item{
+    background:var(--cream);border:1px solid var(--cream-line);border-radius:12px;
+    padding:.8rem 1rem;display:flex;flex-direction:column;gap:.25rem;
+  }
+  .variant-name{font-weight:700;color:var(--navy);font-size:.97rem}
+  .variant-meta{font-size:.82rem;color:var(--muted)}
+  .variant-meta a{color:var(--blue);text-decoration:none}
+  .variant-meta a:hover{text-decoration:underline}
+  .star-row{display:flex;align-items:center;gap:.3rem;margin-top:.25rem}
+  .star-row .stars{display:flex;gap:2px}
+  .star{
+    font-size:1.1rem;cursor:pointer;color:var(--cream-line);
+    transition:color .1s ease,transform .1s ease;
+    user-select:none;
+  }
+  .star.filled{color:#F38222}
+  .star:hover{transform:scale(1.2)}
+  .star-avg{font-size:.8rem;color:var(--muted);margin-left:.4rem}
+  .star-voted{font-size:.8rem;color:var(--orange-dark);font-weight:700;margin-left:.4rem;display:none}
+  .variant-empty{
+    color:var(--muted);font-size:.9rem;font-style:italic;
+    border:1px dashed var(--cream-line);border-radius:10px;
+    padding:.7rem 1rem;text-align:center;margin-bottom:.8rem;
+  }
+  /* Mini-formulario aportar variante */
+  .variant-add-btn{
+    display:inline-flex;align-items:center;gap:.4rem;
+    font-size:.88rem;font-weight:700;cursor:pointer;
+    color:var(--blue);background:none;border:1px solid var(--blue);
+    padding:.4rem 1rem;border-radius:999px;transition:background .15s ease;
+    margin-bottom:1rem;
+  }
+  .variant-add-btn:hover{background:rgba(27,107,170,.08)}
+  .variant-add-form{
+    background:var(--cream);border:1px solid var(--cream-line);border-radius:14px;
+    padding:1.1rem;margin-bottom:1rem;display:none;
+  }
+  .variant-add-form.open{display:block}
+  .variant-add-form label{display:block;font-weight:700;color:var(--navy);font-size:.9rem;margin:.65rem 0 .25rem}
+  .variant-add-form label:first-of-type{margin-top:0}
+  .variant-add-form input,.variant-add-form textarea{
+    width:100%;padding:.6rem .8rem;border-radius:9px;
+    border:1px solid var(--cream-line);background:#fff;color:var(--ink);
+    font-family:inherit;font-size:.95rem;
+  }
+  .variant-add-form input:focus,.variant-add-form textarea:focus{outline:2px solid var(--orange)}
+  .variant-add-form textarea{min-height:70px;resize:vertical}
+  .variant-add-form .form-row{display:flex;gap:.6rem}
+  .variant-add-form .form-row input{flex:1}
+  .variant-add-form button[type="submit"]{
+    margin-top:.8rem;width:100%;
+    background:linear-gradient(135deg,var(--navy),var(--navy-light));
+    color:#fff;font-weight:700;font-size:.95rem;
+    border:none;border-radius:10px;padding:.7rem;cursor:pointer;
+    transition:filter .15s ease;
+  }
+  .variant-add-form button[type="submit"]:hover{filter:brightness(1.15)}
+  .variant-add-form button[type="submit"]:disabled{opacity:.6;cursor:wait}
+  .variant-add-status{font-size:.85rem;font-weight:600;margin-top:.5rem;display:none}
+  .variant-add-status.ok{display:block;color:#2e6b3a}
+  .variant-add-status.err{display:block;color:#c0392b}
+  /* Discusiones link en modal */
+  .modal-discuss-link{
+    display:inline-flex;align-items:center;gap:.4rem;margin-top:.6rem;
+    font-size:.85rem;font-weight:700;color:var(--blue);text-decoration:none;
+  }
+  .modal-discuss-link:hover{text-decoration:underline}
 </style>
 </head>
 <body>
@@ -635,6 +740,48 @@
   <p style="margin-top:.6rem">🎲 Diseñado, jugado, creado</p>
 </footer>
 
+<!-- ── MODAL DE JUEGO ── -->
+<div class="modal-overlay" id="game-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal-box">
+    <img class="modal-banner" id="modal-banner" src="" alt="">
+    <div class="modal-body">
+      <div class="modal-header">
+        <div>
+          <div class="modal-title" id="modal-title"></div>
+          <div class="modal-bot-name" id="modal-bot"></div>
+        </div>
+        <button class="modal-close" id="modal-close" aria-label="Cerrar">✕</button>
+      </div>
+      <p class="modal-desc" id="modal-desc"></p>
+      <div class="modal-tools">
+        <div class="modal-tools-title">Herramientas incluidas</div>
+        <div class="tags" id="modal-tags"></div>
+      </div>
+
+      <div class="modal-section-title">🎮 Modos solitario fan-made</div>
+      <div class="variant-list" id="modal-variants"></div>
+
+      <button type="button" class="variant-add-btn" id="variant-add-toggle">+ Aportar un solitario fan-made</button>
+      <div class="variant-add-form" id="variant-add-form">
+        <label>Nombre del automa / variante</label>
+        <input type="text" id="vf-name" maxlength="120" placeholder="Ej: Automa Soluvi">
+        <div class="form-row">
+          <input type="text" id="vf-author" maxlength="120" placeholder="Autor (nick o nombre)">
+          <input type="url" id="vf-source" maxlength="300" placeholder="Enlace (BGG, PDF, foro…)">
+        </div>
+        <label>¿En qué se diferencia del oficial? <span class="opt" style="font-weight:400;color:var(--muted);font-size:.85em">(opcional)</span></label>
+        <textarea id="vf-desc" maxlength="800" placeholder="Ej: usa mazo de cartas en vez de dados, escala mejor a experto…"></textarea>
+        <label>Foto del automa (obligatoria)</label>
+        <input type="file" id="vf-photo" accept="image/*">
+        <button type="submit" id="vf-submit">Enviar variante</button>
+        <div class="variant-add-status" id="vf-status"></div>
+      </div>
+
+      <a class="modal-discuss-link" id="modal-discuss" href="#" target="_blank" rel="noopener">💬 Ver comentarios y debate en el foro →</a>
+    </div>
+  </div>
+</div>
+
 <script>
 // ── Ordenar tarjetas de juego (relevancia / alfabético) ──
 (function () {
@@ -895,6 +1042,266 @@ var KOFI_USERNAME = null; // ej: 'carchofo'
       status.textContent = '❌ No se pudo enviar. Recuerda que por ahora solo funciona en la red local.';
       status.className = 'err';
     }).finally(function () { btn.disabled = false; });
+  });
+})();
+
+// ── Modal de juego ──
+(function () {
+  var GAME_DATA = {
+    'Spooktacular': {
+      banner: 'assets/banner_spooktacular_new.jpg',
+      bot: '🤖 Bot: Killtron-3000',
+      desc: 'Enfréntate al robot asesino del cine: tres mazos de programa (A→B→C) que se ejecutan cada turno de forma automática. Gestiona su movimiento, ataques y puntuación sin tocar nada.',
+      tools: [{label:'Bot solitario',cls:'bot'},{label:'Resumen reglas',cls:'rules'}],
+      discussions: 'Spooktacular'
+    },
+    'Criaturas Maravillosas': {
+      banner: 'assets/banner_cm_new.jpg',
+      bot: '🦋 Bot: Tingent',
+      desc: 'Un rival artificial con tracker propio de zonas y puntuación. Roba cartas, ocupa zonas y compite contigo hasta el recuento final. Incluye todos los niveles de dificultad del modo solitario oficial.',
+      tools: [{label:'Bot solitario',cls:'bot'},{label:'Calculadora',cls:'calc'},{label:'Resumen reglas',cls:'rules'}],
+      discussions: 'Criaturas%20Maravillosas'
+    },
+    'Tiletum': {
+      banner: 'assets/banner_tiletum_img.jpg',
+      bot: '🏛️ Bot: Titus',
+      desc: 'El mercader automático que recorre Europa: mazo de decisiones propio para jugar el modo solitario sin gestionar tú al rival. Elige dados, activa acciones y puntúa con las reglas oficiales.',
+      tools: [{label:'Bot solitario',cls:'bot'},{label:'Resumen reglas',cls:'rules'}],
+      discussions: 'Tiletum'
+    },
+    'Piratas de Maracaibo': {
+      banner: 'assets/banner_maracaibo.jpg',
+      bot: '🏴‍☠️ Bot: Jordán',
+      desc: 'Un pirata automático que navega el Caribe: gestiona su ruta y sus acciones para que solo te preocupes de tu turno. Soporta los niveles de dificultad del solitario de Philip Eklund.',
+      tools: [{label:'Bot solitario',cls:'bot'},{label:'Resumen reglas',cls:'rules'}],
+      discussions: 'Piratas%20de%20Maracaibo'
+    },
+    'Castle Combo': {
+      banner: 'assets/banner_castle_combo.jpg',
+      bot: '🏰 Bot: Anton',
+      desc: 'El rival automático para el modo solitario: elige cartas, construye su castillo y puntúa contra ti. Los contadores de Anton se gestionan solos, tú solo decides tu turno.',
+      tools: [{label:'Bot solitario',cls:'bot'},{label:'Resumen reglas',cls:'rules'}],
+      discussions: 'Castle%20Combo'
+    },
+    'Coimbra': {
+      banner: 'assets/banner_coimbra.jpg',
+      bot: '🎓 Bot solitario',
+      desc: 'Automatiza al rival en la ciudad universitaria portuguesa: dados, influencia y viajes gestionados por la app. El estado de la partida se guarda aunque salgas o rotes el móvil.',
+      tools: [{label:'Bot solitario',cls:'bot'},{label:'Resumen reglas',cls:'rules'}],
+      discussions: 'Coimbra'
+    },
+    'Cascadia': {
+      banner: 'assets/banner_cascadia.jpg',
+      bot: '🌲 Calculadora de puntuación',
+      desc: 'Introduce tus cartas de fauna y hábitats al terminar la partida y obtén el desglose completo de puntos al instante. Soporta todas las tarjetas de objetivos y cualquier número de jugadores.',
+      tools: [{label:'Calculadora',cls:'calc'}],
+      discussions: 'Cascadia'
+    },
+    'Viernes': {
+      banner: 'assets/banner_friday.jpg',
+      bot: '🧭 Ayuda de juego solitario',
+      desc: 'Asistente para el clásico solitario de Friedemann Friese: gestiona fases, peligros y evolución de Robinson. La app lleva la cuenta de las cartas de peligro, las de pelea y los puntos de vida.',
+      tools: [{label:'Solitario',cls:'bot'},{label:'Resumen reglas',cls:'rules'}],
+      discussions: 'Viernes'
+    }
+  };
+
+  var overlay = document.getElementById('game-modal');
+  var closeBtn = document.getElementById('modal-close');
+  var variantsList = document.getElementById('modal-variants');
+  var variantToggle = document.getElementById('variant-add-toggle');
+  var variantForm = document.getElementById('variant-add-form');
+  var vfStatus = document.getElementById('vf-status');
+  var vfSubmit = document.getElementById('vf-submit');
+  var currentGame = null;
+  var variantsData = {};
+
+  fetch('assets/game-variants.json')
+    .then(function(r){ return r.ok ? r.json() : {}; })
+    .then(function(d){ variantsData = d || {}; })
+    .catch(function(){});
+
+  function buildStars(variantId, game, initialAvg, voteCount) {
+    var stored = localStorage.getItem('bgt-vote-' + game + '-' + variantId);
+    var userVote = stored ? parseInt(stored, 10) : 0;
+    var row = document.createElement('div');
+    row.className = 'star-row';
+    var starsEl = document.createElement('div');
+    starsEl.className = 'stars';
+    var stars = [];
+    for (var i = 2; i <= 5; i++) {
+      var s = document.createElement('span');
+      s.className = 'star' + (i <= userVote ? ' filled' : '');
+      s.dataset.val = i;
+      s.textContent = '★';
+      s.title = i + ' estrella' + (i > 1 ? 's' : '');
+      starsEl.appendChild(s);
+      stars.push(s);
+    }
+    var avgEl = document.createElement('span');
+    avgEl.className = 'star-avg';
+    var avg = voteCount > 0 ? (initialAvg / voteCount).toFixed(1) : '—';
+    avgEl.textContent = avg !== '—' ? avg + ' (' + voteCount + ' votos)' : 'Sin votos aún';
+    var votedEl = document.createElement('span');
+    votedEl.className = 'star-voted';
+    if (userVote) { votedEl.textContent = '¡Votado!'; votedEl.style.display = 'inline'; }
+    row.appendChild(starsEl);
+    row.appendChild(avgEl);
+    row.appendChild(votedEl);
+
+    starsEl.addEventListener('mouseover', function(e) {
+      var val = e.target.dataset.val;
+      if (!val) return;
+      stars.forEach(function(s){ s.classList.toggle('filled', parseInt(s.dataset.val,10) <= parseInt(val,10)); });
+    });
+    starsEl.addEventListener('mouseleave', function() {
+      stars.forEach(function(s){ s.classList.toggle('filled', parseInt(s.dataset.val,10) <= userVote); });
+    });
+    starsEl.addEventListener('click', function(e) {
+      var val = parseInt(e.target.dataset.val, 10);
+      if (!val || userVote) return;
+      userVote = val;
+      localStorage.setItem('bgt-vote-' + game + '-' + variantId, val);
+      stars.forEach(function(s){ s.classList.toggle('filled', parseInt(s.dataset.val,10) <= val); });
+      votedEl.style.display = 'inline';
+      // enviar voto al webhook (best-effort)
+      fetch('http://192.168.0.25:5678/webhook/bgt-community-submit', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ game: game, type: 'star_vote', source: 'web',
+          fields: { variant_id: variantId, stars: val } })
+      }).catch(function(){});
+    });
+    return row;
+  }
+
+  function renderVariants(game) {
+    variantsList.innerHTML = '';
+    var list = variantsData[game] || [];
+    if (!list.length) {
+      var empty = document.createElement('div');
+      empty.className = 'variant-empty';
+      empty.textContent = 'Aún no hay modos fan-made aportados para este juego. ¡Sé el primero!';
+      variantsList.appendChild(empty);
+      return;
+    }
+    list.forEach(function(v) {
+      var item = document.createElement('div');
+      item.className = 'variant-item';
+      var name = document.createElement('div');
+      name.className = 'variant-name';
+      name.textContent = v.name || '(Sin nombre)';
+      var meta = document.createElement('div');
+      meta.className = 'variant-meta';
+      meta.innerHTML = 'Por <strong>' + (v.author || '?') + '</strong>' +
+        (v.source ? ' · <a href="' + v.source + '" target="_blank" rel="noopener">Ver fuente →</a>' : '');
+      item.appendChild(name);
+      item.appendChild(meta);
+      if (v.desc) {
+        var desc = document.createElement('div');
+        desc.style.cssText = 'font-size:.88rem;color:var(--muted);margin-top:.2rem';
+        desc.textContent = v.desc;
+        item.appendChild(desc);
+      }
+      item.appendChild(buildStars(v.id || v.name, game, v.stars_sum || 0, v.stars_count || 0));
+      variantsList.appendChild(item);
+    });
+  }
+
+  function openModal(gameKey) {
+    var g = GAME_DATA[gameKey];
+    if (!g) return;
+    currentGame = gameKey;
+    document.getElementById('modal-banner').src = g.banner;
+    document.getElementById('modal-banner').alt = 'Banner de ' + gameKey;
+    document.getElementById('modal-title').textContent = gameKey;
+    document.getElementById('modal-bot').textContent = g.bot;
+    document.getElementById('modal-desc').textContent = g.desc;
+    var tagsEl = document.getElementById('modal-tags');
+    tagsEl.innerHTML = g.tools.map(function(t){
+      return '<span class="tag ' + t.cls + '">' + t.label + '</span>';
+    }).join('');
+    document.getElementById('modal-discuss').href =
+      'https://github.com/Carchofo/BGT/discussions?discussions_q=' + g.discussions;
+    renderVariants(gameKey);
+    variantForm.classList.remove('open');
+    variantToggle.textContent = '+ Aportar un solitario fan-made';
+    vfStatus.className = 'variant-add-status';
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // Hacer clickables las tarjetas de juego (excepto la tarjeta "+")
+  document.querySelectorAll('.game-card[data-game]').forEach(function(card) {
+    card.style.cursor = 'pointer';
+    // el enlace de Discussions dentro no debe abrir el modal
+    card.addEventListener('click', function(e) {
+      if (e.target.closest('a')) return;
+      openModal(card.dataset.game);
+    });
+  });
+
+  closeBtn.addEventListener('click', closeModal);
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) closeModal();
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeModal();
+  });
+
+  // Toggle mini-formulario
+  variantToggle.addEventListener('click', function() {
+    var open = variantForm.classList.toggle('open');
+    variantToggle.textContent = open ? '— Cancelar' : '+ Aportar un solitario fan-made';
+    if (open) variantForm.querySelector('input[type="text"]').focus();
+  });
+
+  // Envío del mini-formulario de variante
+  vfSubmit.addEventListener('click', function() {
+    var name = document.getElementById('vf-name').value.trim();
+    var author = document.getElementById('vf-author').value.trim();
+    var source = document.getElementById('vf-source').value.trim();
+    var desc = document.getElementById('vf-desc').value.trim();
+    var photo = document.getElementById('vf-photo').files[0];
+    vfStatus.className = 'variant-add-status';
+    if (!name || !author || !photo) {
+      vfStatus.textContent = '❌ Nombre, autor y foto son obligatorios.';
+      vfStatus.className = 'variant-add-status err';
+      return;
+    }
+    vfSubmit.disabled = true;
+    vfStatus.textContent = '⏳ Enviando…';
+    var r = new FileReader();
+    r.onload = function() {
+      var img = String(r.result).split(',')[1] || null;
+      fetch('http://192.168.0.25:5678/webhook/bgt-community-submit', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({
+          game: currentGame, type: 'variant', source: 'web',
+          message: 'VARIANTE DE AUTOMA\nJuego: ' + currentGame +
+            '\nVariante: ' + name + '\nAutor: ' + author +
+            (source ? '\nFuente: ' + source : '') + (desc ? '\nDesc: ' + desc : ''),
+          fields: { juego: currentGame, nombre_variante: name, autor: author, fuente: source, descripcion: desc },
+          image: img
+        })
+      })
+      .then(function(res){ if(!res.ok) throw new Error(res.status); })
+      .then(function(){
+        vfStatus.textContent = '✅ ¡Enviado! Lo revisaremos pronto.';
+        vfStatus.className = 'variant-add-status ok';
+        variantForm.querySelectorAll('input,textarea').forEach(function(el){ el.value=''; });
+      })
+      .catch(function(){
+        vfStatus.textContent = '❌ No se pudo enviar (solo funciona en la red local por ahora).';
+        vfStatus.className = 'variant-add-status err';
+      })
+      .finally(function(){ vfSubmit.disabled = false; });
+    };
+    r.readAsDataURL(photo);
   });
 })();
 
