@@ -194,6 +194,23 @@
     font-size:.82rem;font-weight:700;color:var(--blue);text-decoration:none;
   }
   .game-thread-link:hover{text-decoration:underline}
+  .card-footer{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:.6rem 1.2rem .8rem;border-top:1px solid var(--cream-line);
+    margin-top:auto;
+  }
+  .like-btn{
+    display:inline-flex;align-items:center;gap:.35rem;
+    background:none;border:1px solid var(--cream-line);border-radius:999px;
+    padding:.3rem .75rem;cursor:pointer;font-size:.85rem;font-weight:700;
+    color:var(--muted);transition:color .15s,border-color .15s,background .15s;
+    user-select:none;
+  }
+  .like-btn:hover{border-color:#e57c8a;color:#c0392b}
+  .like-btn.liked{border-color:#e57c8a;background:#fff0f1;color:#c0392b}
+  .like-btn .like-heart{font-size:1rem;transition:transform .2s}
+  .like-btn.liked .like-heart{animation:heartPop .3s ease}
+  @keyframes heartPop{0%{transform:scale(1)}50%{transform:scale(1.4)}100%{transform:scale(1)}}
 
   .add-game-card{
     text-decoration:none;color:inherit;cursor:pointer;
@@ -655,7 +672,7 @@
 <section id="juegos">
   <div class="container">
     <h2 class="section-title">🎲 Juegos soportados</h2>
-    <p class="section-lead">Cada juego incluye su propio módulo: bots con inteligencia propia para jugar en solitario, calculadoras de puntuación y resúmenes de reglas.</p>
+    <p class="section-lead">¿No está el tuyo? <a href="#pedir-juego">Pídelo a la comunidad</a> y lo añadimos — la biblioteca crece con los votos de los jugadores.</p>
     <div class="sort-bar" role="group" aria-label="Ordenar juegos">
       <span class="sort-label">Ordenar por:</span>
       <button type="button" class="sort-btn active" data-sort="relevance">🔥 Relevancia</button>
@@ -670,7 +687,10 @@
           <div class="bot-name">🤖 Bot: Killtron-3000</div>
           <p>Enfréntate al robot asesino del cine: tres mazos de programa (A→B→C) que se ejecutan cada turno de forma automática.</p>
           <div class="tags"><span class="tag bot">Bot solitario</span><span class="tag rules">Reglas</span></div>
-          <a class="game-thread-link" href="https://github.com/Carchofo/BGT/discussions?discussions_q=Spooktacular" target="_blank" rel="noopener">💬 Comentar y aportar solo modes</a>
+        </div>
+        <div class="card-footer">
+          <button class="like-btn" data-game="Spooktacular"><span class="like-heart">♡</span> <span class="like-count">0</span></button>
+          <a class="game-thread-link" href="https://github.com/Carchofo/BGT/discussions?discussions_q=Spooktacular" target="_blank" rel="noopener">💬 Foro</a>
         </div>
       </div>
 
@@ -681,7 +701,10 @@
           <div class="bot-name">🦋 Bot: Tingent</div>
           <p>Un rival artificial con tracker propio de zonas y puntuación. Roba cartas, ocupa zonas y compite contigo hasta el recuento final.</p>
           <div class="tags"><span class="tag bot">Bot solitario</span><span class="tag calc">Puntuación</span><span class="tag rules">Reglas</span></div>
-          <a class="game-thread-link" href="https://github.com/Carchofo/BGT/discussions?discussions_q=Criaturas%20Maravillosas" target="_blank" rel="noopener">💬 Comentar y aportar solo modes</a>
+        </div>
+        <div class="card-footer">
+          <button class="like-btn" data-game="Criaturas Maravillosas"><span class="like-heart">♡</span> <span class="like-count">0</span></button>
+          <a class="game-thread-link" href="https://github.com/Carchofo/BGT/discussions?discussions_q=Criaturas%20Maravillosas" target="_blank" rel="noopener">💬 Foro</a>
         </div>
       </div>
 
@@ -692,7 +715,10 @@
           <div class="bot-name">🏛️ Bot: Titus</div>
           <p>El mercader automático que recorre Europa: mazo de decisiones propio para jugar el modo solitario sin gestionar tú al rival.</p>
           <div class="tags"><span class="tag bot">Bot solitario</span><span class="tag rules">Reglas</span></div>
-          <a class="game-thread-link" href="https://github.com/Carchofo/BGT/discussions?discussions_q=Tiletum" target="_blank" rel="noopener">💬 Comentar y aportar solo modes</a>
+        </div>
+        <div class="card-footer">
+          <button class="like-btn" data-game="Tiletum"><span class="like-heart">♡</span> <span class="like-count">0</span></button>
+          <a class="game-thread-link" href="https://github.com/Carchofo/BGT/discussions?discussions_q=Tiletum" target="_blank" rel="noopener">💬 Foro</a>
         </div>
       </div>
 
@@ -703,7 +729,10 @@
           <div class="bot-name">🏴‍☠️ Bot: Jordán</div>
           <p>Un pirata automático que navega el Caribe por ti: gestiona su ruta y sus acciones para que solo te preocupes de tu turno.</p>
           <div class="tags"><span class="tag bot">Bot solitario</span><span class="tag rules">Reglas</span></div>
-          <a class="game-thread-link" href="https://github.com/Carchofo/BGT/discussions?discussions_q=Piratas%20de%20Maracaibo" target="_blank" rel="noopener">💬 Comentar y aportar solo modes</a>
+        </div>
+        <div class="card-footer">
+          <button class="like-btn" data-game="Piratas de Maracaibo"><span class="like-heart">♡</span> <span class="like-count">0</span></button>
+          <a class="game-thread-link" href="https://github.com/Carchofo/BGT/discussions?discussions_q=Piratas%20de%20Maracaibo" target="_blank" rel="noopener">💬 Foro</a>
         </div>
       </div>
 
@@ -714,7 +743,10 @@
           <div class="bot-name">🏰 Bot: Anton</div>
           <p>El rival automático para el modo solitario: elige cartas, construye su castillo y puntúa contra ti.</p>
           <div class="tags"><span class="tag bot">Bot solitario</span><span class="tag rules">Reglas</span></div>
-          <a class="game-thread-link" href="https://github.com/Carchofo/BGT/discussions?discussions_q=Castle%20Combo" target="_blank" rel="noopener">💬 Comentar y aportar solo modes</a>
+        </div>
+        <div class="card-footer">
+          <button class="like-btn" data-game="Castle Combo"><span class="like-heart">♡</span> <span class="like-count">0</span></button>
+          <a class="game-thread-link" href="https://github.com/Carchofo/BGT/discussions?discussions_q=Castle%20Combo" target="_blank" rel="noopener">💬 Foro</a>
         </div>
       </div>
 
@@ -725,7 +757,10 @@
           <div class="bot-name">🎓 Bot solitario</div>
           <p>Automatiza al rival en la ciudad universitaria portuguesa: dados, influencia y viajes gestionados por la app.</p>
           <div class="tags"><span class="tag bot">Bot solitario</span><span class="tag rules">Reglas</span></div>
-          <a class="game-thread-link" href="https://github.com/Carchofo/BGT/discussions?discussions_q=Coimbra" target="_blank" rel="noopener">💬 Comentar y aportar solo modes</a>
+        </div>
+        <div class="card-footer">
+          <button class="like-btn" data-game="Coimbra"><span class="like-heart">♡</span> <span class="like-count">0</span></button>
+          <a class="game-thread-link" href="https://github.com/Carchofo/BGT/discussions?discussions_q=Coimbra" target="_blank" rel="noopener">💬 Foro</a>
         </div>
       </div>
 
@@ -736,7 +771,10 @@
           <div class="bot-name">🌲 Calculadora de puntuación</div>
           <p>Introduce tus cartas de fauna y hábitats y obtén el desglose completo de puntos al instante, para cualquier número de jugadores.</p>
           <div class="tags"><span class="tag calc">Calculadora</span></div>
-          <a class="game-thread-link" href="https://github.com/Carchofo/BGT/discussions?discussions_q=Cascadia" target="_blank" rel="noopener">💬 Comentar y aportar solo modes</a>
+        </div>
+        <div class="card-footer">
+          <button class="like-btn" data-game="Cascadia"><span class="like-heart">♡</span> <span class="like-count">0</span></button>
+          <a class="game-thread-link" href="https://github.com/Carchofo/BGT/discussions?discussions_q=Cascadia" target="_blank" rel="noopener">💬 Foro</a>
         </div>
       </div>
 
@@ -747,7 +785,10 @@
           <div class="bot-name">🧭 Ayuda de juego solitario</div>
           <p>Asistente para el clásico solitario de Friedemann Friese: gestiona fases, peligros y puntuación de tu aventura con Robinson.</p>
           <div class="tags"><span class="tag bot">Solitario</span><span class="tag rules">Reglas</span></div>
-          <a class="game-thread-link" href="https://github.com/Carchofo/BGT/discussions?discussions_q=Viernes" target="_blank" rel="noopener">💬 Comentar y aportar solo modes</a>
+        </div>
+        <div class="card-footer">
+          <button class="like-btn" data-game="Viernes"><span class="like-heart">♡</span> <span class="like-count">0</span></button>
+          <a class="game-thread-link" href="https://github.com/Carchofo/BGT/discussions?discussions_q=Viernes" target="_blank" rel="noopener">💬 Foro</a>
         </div>
       </div>
 
@@ -1742,6 +1783,55 @@ var KOFI_USERNAME = null; // ej: 'carchofo'
   }
   window.addEventListener('scroll', checkEdge, { passive: true });
   checkEdge();
+})();
+
+// ── Likes en tarjetas de juego ──
+(function () {
+  var LIKES_KEY = 'bgt_card_likes';
+  function getLikes() {
+    try { return JSON.parse(localStorage.getItem(LIKES_KEY) || '{}'); } catch(e) { return {}; }
+  }
+  function saveLike(game, count) {
+    var l = getLikes(); l[game] = count;
+    try { localStorage.setItem(LIKES_KEY, JSON.stringify(l)); } catch(e) {}
+  }
+
+  var likesData = getLikes();
+
+  document.querySelectorAll('.like-btn').forEach(function(btn) {
+    var game = btn.dataset.game;
+    var countEl = btn.querySelector('.like-count');
+    var heartEl = btn.querySelector('.like-heart');
+    var liked = !!likesData[game + '_liked'];
+    var count = likesData[game] || 0;
+
+    function render() {
+      countEl.textContent = count;
+      heartEl.textContent = liked ? '❤️' : '♡';
+      btn.classList.toggle('liked', liked);
+    }
+    render();
+
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation(); // no abrir el modal
+      if (liked) {
+        liked = false; count = Math.max(0, count - 1);
+      } else {
+        liked = true; count++;
+        // enviar al webhook (fire-and-forget)
+        fetch('http://192.168.0.25:5678/webhook/bgt-community-submit', {
+          method: 'POST', headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({game: game, type: 'like', source: 'web',
+            message: 'LIKE\nJuego: ' + game, fields: {juego: game}})
+        }).catch(function(){});
+      }
+      var l = getLikes();
+      l[game] = count;
+      l[game + '_liked'] = liked;
+      try { localStorage.setItem(LIKES_KEY, JSON.stringify(l)); } catch(e) {}
+      render();
+    });
+  });
 })();
 </script>
 
