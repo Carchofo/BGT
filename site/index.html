@@ -49,24 +49,33 @@
 
   /* HERO */
   header.hero{
+    position:relative;
     text-align:center;
-    padding:4.5rem 1rem 3.5rem;
-    border-bottom:1px solid var(--cream-line);
+    padding:5rem 1rem 4rem;
+    border-bottom:none;
+    background:url('assets/bebe.png') center/cover no-repeat;
+    overflow:hidden;
   }
+  header.hero::before{
+    content:'';
+    position:absolute;inset:0;
+    background:linear-gradient(160deg,rgba(21,51,86,.92) 0%,rgba(21,51,86,.80) 100%);
+  }
+  header.hero > *{position:relative}
   .hero img.logo{
-    width:150px;height:auto;
-    filter:drop-shadow(0 8px 24px rgba(21,51,86,.25));
+    width:130px;height:auto;
+    filter:drop-shadow(0 8px 28px rgba(0,0,0,.45));
   }
   .hero h1{
     font-size:clamp(2.2rem,6vw,3.4rem);
     margin:.9rem 0 .2rem;
-    color:var(--navy);
+    color:#fff;
     font-weight:800;
     letter-spacing:-.01em;
-    text-shadow:0 2px 0 rgba(255,255,255,.6);
+    text-shadow:0 2px 8px rgba(0,0,0,.3);
   }
-  .hero .sub{font-size:1.05rem;color:var(--orange-dark);letter-spacing:.15em;text-transform:uppercase;font-weight:700;margin-bottom:.8rem}
-  .hero .tagline{max-width:620px;margin:0 auto 2rem;color:var(--muted);font-size:1.15rem}
+  .hero .sub{font-size:1.05rem;color:var(--orange);letter-spacing:.15em;text-transform:uppercase;font-weight:700;margin-bottom:.8rem}
+  .hero .tagline{max-width:620px;margin:0 auto 2rem;color:rgba(255,255,255,.82);font-size:1.15rem}
   .btn-download{
     display:inline-block;
     background:linear-gradient(135deg,var(--orange),var(--orange-dark));
@@ -86,16 +95,16 @@
   .btn-telegram.active{opacity:1;cursor:pointer}
   .btn-telegram.active:hover{transform:translateY(-2px)}
   .btn-telegram small{display:block;font-size:.78rem;font-weight:400;opacity:.8;margin-top:.15rem;color:var(--blue)}
-  .release-meta{margin-top:1rem;color:var(--muted);font-size:.95rem}
-  .release-meta span{color:var(--orange-dark);font-weight:700}
+  .release-meta{margin-top:1rem;color:rgba(255,255,255,.65);font-size:.95rem}
+  .release-meta span{color:var(--orange);font-weight:700}
   .badge-free{
     display:inline-block;margin-top:1.1rem;
-    border:1px solid var(--cream-line);border-radius:999px;
-    padding:.3rem 1rem;font-size:.85rem;color:var(--navy);background:#fff;
+    border:1px solid rgba(255,255,255,.25);border-radius:999px;
+    padding:.3rem 1rem;font-size:.85rem;color:rgba(255,255,255,.85);background:rgba(255,255,255,.1);
   }
   .feature-strip{
     display:flex;flex-wrap:wrap;justify-content:center;gap:.6rem 1.4rem;
-    margin-top:1.6rem;font-size:.85rem;color:var(--muted);
+    margin-top:1.6rem;font-size:.85rem;color:rgba(255,255,255,.6);
   }
   .feature-strip span{white-space:nowrap}
 
@@ -131,13 +140,13 @@
   .evolving-banner{
     display:flex;align-items:flex-start;gap:.8rem;
     margin:1.6rem auto 0;max-width:620px;
-    background:linear-gradient(135deg,rgba(21,51,86,.06),rgba(27,107,170,.07));
-    border:1px solid var(--blue);border-radius:14px;
-    padding:.9rem 1.2rem;text-align:left;font-size:.93rem;color:var(--ink);
+    background:rgba(255,255,255,.1);
+    border:1px solid rgba(255,255,255,.2);border-radius:14px;
+    padding:.9rem 1.2rem;text-align:left;font-size:.93rem;color:rgba(255,255,255,.82);
   }
   .evolving-icon{font-size:1.5rem;flex-shrink:0;margin-top:.1rem}
-  .evolving-banner strong{color:var(--navy)}
-  .evolving-banner a{color:var(--blue);font-weight:700;text-decoration:none}
+  .evolving-banner strong{color:#fff}
+  .evolving-banner a{color:var(--orange);font-weight:700;text-decoration:none}
   .evolving-banner a:hover{text-decoration:underline}
 
   /* SECTIONS */
@@ -363,6 +372,105 @@
     opacity:.6;cursor:not-allowed;
   }
   .tg-btn.active{opacity:1;cursor:pointer}
+
+  /* SOBRE NOSOTROS */
+  .about-section{
+    background:#fff;
+    border-top:1px solid var(--cream-line);
+    border-bottom:1px solid var(--cream-line);
+    padding:4rem 1.5rem;
+  }
+  .about-inner{
+    max-width:1000px;margin:0 auto;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:3.5rem;
+    align-items:center;
+  }
+  @media(max-width:760px){
+    .about-inner{grid-template-columns:1fr;gap:2rem}
+    .about-photo{order:-1}
+  }
+  .about-photo img{
+    width:100%;border-radius:20px;
+    box-shadow:0 12px 40px rgba(21,51,86,.18);
+    display:block;
+    object-fit:cover;
+    aspect-ratio:4/3;
+  }
+  .about-text .eyebrow{
+    font-size:.8rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--orange-dark);margin-bottom:.6rem;
+  }
+  .about-text h2{
+    font-size:clamp(1.7rem,4vw,2.3rem);font-weight:800;
+    color:var(--navy);margin-bottom:1.2rem;line-height:1.2;
+  }
+  .about-text p{
+    color:var(--muted);font-size:1rem;line-height:1.75;margin-bottom:1rem;
+  }
+  .about-text p strong{color:var(--navy)}
+  .about-text .quote{
+    border-left:3px solid var(--orange);
+    padding:.6rem 0 .6rem 1.1rem;
+    margin:1.4rem 0;
+    font-style:italic;font-size:1.05rem;
+    color:var(--navy);font-weight:600;line-height:1.5;
+  }
+  .about-donate-btn{
+    display:inline-flex;align-items:center;gap:.5rem;
+    margin-top:1.6rem;
+    background:linear-gradient(135deg,var(--orange),var(--orange-dark));
+    color:#fff;font-weight:700;font-size:1rem;
+    padding:.8rem 1.8rem;border-radius:12px;text-decoration:none;
+    box-shadow:0 6px 18px rgba(217,105,26,.35);
+    transition:transform .15s ease,box-shadow .15s ease;
+  }
+  .about-donate-btn:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(217,105,26,.45)}
+
+  /* DONATE HERO */
+  .donate-hero{
+    position:relative;
+    background:url('assets/bebe.png') center/cover no-repeat;
+    padding:5rem 1.5rem;
+    overflow:hidden;
+  }
+  .donate-hero::before{
+    content:'';
+    position:absolute;inset:0;
+    background:linear-gradient(135deg,rgba(21,51,86,.88),rgba(15,40,70,.78));
+  }
+  .donate-hero-inner{
+    position:relative;
+    max-width:680px;margin:0 auto;
+    text-align:center;color:#fff;
+  }
+  .donate-hero h2{
+    font-size:clamp(1.8rem,5vw,2.8rem);font-weight:800;
+    margin-bottom:.6rem;text-shadow:0 2px 12px rgba(0,0,0,.4);
+  }
+  .donate-hero p{
+    font-size:1.05rem;line-height:1.65;
+    opacity:.88;margin-bottom:2rem;max-width:520px;margin-left:auto;margin-right:auto;
+  }
+  .donate-hero-btns{
+    display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;
+  }
+  .donate-hero-btns a{
+    display:inline-flex;align-items:center;gap:.5rem;
+    font-weight:700;font-size:1.05rem;text-decoration:none;
+    padding:.9rem 2rem;border-radius:14px;
+    transition:transform .15s ease,box-shadow .15s ease;
+  }
+  .donate-hero-btns a:hover{transform:translateY(-2px)}
+  .donate-hero-btns .btn-kofi{
+    background:#FF5E5B;color:#fff;
+    box-shadow:0 6px 18px rgba(255,94,91,.4);
+  }
+  .donate-hero-btns .btn-paypal{
+    background:#009cde;color:#fff;
+    box-shadow:0 6px 18px rgba(0,156,222,.4);
+  }
 
   /* FOOTER */
   footer{
@@ -650,6 +758,7 @@
     </button>
     <div class="nav-links" id="nav-links">
       <a href="#juegos" data-i18n="nav.games">Juegos</a>
+      <a href="#nosotros">Sobre nosotros</a>
       <a href="#faq" data-i18n="nav.faq">FAQ</a>
       <a href="#" id="telegram-link-menu" aria-disabled="true" data-i18n="nav.telegram">✈️ Únete a Telegram</a>
       <a href="https://github.com/Carchofo/BGT/discussions" target="_blank" rel="noopener" data-i18n="nav.forum">Foro</a>
@@ -876,26 +985,13 @@
   </div>
 </section>
 
-<!-- ── SECCIÓN DONACIÓN ── -->
-<section id="apoya-bgt" style="padding:3rem 1rem;background:var(--cream);">
-  <div style="max-width:900px;margin:0 auto;display:flex;align-items:center;gap:3rem;flex-wrap:wrap;">
-    <div style="flex:1;min-width:260px;">
-      <h2 style="color:var(--navy);font-size:1.6rem;font-weight:800;margin-bottom:.8rem;">☕ Apoya el proyecto</h2>
-      <p style="color:var(--muted);font-size:1rem;line-height:1.65;margin-bottom:1.4rem;">BGT es gratis, sin anuncios y lo desarrollo en los ratos libres — que con un bebé en casa no son muchos.<br><br>Si la app te ha ahorrado una partida frustrada, invítame a un café. Cada aportación va directa a mantener los bots y añadir más juegos.</p>
-      <div style="display:flex;flex-wrap:wrap;gap:.8rem;">
-        <a href="https://ko-fi.com/carchofo" target="_blank" rel="noopener"
-          style="display:inline-flex;align-items:center;gap:.5rem;background:#FF5E5B;color:#fff;font-weight:700;font-size:1rem;padding:.75rem 1.5rem;border-radius:10px;text-decoration:none;box-shadow:0 4px 12px rgba(255,94,91,.35);transition:transform .15s;">
-          ❤️ Invítame a un café en Ko-fi
-        </a>
-        <a href="https://www.paypal.com/donate?business=perkatauro%40gmail.com&currency_code=EUR" target="_blank" rel="noopener"
-          style="display:inline-flex;align-items:center;gap:.5rem;background:#009cde;color:#fff;font-weight:700;font-size:1rem;padding:.75rem 1.5rem;border-radius:10px;text-decoration:none;box-shadow:0 4px 12px rgba(0,156,222,.35);transition:transform .15s;">
-          🍼 Ayuda a comprar pañales · PayPal
-        </a>
-      </div>
-    </div>
-    <div style="flex:0 0 auto;text-align:center;">
-      <img src="assets/bebe.png" alt="El motivo de todo esto" style="width:100%;max-width:320px;border-radius:16px;display:block;background:var(--cream-card);padding:1rem;box-sizing:border-box;">
-      <p style="font-size:.8rem;color:var(--muted);margin-top:.5rem;">El motivo de todo esto 🍼</p>
+<section class="donate-hero" id="apoya-bgt">
+  <div class="donate-hero-inner">
+    <h2>🍼 Apoya a BGT</h2>
+    <p>BGT es gratis, sin anuncios y lo desarrollo en los ratos libres — que con un bebé en casa no son muchos. Si la app te ha ahorrado una partida frustrada, cada aportación va directa a mantener los bots y pagar pañales.</p>
+    <div class="donate-hero-btns">
+      <a class="btn-kofi" href="https://ko-fi.com/carchofo" target="_blank" rel="noopener">❤️ Invítame a un café · Ko-fi</a>
+      <a class="btn-paypal" href="https://www.paypal.com/donate?business=perkatauro%40gmail.com&currency_code=EUR" target="_blank" rel="noopener">🍼 Ayuda a comprar pañales · PayPal</a>
     </div>
   </div>
 </section>
@@ -1026,6 +1122,55 @@
   </div>
 </section>
 
+<section class="about-section" id="nosotros">
+  <div class="about-inner">
+    <div class="about-text">
+      <div class="eyebrow">👨‍👩‍👶 Sobre nosotros</div>
+      <h2>Dos frikis de los juegos de mesa con un bebé recién nacido</h2>
+      <p>
+        Somos una pareja aficionada a los juegos de mesa — bueno, sobre todo yo —
+        que lleva años disfrutando de este hobby. Cuando llegó nuestro hijo,
+        el tiempo libre se convirtió en un bien escaso, y los juegos que antes sacábamos
+        a la mesa empezaron a acumular polvo.
+      </p>
+      <div class="quote">
+        "¿Y si mi mujer no quiere jugar? ¿Y si solo tenemos veinte minutos?
+        ¿Y si el juego pide cuatro jugadores mínimo?"
+      </div>
+      <p>
+        De esa frustración nació BGT. Una app para <strong>jugar en solitario</strong>
+        cuando ella no puede o no quiere, para <strong>agilizar los conteos de puntos</strong>
+        sin perder el ritmo de la partida, y para <strong>añadir jugadores virtuales</strong>
+        a juegos que de otra forma no podrían jugarse solos.
+      </p>
+      <p>
+        También queremos <strong>probar automas</strong> fan-made de la comunidad y,
+        poco a poco, crear un espacio donde otros aficionados puedan compartir sus
+        variantes, reportar bugs y pedir nuevos juegos. Un rincón digital para este
+        bonito hobby — construido entre pañales, biberones y noches sin dormir.
+      </p>
+      <a class="about-donate-btn" href="https://ko-fi.com/carchofo" target="_blank" rel="noopener">
+        🍼 Ayúdanos a seguir — Ko-fi o PayPal
+      </a>
+      <div style="margin-top:.8rem;display:flex;gap:.8rem;flex-wrap:wrap;">
+        <a href="https://ko-fi.com/carchofo" target="_blank" rel="noopener"
+          style="display:inline-flex;align-items:center;gap:.4rem;font-size:.9rem;font-weight:700;color:#FF5E5B;text-decoration:none;border:1px solid #FF5E5B;padding:.4rem 1rem;border-radius:999px;transition:background .15s"
+          onmouseover="this.style.background='#fff0f0'" onmouseout="this.style.background='transparent'">
+          ❤️ Ko-fi
+        </a>
+        <a href="https://www.paypal.com/donate?business=perkatauro%40gmail.com&currency_code=EUR" target="_blank" rel="noopener"
+          style="display:inline-flex;align-items:center;gap:.4rem;font-size:.9rem;font-weight:700;color:#009cde;text-decoration:none;border:1px solid #009cde;padding:.4rem 1rem;border-radius:999px;transition:background .15s"
+          onmouseover="this.style.background='#f0f8ff'" onmouseout="this.style.background='transparent'">
+          🍼 PayPal
+        </a>
+      </div>
+    </div>
+    <div class="about-photo">
+      <img src="assets/nosotros.jpg" alt="Rafel y su pareja, creadores de BGT">
+    </div>
+  </div>
+</section>
+
 <section id="faq">
   <div class="container">
     <h2 class="section-title" data-i18n="faq.title">Preguntas frecuentes</h2>
@@ -1050,13 +1195,13 @@
   </div>
 </section>
 
-<section class="community" id="donaciones">
-  <div class="container">
-    <h2 class="section-title" data-i18n="donate.title">☕ Apoya el proyecto</h2>
-    <p class="section-lead" id="donate-lead" data-i18n="donate.lead">BGT es y será siempre gratuita, sin anuncios ni funciones de pago. Si te ha ahorrado partidas frustrantes, puedes invitar al desarrollador a un café.</p>
-    <div class="donate-buttons">
-      <a href="#" id="kofi-link" class="donate-btn kofi" aria-disabled="true" onclick="return false">❤️ Ko-fi <small>· próximamente</small></a>
-      <a href="https://github.com/sponsors/Carchofo" id="sponsors-link" class="donate-btn sponsors" target="_blank" rel="noopener">🐙 GitHub Sponsors</a>
+<section class="donate-hero" id="donaciones">
+  <div class="donate-hero-inner">
+    <h2>☕ ¿Te ha servido la app?</h2>
+    <p>Cada partida solitaria que hayas podido jugar gracias a BGT es un motivo más. Ayúdame a seguir añadiendo juegos y mantener los bots en marcha.</p>
+    <div class="donate-hero-btns">
+      <a class="btn-kofi" href="https://ko-fi.com/carchofo" target="_blank" rel="noopener">❤️ Ko-fi</a>
+      <a class="btn-paypal" href="https://www.paypal.com/donate?business=perkatauro%40gmail.com&currency_code=EUR" target="_blank" rel="noopener">🍼 PayPal · pañales</a>
     </div>
   </div>
 </section>
