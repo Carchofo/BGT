@@ -107,11 +107,20 @@
   }
 
   /* LANG SELECTOR */
-  .lang-selector{display:flex;gap:.3rem;align-items:center;margin-left:.4rem}
-  .lang-btn{background:none;border:1px solid rgba(255,255,255,.3);color:#fff;
-    font-size:.7rem;font-weight:700;padding:.18rem .42rem;border-radius:4px;cursor:pointer;
-    transition:background .15s,border-color .15s;letter-spacing:.04em;line-height:1.4}
-  .lang-btn:hover,.lang-btn.active{background:var(--orange);border-color:var(--orange)}
+  .lang-selector{display:flex;align-items:center;margin-left:.6rem;position:relative}
+  .lang-select{
+    background:#fff;
+    border:none;
+    color:var(--navy);font-size:.78rem;font-weight:700;
+    padding:.28rem .4rem .28rem 1.7rem;
+    border-radius:6px;cursor:pointer;outline:none;
+    min-width:7rem;
+  }
+  .lang-select:hover,.lang-select:focus{background:#ffe8cc}
+  .lang-globe-icon{
+    position:absolute;left:.45rem;top:50%;transform:translateY(-50%);
+    font-size:.85rem;pointer-events:none;line-height:1;
+  }
   @media(max-width:700px){.lang-selector{display:none}}
 
   /* EVOLVING BANNER */
@@ -624,11 +633,14 @@
       <a href="https://github.com/Carchofo/BGT/discussions" target="_blank" rel="noopener" data-i18n="nav.forum">Foro</a>
       <a href="#pedir-juego" data-i18n="nav.suggest">Sugerencias</a>
       <div class="lang-selector" id="lang-selector">
-        <button class="lang-btn active" data-lang="es">ES</button>
-        <button class="lang-btn" data-lang="en">EN</button>
-        <button class="lang-btn" data-lang="fr">FR</button>
-        <button class="lang-btn" data-lang="de">DE</button>
-        <button class="lang-btn" data-lang="it">IT</button>
+        <span class="lang-globe-icon">🌐</span>
+        <select class="lang-select" id="lang-select" aria-label="Idioma / Language">
+          <option value="es">Español</option>
+          <option value="en">English</option>
+          <option value="fr">Français</option>
+          <option value="de">Deutsch</option>
+          <option value="it">Italiano</option>
+        </select>
       </div>
       <a href="#donaciones" class="cta" data-i18n="nav.support">Apoyar el proyecto</a>
     </div>
@@ -2252,10 +2264,9 @@ function applyLang(lang) {
     if (val) el.placeholder = val;
   });
 
-  // Actualizar botones del selector
-  document.querySelectorAll('.lang-btn').forEach(function(btn) {
-    btn.classList.toggle('active', btn.dataset.lang === lang);
-  });
+  // Actualizar select
+  var sel = document.getElementById('lang-select');
+  if (sel) sel.value = lang;
 
   // Actualizar lang del html para accesibilidad
   document.documentElement.lang = lang;
@@ -2270,9 +2281,8 @@ function applyLang(lang) {
   var initial = saved || (supported.indexOf(nav) >= 0 ? nav : 'es');
   applyLang(initial);
 
-  document.getElementById('lang-selector').addEventListener('click', function(e) {
-    var btn = e.target.closest('.lang-btn');
-    if (btn && btn.dataset.lang) applyLang(btn.dataset.lang);
+  document.getElementById('lang-select').addEventListener('change', function() {
+    applyLang(this.value);
   });
 })();
 </script>
