@@ -1,0 +1,59 @@
+{
+  "_nota": "Radar de candidatos BGT. Fuente: BGG top games filtrado por rating >= 7.2 y modo solo (oficial o fan-made automa). Actualizar cuando haya nueva info de comunidad.",
+  "generated": "2026-07-24",
+  "min_rating": 7.2,
+  "criterio_prioridad": {
+    "ALTA": "min_players >= 2 pero existe automa fan-made activo — BGT cubriría una necesidad real",
+    "MEDIA": "min_players = 1, solitario oficial — BGT aportaría comodidad / UX",
+    "BAJA": "tiene modo solo pero poco demandado o muy sencillo"
+  },
+  "ya_en_bgt": [
+    "Spooktacular", "Criaturas Maravillosas", "Tiletum",
+    "Piratas de Maracaibo", "Castle Combo", "Coimbra", "Cascadia", "Viernes"
+  ],
+  "candidates": [
+
+    { "priority": "ALTA", "name": "Ark Nova",               "bgg_id": 342942, "rating": 8.6, "min_p": 1, "max_p": 4, "notes": "Automa oficial muy bien valorado. Enorme demanda en solitario. Top 5 BGG.", "bgg_url": "https://boardgamegeek.com/boardgame/342942" },
+    { "priority": "ALTA", "name": "Spirit Island",           "bgg_id": 162886, "rating": 8.4, "min_p": 1, "max_p": 4, "notes": "Diseñado para solitario cooperativo. Top 3 BGG. Alta complejidad — bot de reglas sería muy útil.", "bgg_url": "https://boardgamegeek.com/boardgame/162886" },
+    { "priority": "ALTA", "name": "Terraforming Mars",       "bgg_id": 167791, "rating": 8.4, "min_p": 1, "max_p": 5, "notes": "Automa Ares Expedition + automas fan-made. Top 10 BGG. Muy pedido.", "bgg_url": "https://boardgamegeek.com/boardgame/167791" },
+    { "priority": "ALTA", "name": "Wingspan",                "bgg_id": 266192, "rating": 8.1, "min_p": 1, "max_p": 5, "notes": "Automa oficial (Automata Row). Millones de copias vendidas. Alta visibilidad.", "bgg_url": "https://boardgamegeek.com/boardgame/266192" },
+    { "priority": "ALTA", "name": "Viticulture Essential",   "bgg_id": 183394, "rating": 8.1, "min_p": 1, "max_p": 6, "notes": "Automa Tuscany. Muy jugado en solitario. Comunidad activa.", "bgg_url": "https://boardgamegeek.com/boardgame/183394" },
+    { "priority": "ALTA", "name": "Scythe",                  "bgg_id": 169786, "rating": 8.2, "min_p": 1, "max_p": 5, "notes": "Automa Automaja fan-made. Muy popular. Fácil de trackear con app.", "bgg_url": "https://boardgamegeek.com/boardgame/169786" },
+    { "priority": "ALTA", "name": "Everdell",                "bgg_id": 199792, "rating": 8.0, "min_p": 1, "max_p": 4, "notes": "Automa Rugwort. Fan-made muy activo. Jugadores piden app.", "bgg_url": "https://boardgamegeek.com/boardgame/199792" },
+    { "priority": "ALTA", "name": "Agricola",                "bgg_id": 31260,  "rating": 7.9, "min_p": 1, "max_p": 5, "notes": "Modo solitario oficial. Clásico top BGG. Muchos jugadores solos.", "bgg_url": "https://boardgamegeek.com/boardgame/31260" },
+    { "priority": "ALTA", "name": "Pandemic Legacy S1",      "bgg_id": 161936, "rating": 8.6, "min_p": 1, "max_p": 4, "notes": "Cooperativo puro — se juega solo fácilmente. Top 5 BGG histórico.", "bgg_url": "https://boardgamegeek.com/boardgame/161936" },
+    { "priority": "ALTA", "name": "Gloomhaven Jaws of the Lion", "bgg_id": 291457, "rating": 8.2, "min_p": 1, "max_p": 4, "notes": "Cooperativo, diseñado para 1-2. Muy jugado en solitario. Enorme comunidad.", "bgg_url": "https://boardgamegeek.com/boardgame/291457" },
+    { "priority": "ALTA", "name": "Robinson Crusoe",         "bgg_id": 121921, "rating": 7.8, "min_p": 1, "max_p": 4, "notes": "Cooperativo/solitario. Muy complejo — app de referencia sería muy útil.", "bgg_url": "https://boardgamegeek.com/boardgame/121921" },
+    { "priority": "ALTA", "name": "Mage Knight",             "bgg_id": 96848,  "rating": 8.1, "min_p": 1, "max_p": 4, "notes": "Solitario como modo principal. Alto peso — app ayudaría mucho con reglas.", "bgg_url": "https://boardgamegeek.com/boardgame/96848" },
+    { "priority": "ALTA", "name": "Sleeping Gods",           "bgg_id": 322289, "rating": 8.2, "min_p": 1, "max_p": 4, "notes": "Narrativo cooperativo. Muy jugado en solitario. Comunidad activa.", "bgg_url": "https://boardgamegeek.com/boardgame/322289" },
+    { "priority": "ALTA", "name": "Too Many Bones",          "bgg_id": 192135, "rating": 8.4, "min_p": 1, "max_p": 4, "notes": "Diseñado para 1-2. Muchos dados — calculadora/tracker muy útil.", "bgg_url": "https://boardgamegeek.com/boardgame/192135" },
+    { "priority": "ALTA", "name": "Tapestry",                "bgg_id": 286096, "rating": 7.5, "min_p": 1, "max_p": 5, "notes": "Automa oficial. Gran base de fans. Tracker de civilizaciones útil.", "bgg_url": "https://boardgamegeek.com/boardgame/286096" },
+    { "priority": "ALTA", "name": "Hadrian's Wall",          "bgg_id": 304783, "rating": 8.0, "min_p": 1, "max_p": 6, "notes": "Puro solitario en multijugador (roll & write). App llevaría el scoring.", "bgg_url": "https://boardgamegeek.com/boardgame/304783" },
+    { "priority": "ALTA", "name": "Eldritch Horror",         "bgg_id": 146021, "rating": 7.9, "min_p": 1, "max_p": 8, "notes": "Cooperativo — se juega muy bien solo. Muchas cartas que trackear.", "bgg_url": "https://boardgamegeek.com/boardgame/146021" },
+    { "priority": "ALTA", "name": "Under Falling Skies",     "bgg_id": 306986, "rating": 7.5, "min_p": 1, "max_p": 1, "notes": "Puro solitario. Roll & write. App de referencia de reglas sería muy cómoda.", "bgg_url": "https://boardgamegeek.com/boardgame/306986" },
+    { "priority": "ALTA", "name": "Cartographers",           "bgg_id": 263918, "rating": 7.7, "min_p": 1, "max_p": 100, "notes": "Roll & write. Calculadora de score muy pedida por la comunidad.", "bgg_url": "https://boardgamegeek.com/boardgame/263918" },
+    { "priority": "ALTA", "name": "Dune Imperium",           "bgg_id": 316554, "rating": 8.3, "min_p": 1, "max_p": 4, "notes": "Automa oficial Rival. Top 20 BGG. Muy activo en solitario.", "bgg_url": "https://boardgamegeek.com/boardgame/316554" },
+    { "priority": "ALTA", "name": "Architects of the West Kingdom", "bgg_id": 236457, "rating": 7.8, "min_p": 1, "max_p": 5, "notes": "Automa fan-made activo. Saga muy popular. App encajaría bien.", "bgg_url": "https://boardgamegeek.com/boardgame/236457" },
+    { "priority": "ALTA", "name": "Paleo",                   "bgg_id": 300531, "rating": 7.9, "min_p": 1, "max_p": 4, "notes": "Cooperativo — jugado en solitario controlando 2 personajes. Muy de moda.", "bgg_url": "https://boardgamegeek.com/boardgame/300531" },
+    { "priority": "ALTA", "name": "Lost Ruins of Arnak",     "bgg_id": 312484, "rating": 8.1, "min_p": 1, "max_p": 4, "notes": "Automa oficial Akt. Top 30 BGG. Muy jugado en solitario.", "bgg_url": "https://boardgamegeek.com/boardgame/312484" },
+    { "priority": "ALTA", "name": "Wandering Towers",        "bgg_id": 354575, "rating": 7.3, "min_p": 1, "max_p": 6, "notes": "Reciente. Modo solitario con Automa. Fácil de implementar.", "bgg_url": "https://boardgamegeek.com/boardgame/354575" },
+    { "priority": "ALTA", "name": "Pathfinder Adventure Card Game", "bgg_id": 133038, "rating": 7.4, "min_p": 1, "max_p": 6, "notes": "Diseñado para solitario. Cartas complejas — app de referencia muy útil.", "bgg_url": "https://boardgamegeek.com/boardgame/133038" },
+
+    { "priority": "MEDIA", "name": "Friday (Freitag)",       "bgg_id": 43094,  "rating": 7.2, "min_p": 1, "max_p": 1, "notes": "Puro solitario. Clásico referencia. Ya tenemos Viernes — versión original.", "bgg_url": "https://boardgamegeek.com/boardgame/43094" },
+    { "priority": "MEDIA", "name": "Onirim",                  "bgg_id": 59836,  "rating": 7.3, "min_p": 1, "max_p": 2, "notes": "Puro solitario de cartas. Fácil de implementar. Comunidad pequeña.", "bgg_url": "https://boardgamegeek.com/boardgame/59836" },
+    { "priority": "MEDIA", "name": "Hostage Negotiator",      "bgg_id": 154845, "rating": 7.3, "min_p": 1, "max_p": 1, "notes": "Puro solitario. Cartas de terror. Nicho pero activo.", "bgg_url": "https://boardgamegeek.com/boardgame/154845" },
+    { "priority": "MEDIA", "name": "Nemo's War (2nd Ed)",     "bgg_id": 187617, "rating": 7.7, "min_p": 1, "max_p": 4, "notes": "Diseñado para solitario. Narrativo. App de tracking de estado útil.", "bgg_url": "https://boardgamegeek.com/boardgame/187617" },
+    { "priority": "MEDIA", "name": "This War of Mine",        "bgg_id": 201921, "rating": 7.7, "min_p": 1, "max_p": 6, "notes": "Cooperativo/solo. Muy narrativo. App de estado de personajes encajaría.", "bgg_url": "https://boardgamegeek.com/boardgame/201921" },
+    { "priority": "MEDIA", "name": "One Deck Dungeon",        "bgg_id": 179275, "rating": 7.3, "min_p": 1, "max_p": 2, "notes": "Puro solitario de dungeon crawl. Cartas de habilidades — tracker útil.", "bgg_url": "https://boardgamegeek.com/boardgame/179275" },
+    { "priority": "MEDIA", "name": "Space Hulk Death Angel", "bgg_id": 59655,  "rating": 7.2, "min_p": 1, "max_p": 6, "notes": "Cooperativo/solitario. Warhammer. Nicho activo.", "bgg_url": "https://boardgamegeek.com/boardgame/59655" },
+    { "priority": "MEDIA", "name": "Aeon's End",              "bgg_id": 191189, "rating": 7.8, "min_p": 1, "max_p": 4, "notes": "Cooperativo diseñado para 1-2. Muchas cartas — app referencia de reglas útil.", "bgg_url": "https://boardgamegeek.com/boardgame/191189" },
+    { "priority": "MEDIA", "name": "Dungeon Petz",            "bgg_id": 97207,  "rating": 7.6, "min_p": 2, "max_p": 4, "notes": "Automa fan-made. Vladimír Chvátil. Nicho fiel.", "bgg_url": "https://boardgamegeek.com/boardgame/97207" },
+    { "priority": "MEDIA", "name": "The 7th Continent",       "bgg_id": 190671, "rating": 7.9, "min_p": 1, "max_p": 4, "notes": "Solitario/cooperativo narrativo. App de estado de cartas muy pedida.", "bgg_url": "https://boardgamegeek.com/boardgame/190671" },
+    { "priority": "MEDIA", "name": "Stellar",                 "bgg_id": 290448, "rating": 7.3, "min_p": 1, "max_p": 4, "notes": "Fácil y rápido. Solitario. Buen candidato para primera implementación ágil.", "bgg_url": "https://boardgamegeek.com/boardgame/290448" },
+    { "priority": "MEDIA", "name": "Aqua Garden",             "bgg_id": 375067, "rating": 7.6, "min_p": 1, "max_p": 4, "notes": "Reciente 2024. Modo solitario. Puntuación compleja — calculadora útil.", "bgg_url": "https://boardgamegeek.com/boardgame/375067" },
+    { "priority": "MEDIA", "name": "Kronologic Paris 1920",   "bgg_id": 335523, "rating": 7.2, "min_p": 1, "max_p": 6, "notes": "Deducción. Modo solitario. Nicho deducción en crecimiento.", "bgg_url": "https://boardgamegeek.com/boardgame/335523" },
+
+    { "priority": "BAJA", "name": "Pandemic",                "bgg_id": 30549,  "rating": 7.7, "min_p": 2, "max_p": 4, "notes": "Cooperativo — se puede jugar solo controlando 2. Muy conocido pero app tiene poco valor añadido.", "bgg_url": "https://boardgamegeek.com/boardgame/30549" },
+    { "priority": "BAJA", "name": "Betrayal at House on Hill","bgg_id": 10547,  "rating": 7.2, "min_p": 3, "max_p": 6, "notes": "No tiene modo solo real. Interés bajo para BGT.", "bgg_url": "https://boardgamegeek.com/boardgame/10547" }
+  ]
+}
