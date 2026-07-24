@@ -256,28 +256,6 @@ fun HomeScreen(
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = MidnightBlue)
             )
         },
-        floatingActionButton = {
-            val context = LocalContext.current
-            FloatingActionButton(
-                onClick = {
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://ko-fi.com/carchofo"))
-                    context.startActivity(intent)
-                },
-                containerColor = HalloweenOrange,
-                contentColor = GhostWhite,
-                shape = RoundedCornerShape(16.dp),
-                modifier = Modifier.size(60.dp)
-            ) {
-                Image(
-                    painter = painterResource(R.drawable.bebe),
-                    contentDescription = "Apoya el proyecto",
-                    modifier = Modifier
-                        .size(48.dp)
-                        .clip(RoundedCornerShape(12.dp)),
-                    contentScale = ContentScale.Crop
-                )
-            }
-        },
         containerColor = MidnightBlue
     ) { padding ->
         if (showBugDialog) {
