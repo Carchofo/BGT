@@ -1449,7 +1449,7 @@ var TELEGRAM_GROUP_URL = 'https://t.me/+U_cZ8mO0t8ZMmQ0';
 var KOFI_USERNAME = 'carchofo';
 (function () {
   var link = document.getElementById('kofi-link');
-  if (KOFI_USERNAME) {
+  if (KOFI_USERNAME && link) {
     link.href = 'https://ko-fi.com/' + KOFI_USERNAME;
     link.textContent = '❤️ Invítame en Ko-fi';
     link.removeAttribute('aria-disabled');
