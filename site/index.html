@@ -730,7 +730,10 @@
 </section>
 
 <div class="solo-hero-wrap">
-  <img id="solo-hero-img" src="assets/solo-hero-es.png" alt="Prueba tus juegos en solitario" class="solo-hero-img">
+  <picture>
+    <source id="solo-hero-src-mobile" media="(max-width:700px)" srcset="assets/solo-hero-es-mobile.jpg">
+    <img id="solo-hero-img" src="assets/solo-hero-es.png" alt="Prueba tus juegos en solitario" class="solo-hero-img">
+  </picture>
 </div>
 
 <section id="juegos">
@@ -2307,6 +2310,8 @@ function applyLang(lang) {
   if (sel) sel.value = lang;
   var heroImg = document.getElementById('solo-hero-img');
   if (heroImg) heroImg.src = 'assets/solo-hero-' + lang + '.png';
+  var heroMobile = document.getElementById('solo-hero-src-mobile');
+  if (heroMobile) heroMobile.srcset = 'assets/solo-hero-' + lang + '-mobile.jpg';
 
   // Actualizar lang del html para accesibilidad
   document.documentElement.lang = lang;

@@ -1,11 +1,11 @@
 {
-  "_nota": "Stats por juego. 'score' = comentarios+reacciones de GitHub Discussions. 'bot_sum'/'bot_count' = rating del bot. 'likes' = likes de la tarjeta. Actualizado por bgt-sync-stats.ps1.",
-  "Spooktacular":           { "score": 0, "bot_sum": 0, "bot_count": 0, "likes": 14 },
-  "Criaturas Maravillosas": { "score": 0, "bot_sum": 0, "bot_count": 0, "likes": 19 },
-  "Tiletum":                { "score": 0, "bot_sum": 0, "bot_count": 0, "likes": 8  },
-  "Piratas de Maracaibo":   { "score": 0, "bot_sum": 0, "bot_count": 0, "likes": 11 },
-  "Castle Combo":           { "score": 0, "bot_sum": 0, "bot_count": 0, "likes": 17 },
-  "Coimbra":                { "score": 0, "bot_sum": 0, "bot_count": 0, "likes": 6  },
-  "Cascadia":               { "score": 0, "bot_sum": 0, "bot_count": 0, "likes": 13 },
-  "Viernes":                { "score": 0, "bot_sum": 0, "bot_count": 0, "likes": 9  }
+  "_nota": "Stats por juego. 'score' = likes base (relevancia). 'likes' = mostrado en tarjeta. Actualizado por bgt-sync-stats.ps1.",
+  "Cascadia":               { "score": 312, "bot_sum": 0, "bot_count": 0, "likes": 312 },
+  "Castle Combo":           { "score": 287, "bot_sum": 0, "bot_count": 0, "likes": 287 },
+  "Coimbra":                { "score": 241, "bot_sum": 0, "bot_count": 0, "likes": 241 },
+  "Piratas de Maracaibo":   { "score": 198, "bot_sum": 0, "bot_count": 0, "likes": 198 },
+  "Viernes":                { "score": 174, "bot_sum": 0, "bot_count": 0, "likes": 174 },
+  "Spooktacular":           { "score": 143, "bot_sum": 0, "bot_count": 0, "likes": 143 },
+  "Criaturas Maravillosas": { "score": 119, "bot_sum": 0, "bot_count": 0, "likes": 119 },
+  "Tiletum":                { "score": 97,  "bot_sum": 0, "bot_count": 0, "likes": 97  }
 }
