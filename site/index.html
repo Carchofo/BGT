@@ -49,41 +49,26 @@
 
   /* HERO */
   header.hero{
-    position:relative;
     text-align:center;
-    padding:5rem 1rem 4rem;
-    border-bottom:none;
-    background:url('assets/bebe-diagrama.jpg') center/cover no-repeat;
-    overflow:hidden;
+    padding:4.5rem 1rem 3.5rem;
+    border-bottom:1px solid var(--cream-line);
   }
-  @media(max-width:700px){
-    header.hero{
-      background-image:url('assets/bebe-diagrama-mobile.jpg');
-      background-size:55% auto;
-      background-repeat:no-repeat;
-      background-position:center center;
-    }
-  }
-  header.hero::before{
-    content:'';
-    position:absolute;inset:0;
-    background:linear-gradient(160deg,rgba(21,51,86,.92) 0%,rgba(21,51,86,.80) 100%);
-  }
-  header.hero > *{position:relative}
   .hero img.logo{
-    width:130px;height:auto;
-    filter:drop-shadow(0 8px 28px rgba(0,0,0,.45));
+    width:100vw;height:auto;position:relative;left:50%;transform:translateX(-50%);
+    -webkit-mask-image:radial-gradient(ellipse 70% 50% at 50% 50%,#000 30%,transparent 100%);
+    mask-image:radial-gradient(ellipse 70% 50% at 50% 50%,#000 30%,transparent 100%);
+    filter:drop-shadow(0 8px 24px rgba(21,51,86,.2));
   }
   .hero h1{
     font-size:clamp(2.2rem,6vw,3.4rem);
     margin:.9rem 0 .2rem;
-    color:#fff;
+    color:var(--navy);
     font-weight:800;
     letter-spacing:-.01em;
-    text-shadow:0 2px 8px rgba(0,0,0,.3);
+    text-shadow:0 2px 0 rgba(255,255,255,.6);
   }
-  .hero .sub{font-size:1.05rem;color:var(--orange);letter-spacing:.15em;text-transform:uppercase;font-weight:700;margin-bottom:.8rem}
-  .hero .tagline{max-width:620px;margin:0 auto 2rem;color:rgba(255,255,255,.82);font-size:1.15rem}
+  .hero .sub{font-size:1.05rem;color:var(--orange-dark);letter-spacing:.15em;text-transform:uppercase;font-weight:700;margin-bottom:.8rem}
+  .hero .tagline{max-width:620px;margin:0 auto 2rem;color:var(--muted);font-size:1.15rem}
   .btn-download{
     display:inline-block;
     background:linear-gradient(135deg,var(--orange),var(--orange-dark));
@@ -103,16 +88,16 @@
   .btn-telegram.active{opacity:1;cursor:pointer}
   .btn-telegram.active:hover{transform:translateY(-2px)}
   .btn-telegram small{display:block;font-size:.78rem;font-weight:400;opacity:.8;margin-top:.15rem;color:var(--blue)}
-  .release-meta{margin-top:1rem;color:rgba(255,255,255,.65);font-size:.95rem}
-  .release-meta span{color:var(--orange);font-weight:700}
+  .release-meta{margin-top:1rem;color:var(--muted);font-size:.95rem}
+  .release-meta span{color:var(--orange-dark);font-weight:700}
   .badge-free{
     display:inline-block;margin-top:1.1rem;
-    border:1px solid rgba(255,255,255,.25);border-radius:999px;
-    padding:.3rem 1rem;font-size:.85rem;color:rgba(255,255,255,.85);background:rgba(255,255,255,.1);
+    border:1px solid var(--cream-line);border-radius:999px;
+    padding:.3rem 1rem;font-size:.85rem;color:var(--navy);background:#fff;
   }
   .feature-strip{
     display:flex;flex-wrap:wrap;justify-content:center;gap:.6rem 1.4rem;
-    margin-top:1.6rem;font-size:.85rem;color:rgba(255,255,255,.6);
+    margin-top:1.6rem;font-size:.85rem;color:var(--muted);
   }
   .feature-strip span{white-space:nowrap}
 
@@ -122,7 +107,7 @@
 
   /* PLATFORM BAR */
   .platform-bar{
-    width:100%;background:var(--orange-dark);color:#fff;
+    width:100%;background:var(--navy);color:#fff;
     text-align:center;font-size:.85rem;font-weight:600;
     padding:.55rem 1rem;letter-spacing:.01em;
   }
@@ -797,7 +782,7 @@
 </nav>
 
 <header class="hero">
-  <img class="logo" src="assets/logo-icon.png" alt="Logo de BGT">
+  <img class="logo" src="assets/cabecera.png" alt="Logo de BGT">
   <h1>BGT</h1>
   <div class="sub">Board Game Tools</div>
   <p class="tagline" data-i18n="hero.tagline">¿Sin rival? No hay problema. BGT añade un bot automático a tus juegos favoritos para que puedas jugar en solitario sin gestionar al rival tú mismo.</p>
