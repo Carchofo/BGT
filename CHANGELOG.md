@@ -1,52 +1,53 @@
-# Changelog — BGT Board Game Tools
+﻿# Changelog â€” BGT Board Game Tools
 
-Format: `[vX.Y] YYYY-MM-DD — descripción breve`
-Cada versión: **Added** (nuevo), **Fixed** (bug), **Changed** (mejora).
+Format: `[vX.Y] YYYY-MM-DD â€” descripciÃ³n breve`
+Cada versiÃ³n: **Added** (nuevo), **Fixed** (bug), **Changed** (mejora).
 
 ---
 
-## [v1.1] 2026-06-22 — Pipeline bugs, About screen, R8
+## [v1.1] 2026-06-22 â€” Pipeline bugs, About screen, R8
 
 ### Added
-- **Bug reporter** in-app: icono 🐛 en HomeScreen → dialog → POST a n8n en PC → GitHub Issue automático con sugerencia de fix de Qwen
-- **About screen**: Ko-fi donation card, créditos autores fan-made, links GitHub/BGG
-- **README.md**: instrucciones install, build, release, créditos
-- **n8n bug pipeline** (`bgt-bug-pipeline.json`): bug report → GitHub Issue → Qwen fix → comentario automático
+- **Bug reporter** in-app: icono ðŸ› en HomeScreen â†’ dialog â†’ POST a n8n en PC â†’ GitHub Issue automÃ¡tico con sugerencia de fix de Qwen
+- **About screen**: Ko-fi donation card, crÃ©ditos autores fan-made, links GitHub/BGG
+- **README.md**: instrucciones install, build, release, crÃ©ditos
+- **n8n bug pipeline** (`bgt-bug-pipeline.json`): bug report â†’ GitHub Issue â†’ Qwen fix â†’ comentario automÃ¡tico
 
 ### Fixed
-- **versionCode hardcoded a 1**: actualizaciones silenciosas fallaban al instalar (Android rechaza APK con mismo versionCode). Ahora viene de `github.run_number` — monotónico, garantiza instalación correcta
-- **HomeViewModel favoritos desconectado**: favoritos se perdían al reiniciar la app. Wired a DataStore correctamente
-- **@OptIn faltante en BugReportDialog**: fix de compilación potencial
+- **versionCode hardcoded a 1**: actualizaciones silenciosas fallaban al instalar (Android rechaza APK con mismo versionCode). Ahora viene de `github.run_number` â€” monotÃ³nico, garantiza instalaciÃ³n correcta
+- **HomeViewModel favoritos desconectado**: favoritos se perdÃ­an al reiniciar la app. Wired a DataStore correctamente
+- **@OptIn faltante en BugReportDialog**: fix de compilaciÃ³n potencial
 
 ### Changed
-- R8 + shrinkResources habilitados en release — APK más pequeño, sideload más rápido
+- R8 + shrinkResources habilitados en release â€” APK mÃ¡s pequeÃ±o, sideload mÃ¡s rÃ¡pido
 - proguard-rules.pro: reglas para Kotlin/coroutines/DataStore/Compose/ViewModel
 
 ---
 
-## [v1.0] 2026-06-17 — Lanzamiento inicial
+## [v1.0] 2026-06-17 â€” Lanzamiento inicial
 
 ### Added
-- 7 juegos: Maracaibo (Jordán), Tiletum (Titus), Criaturas Maravillosas (Tingent), Castle Combo (Anton), Coimbra (Bot interferencia), Cascadia (calculadora), Spooktacular (Killtron)
-- HomeScreen con búsqueda, favoritos, filtros por feature (Solo/Scoring/Rules), vista lista/grid
+- 7 juegos: Maracaibo (JordÃ¡n), Tiletum (Titus), Criaturas Maravillosas (Tingent), Castle Combo (Anton), Coimbra (Bot interferencia), Cascadia (calculadora), Spooktacular (Killtron)
+- HomeScreen con bÃºsqueda, favoritos, filtros por feature (Solo/Scoring/Rules), vista lista/grid
 - Auto-update: comprueba GitHub Releases al arrancar, descarga e instala APK firmado
 - DisclaimerScreen legal (se muestra una vez)
 - Idiomas: es, en, fr, de, it
-- GitHub Actions CI: tag `vX.Y` → build → APK firmado → GitHub Release
+- GitHub Actions CI: tag `vX.Y` â†’ build â†’ APK firmado â†’ GitHub Release
 
 ---
 
-<!-- TEMPLATE para próximas versiones:
+<!-- TEMPLATE para prÃ³ximas versiones:
 
-## [vX.Y] YYYY-MM-DD — título
+## [vX.Y] YYYY-MM-DD â€” tÃ­tulo
 
 ### Added
 - 
 
 ### Fixed
-- Bug #NNN: descripción. Reportado por: [user/internal]. Archivo: `ScreenX.kt:line`
+- Bug #NNN: descripciÃ³n. Reportado por: [user/internal]. Archivo: `ScreenX.kt:line`
 
 ### Changed
 - 
 
 -->
+
