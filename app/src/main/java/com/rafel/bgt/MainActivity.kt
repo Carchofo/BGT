@@ -13,6 +13,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -47,6 +48,20 @@ import com.rafel.bgt.ui.util.SoundSettings
 
 private const val PREFS_NAME = "tbg_prefs"
 private const val KEY_DISCLAIMER = "disclaimer_accepted"
+private const val KEY_WHATS_NEW_SEEN = "whats_new_seen_v"
+
+private val WHATS_NEW = listOf(
+    "🍼 Botón de donación en pantalla principal",
+    "🎨 Nuevo icono de la app con el logo BGT",
+    "🤖 8 juegos: Cascadia, Castle Combo, Coimbra, Maracaibo, Viernes, Spooktacular, Criaturas Maravillosas, Tiletum",
+    "📊 Calculadora de puntuación para Cascadia",
+    "📖 Reglas en pantalla para todos los juegos",
+    "🔇 Modo silencio",
+    "⭐ Favoritos y filtros por tipo",
+    "🐛 Reportar bugs desde la app",
+    "📷 Enviar aportes a la comunidad",
+    "🔄 Auto-actualización al haber nueva versión"
+)
 
 class MainActivity : ComponentActivity() {
 
@@ -82,16 +97,32 @@ class MainActivity : ComponentActivity() {
                     mutableStateOf(!prefs.getBoolean(KEY_DISCLAIMER, false))
                 }
                 var updateInfo by remember { mutableStateOf<UpdateInfo?>(null) }
+                var showWhatsNew by remember { mutableStateOf(false) }
+                var currentVersion by remember { mutableStateOf("") }
 
                 LaunchedEffect(Unit) {
                     lifecycleScope.launch {
-                        val currentVersion = packageManager
+                        val version = packageManager
                             .getPackageInfo(packageName, 0).versionName ?: "1.0"
-                        updateInfo = UpdateChecker.check(currentVersion)
+                        currentVersion = version
+                        if (!prefs.getBoolean(KEY_WHATS_NEW_SEEN + version, false)) {
+                            showWhatsNew = true
+                        }
+                        updateInfo = UpdateChecker.check(version)
                     }
                 }
 
                 BGTApp()
+
+                if (showWhatsNew && !showDisclaimer) {
+                    WhatsNewDialog(
+                        version = currentVersion,
+                        onDismiss = {
+                            prefs.edit().putBoolean(KEY_WHATS_NEW_SEEN + currentVersion, true).apply()
+                            showWhatsNew = false
+                        }
+                    )
+                }
 
                 if (showDisclaimer) {
                     DisclaimerDialog(
@@ -227,6 +258,43 @@ private fun UpdateDialog(
         dismissButton = {
             TextButton(onClick = onDismiss) {
                 Text("Ahora no", color = GhostWhite.copy(alpha = 0.55f))
+            }
+        },
+        containerColor = CardBackground
+    )
+}
+
+@Composable
+private fun WhatsNewDialog(version: String, onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Text(
+                "🎲 Novedades v$version",
+                fontWeight = FontWeight.Bold,
+                color = GhostWhite
+            )
+        },
+        text = {
+            LazyColumn(modifier = Modifier.fillMaxWidth()) {
+                items(WHATS_NEW) { item ->
+                    Text(
+                        item,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = GhostWhite.copy(alpha = 0.85f),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 3.dp)
+                    )
+                }
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = onDismiss,
+                colors = ButtonDefaults.buttonColors(containerColor = HalloweenOrange)
+            ) {
+                Text("¡Genial!", fontWeight = FontWeight.Bold)
             }
         },
         containerColor = CardBackground
