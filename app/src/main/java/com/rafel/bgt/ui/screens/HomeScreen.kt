@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -254,6 +255,28 @@ fun HomeScreen(
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = MidnightBlue)
             )
+        },
+        floatingActionButton = {
+            val context = LocalContext.current
+            FloatingActionButton(
+                onClick = {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://ko-fi.com/carchofo"))
+                    context.startActivity(intent)
+                },
+                containerColor = HalloweenOrange,
+                contentColor = GhostWhite,
+                shape = RoundedCornerShape(16.dp),
+                modifier = Modifier.size(60.dp)
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.bebe),
+                    contentDescription = "Apoya el proyecto",
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clip(RoundedCornerShape(12.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            }
         },
         containerColor = MidnightBlue
     ) { padding ->
