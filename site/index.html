@@ -876,6 +876,24 @@
   </div>
 </section>
 
+<!-- ── SECCIÓN DONACIÓN ── -->
+<section id="apoya-bgt" style="padding:3rem 1rem;background:var(--cream);">
+  <div style="max-width:900px;margin:0 auto;display:flex;align-items:center;gap:3rem;flex-wrap:wrap;">
+    <div style="flex:1;min-width:260px;">
+      <h2 style="color:var(--navy);font-size:1.6rem;font-weight:800;margin-bottom:.8rem;">☕ Apoya el proyecto</h2>
+      <p style="color:var(--muted);font-size:1rem;line-height:1.65;margin-bottom:1.4rem;">BGT es gratis, sin anuncios y lo desarrollo en los ratos libres — que con un bebé en casa no son muchos.<br><br>Si la app te ha ahorrado una partida frustrada, invítame a un café. Cada aportación va directa a mantener los bots y añadir más juegos.</p>
+      <a href="https://ko-fi.com/carchofo" target="_blank" rel="noopener"
+        style="display:inline-flex;align-items:center;gap:.5rem;background:#FF5E5B;color:#fff;font-weight:700;font-size:1rem;padding:.75rem 1.5rem;border-radius:10px;text-decoration:none;box-shadow:0 4px 12px rgba(255,94,91,.35);transition:transform .15s;">
+        ❤️ Invítame a un café en Ko-fi
+      </a>
+    </div>
+    <div style="flex:0 0 auto;text-align:center;">
+      <img src="assets/bebe.png" alt="El motivo de todo esto" style="width:100%;max-width:320px;border-radius:16px;display:block;background:var(--cream-card);padding:1rem;box-sizing:border-box;">
+      <p style="font-size:.8rem;color:var(--muted);margin-top:.5rem;">El motivo de todo esto 🍼</p>
+    </div>
+  </div>
+</section>
+
 <section class="community" id="comunidad">
   <div class="container">
     <h2 class="section-title" data-i18n="comm.title">🧡 Hecho por y para la comunidad</h2>
@@ -1270,7 +1288,7 @@ var TELEGRAM_GROUP_URL = 'https://t.me/+U_cZ8mO0t8ZMmQ0';
 
 // ── Donaciones (Ko-fi) ──
 // En cuanto exista la cuenta (plan 90 días, semana 1-2), pon aquí el usuario y se activa sola.
-var KOFI_USERNAME = null; // ej: 'carchofo'
+var KOFI_USERNAME = 'carchofo';
 (function () {
   var link = document.getElementById('kofi-link');
   if (KOFI_USERNAME) {
