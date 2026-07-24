@@ -99,6 +99,12 @@
   }
   .feature-strip span{white-space:nowrap}
 
+  /* SOLO HERO BANNER */
+  #solo-hero-banner{width:100%;padding:0;margin:0;background:#f5f0e8;}
+  .solo-hero-wrap{width:100%;max-height:340px;overflow:hidden;line-height:0;}
+  .solo-hero-img{width:100%;height:auto;display:block;object-fit:cover;object-position:center;}
+  @media(max-width:700px){.solo-hero-wrap{max-height:200px;}}
+
   /* PLATFORM BAR */
   .platform-bar{
     width:100%;background:var(--navy);color:#fff;
@@ -704,6 +710,12 @@
         <p data-i18n="how.s3_body">El automa gestiona su turno solo. Tú juegas el tuyo. Sin necesidad de un segundo jugador.</p>
       </div>
     </div>
+  </div>
+</section>
+
+<section id="solo-hero-banner">
+  <div class="solo-hero-wrap">
+    <img id="solo-hero-img" src="assets/solo-hero-es.png" alt="Prueba tus juegos en solitario" class="solo-hero-img">
   </div>
 </section>
 
@@ -2267,6 +2279,8 @@ function applyLang(lang) {
   // Actualizar select
   var sel = document.getElementById('lang-select');
   if (sel) sel.value = lang;
+  var heroImg = document.getElementById('solo-hero-img');
+  if (heroImg) heroImg.src = 'assets/solo-hero-' + lang + '.png';
 
   // Actualizar lang del html para accesibilidad
   document.documentElement.lang = lang;
