@@ -1213,22 +1213,17 @@ var BGT_API = (function() {
 })();
 
 // ── Bot de Telegram ──
-// Bot activo hoy: @Xeft_bot (nombre genérico, pendiente de rebranding vía BotFather /setname).
-// Cambia este valor si en el futuro se renombra o se crea uno nuevo dedicado a BGT.
-var TELEGRAM_BOT_USERNAME = 'Xeft_bot';
+var TELEGRAM_GROUP_URL = 'https://t.me/+U_cZ8mO0t8ZMmQ0';
 (function () {
   var links = [document.getElementById('telegram-link'), document.getElementById('telegram-link-hero'), document.getElementById('telegram-link-menu')];
-  if (TELEGRAM_BOT_USERNAME) {
-    links.forEach(function (link) {
-      if (!link) return;
-      link.href = 'https://t.me/' + TELEGRAM_BOT_USERNAME;
-      link.removeAttribute('aria-disabled');
-      link.classList.add('active');
-      link.target = '_blank';
-      link.rel = 'noopener';
-    });
-    document.getElementById('telegram-link').textContent = '✈️ Abrir @' + TELEGRAM_BOT_USERNAME;
-  }
+  links.forEach(function (link) {
+    if (!link) return;
+    link.href = TELEGRAM_GROUP_URL;
+    link.removeAttribute('aria-disabled');
+    link.classList.add('active');
+    link.target = '_blank';
+    link.rel = 'noopener';
+  });
 })();
 
 // ── Donaciones (Ko-fi) ──
@@ -1947,7 +1942,7 @@ var BGT_TRANS = {
     'comm.c2_title': 'Feedback y reporte de bugs', 'comm.c2_body': 'Sugerencias, erratas en reglas o fallos del bot: repórtalos con dos toques desde la propia app. Todo aporte cuenta.',
     'comm.c3_title': 'Agentes de IA locales', 'comm.c3_body': 'Los aportes se procesan con agentes de IA que corren en local: leen las fotos, clasifican el feedback y preparan las mejoras para la siguiente versión.',
     'comm.c4_title': 'Bot de Telegram', 'comm.c4_body': '<code>/juego_nuevo</code> para pedir un juego, <code>/modificar</code> para reportar un fallo, <code>/update</code> para la última versión.',
-    'comm.tg_btn': 'Próximamente en Telegram', 'comm.forum_btn': 'Abrir el foro',
+    'comm.tg_btn': '✈️ Unirse al grupo', 'comm.forum_btn': 'Abrir el foro',
     'comm.c5_title': 'Foro de discusión', 'comm.c5_body': 'Debate reglas, comparte automas alternativos y sube archivos directamente. Nuestros agentes leen el foro y lo incorporan al desarrollo.',
     'faq.title': 'Preguntas frecuentes',
     'faq.q1': '¿Necesito el juego físico?', 'faq.a1': 'Sí. BGT es una herramienta de apoyo, no una copia del juego. Necesitas el juego físico original — la app gestiona el bot rival y la puntuación.',
@@ -2014,7 +2009,7 @@ var BGT_TRANS = {
     'comm.c2_title': 'Feedback & bug reports', 'comm.c2_body': 'Suggestions, rule errata or bot bugs: report them in two taps from the app. Every contribution counts.',
     'comm.c3_title': 'Local AI agents', 'comm.c3_body': 'Contributions are processed by local AI agents: they read the photos, classify feedback and prepare improvements for the next version.',
     'comm.c4_title': 'Telegram bot', 'comm.c4_body': '<code>/new_game</code> to request a game, <code>/modify</code> to report a bug, <code>/update</code> for the latest version.',
-    'comm.tg_btn': 'Coming soon on Telegram', 'comm.forum_btn': 'Open the forum',
+    'comm.tg_btn': '✈️ Join the group', 'comm.forum_btn': 'Open the forum',
     'comm.c5_title': 'Discussion forum', 'comm.c5_body': 'Debate rules, share alternative automata and upload files directly. Our agents read the forum and incorporate it into development.',
     'faq.title': 'Frequently asked questions',
     'faq.q1': 'Do I need the physical game?', 'faq.a1': 'Yes. BGT is a companion tool, not a copy of the game. You need the original physical game — the app manages the bot rival and scoring.',
@@ -2081,7 +2076,7 @@ var BGT_TRANS = {
     'comm.c2_title': 'Retours et signalement de bugs', 'comm.c2_body': 'Suggestions, erreurs de règles ou bugs du bot : signalez-les en deux taps depuis l\'app. Chaque contribution compte.',
     'comm.c3_title': 'Agents IA locaux', 'comm.c3_body': 'Les contributions sont traitées par des agents IA locaux : ils lisent les photos, classifient les retours et préparent les améliorations.',
     'comm.c4_title': 'Bot Telegram', 'comm.c4_body': '<code>/nouveau_jeu</code> pour demander un jeu, <code>/modifier</code> pour signaler un bug, <code>/update</code> pour la dernière version.',
-    'comm.tg_btn': 'Bientôt sur Telegram', 'comm.forum_btn': 'Ouvrir le forum',
+    'comm.tg_btn': '✈️ Rejoindre le groupe', 'comm.forum_btn': 'Ouvrir le forum',
     'comm.c5_title': 'Forum de discussion', 'comm.c5_body': 'Débattez des règles, partagez des automates alternatifs et envoyez des fichiers directement. Nos agents lisent le forum et l\'intègrent au développement.',
     'faq.title': 'Questions fréquentes',
     'faq.q1': 'Ai-je besoin du jeu physique ?', 'faq.a1': 'Oui. BGT est un outil compagnon, pas une copie du jeu. Vous avez besoin du jeu physique original — l\'app gère le bot adversaire et le score.',
@@ -2148,7 +2143,7 @@ var BGT_TRANS = {
     'comm.c2_title': 'Feedback & Bug-Meldungen', 'comm.c2_body': 'Vorschläge, Regelirrtümer oder Bot-Fehler: melde sie mit zwei Taps aus der App. Jeder Beitrag zählt.',
     'comm.c3_title': 'Lokale KI-Agenten', 'comm.c3_body': 'Beiträge werden von lokalen KI-Agenten verarbeitet: sie lesen Fotos, klassifizieren Feedback und bereiten Verbesserungen vor.',
     'comm.c4_title': 'Telegram-Bot', 'comm.c4_body': '<code>/neues_spiel</code> für Anfragen, <code>/ändern</code> für Bug-Meldungen, <code>/update</code> für die neueste Version.',
-    'comm.tg_btn': 'Demnächst auf Telegram', 'comm.forum_btn': 'Forum öffnen',
+    'comm.tg_btn': '✈️ Gruppe beitreten', 'comm.forum_btn': 'Forum öffnen',
     'comm.c5_title': 'Diskussionsforum', 'comm.c5_body': 'Diskutiere Regeln, teile alternative Automaten und lade Dateien direkt hoch. Unsere Agenten lesen das Forum und integrieren es in die Entwicklung.',
     'faq.title': 'Häufige Fragen',
     'faq.q1': 'Brauche ich das physische Spiel?', 'faq.a1': 'Ja. BGT ist ein Begleittool, keine Kopie des Spiels. Du brauchst das originale physische Spiel — die App verwaltet den Bot-Gegner und die Punkte.',
@@ -2215,7 +2210,7 @@ var BGT_TRANS = {
     'comm.c2_title': 'Feedback e segnalazione bug', 'comm.c2_body': 'Suggerimenti, errori nelle regole o bug del bot: segnalali in due tap dall\'app. Ogni contributo conta.',
     'comm.c3_title': 'Agenti IA locali', 'comm.c3_body': 'I contributi vengono elaborati da agenti IA locali: leggono le foto, classificano il feedback e preparano i miglioramenti.',
     'comm.c4_title': 'Bot Telegram', 'comm.c4_body': '<code>/nuovo_gioco</code> per richiedere un gioco, <code>/modifica</code> per segnalare un bug, <code>/update</code> per l\'ultima versione.',
-    'comm.tg_btn': 'Prossimamente su Telegram', 'comm.forum_btn': 'Apri il forum',
+    'comm.tg_btn': '✈️ Unisciti al gruppo', 'comm.forum_btn': 'Apri il forum',
     'comm.c5_title': 'Forum di discussione', 'comm.c5_body': 'Discuti le regole, condividi automi alternativi e carica file direttamente. I nostri agenti leggono il forum e lo incorporano nello sviluppo.',
     'faq.title': 'Domande frequenti',
     'faq.q1': 'Ho bisogno del gioco fisico?', 'faq.a1': 'Sì. BGT è uno strumento di supporto, non una copia del gioco. Hai bisogno del gioco fisico originale — l\'app gestisce il bot avversario e il punteggio.',
