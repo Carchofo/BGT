@@ -1,12 +1,7 @@
 {
   "_nota": "Comentarios rápidos por juego. Poblado por bgt-sync-stats.ps1 a partir del webhook bgt-community-submit tipo 'comment'.",
-  "Spooktacular": [
-    {"id":"a1b2c3d4","author":"Marcos_BGT","text":"El bot de Killtron me sorprendió, tiene mucho más carácter del que esperaba. La progresión A→B→C se siente muy amenazante.","date":"2026-06-15T18:32:00Z"},
-    {"id":"e5f6g7h8","author":"Ana","text":"Primera partida y ya lo entendí todo. La app hace que el setup sea rapidísimo.","date":"2026-07-02T11:05:00Z"}
-  ],
-  "Criaturas Maravillosas": [
-    {"id":"i9j0k1l2","author":"Dani","text":"Tingent es muy agresivo al principio, tuve que cambiar mi estrategia completamente. Buena implementación.","date":"2026-06-20T20:14:00Z"}
-  ],
+  "Spooktacular": [],
+  "Criaturas Maravillosas": [],
   "Tiletum": [],
   "Piratas de Maracaibo": [],
   "Castle Combo": [],

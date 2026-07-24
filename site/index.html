@@ -2540,6 +2540,24 @@ function applyLang(lang) {
   });
 })();
 </script>
+<!-- Popup bienvenida -->
+<div id="welcome-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9000;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:16px;padding:2rem 2.2rem;max-width:420px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,.25);text-align:center;position:relative;">
+    <button onclick="document.getElementById('welcome-overlay').style.display='none'" style="position:absolute;top:.8rem;right:1rem;background:none;border:none;font-size:1.4rem;cursor:pointer;color:#888;">✕</button>
+    <div style="font-size:2rem;margin-bottom:.5rem;">🎲</div>
+    <h2 style="margin:0 0 .75rem;font-size:1.25rem;color:#153356;">¡Bienvenido a BGT!</h2>
+    <p style="margin:0;color:#444;line-height:1.6;">Estamos recopilando modos solitario — automas oficiales y fan-made — para que puedas jugar solo a tus juegos favoritos.</p>
+    <button onclick="document.getElementById('welcome-overlay').style.display='none';localStorage.setItem('bgt_welcome_seen','1')" style="margin-top:1.5rem;padding:.6rem 2rem;background:#F38222;color:#fff;border:none;border-radius:8px;font-size:1rem;font-weight:700;cursor:pointer;">¡Vamos!</button>
+  </div>
+</div>
+<script>
+(function(){
+  if (!localStorage.getItem('bgt_welcome_seen')) {
+    var el = document.getElementById('welcome-overlay');
+    el.style.display = 'flex';
+  }
+})();
+</script>
 </body>
 </html>
 
