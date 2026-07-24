@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sobre nosotros — BGT</title>
+<meta name="description" content="Quiénes somos: una pareja con un bebé recién nacido y una gran pasión por los juegos de mesa.">
+<link rel="icon" type="image/png" href="assets/logo-icon.png">
+<style>
+  :root{
+    --navy:#153356;--navy-light:#1B3A5C;
+    --orange:#F38222;--orange-dark:#D9691A;
+    --blue:#1B6BAA;--cream:#F9F6EC;
+    --cream-card:#FFFFFF;--cream-line:#E4DDC8;
+    --ink:#1E2A33;--muted:#6B7280;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+    background-color:var(--cream);
+    color:var(--ink);line-height:1.6;min-height:100vh;
+    padding-top:56px;
+  }
+  a{color:var(--blue)}
+
+  /* TOPNAV */
+  .topnav{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    background:rgba(249,246,236,.92);backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--cream-line);
+  }
+  .topnav-inner{
+    max-width:1100px;margin:0 auto;padding:.7rem 1.25rem;
+    display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  }
+  .topnav-brand{display:flex;align-items:center;gap:.6rem;text-decoration:none}
+  .topnav-brand img{width:34px;height:auto}
+  .topnav-brand span{font-weight:800;color:var(--navy);font-size:1.05rem}
+  .back-link{
+    display:inline-flex;align-items:center;gap:.4rem;
+    font-size:.9rem;font-weight:700;color:var(--navy);text-decoration:none;
+    padding:.4rem .9rem;border:1px solid var(--cream-line);border-radius:999px;
+    background:#fff;transition:border-color .15s;
+  }
+  .back-link:hover{border-color:var(--orange);color:var(--orange-dark)}
+
+  /* HERO */
+  .hero{
+    position:relative;
+    background:url('assets/bebe.png') center/cover no-repeat;
+    padding:5rem 1.5rem 4rem;
+    text-align:center;overflow:hidden;
+  }
+  .hero::before{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(160deg,rgba(21,51,86,.9),rgba(21,51,86,.78));
+  }
+  .hero > *{position:relative}
+  .hero .eyebrow{
+    font-size:.8rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--orange);margin-bottom:.8rem;
+  }
+  .hero h1{
+    font-size:clamp(2rem,5vw,3rem);font-weight:800;color:#fff;
+    line-height:1.15;margin-bottom:1rem;
+    text-shadow:0 2px 10px rgba(0,0,0,.3);
+  }
+  .hero p{
+    max-width:560px;margin:0 auto;
+    color:rgba(255,255,255,.78);font-size:1.1rem;line-height:1.65;
+  }
+
+  /* MAIN CONTENT */
+  .content{max-width:900px;margin:0 auto;padding:4rem 1.5rem}
+
+  .story-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:3rem;align-items:start;
+    margin-bottom:3.5rem;
+  }
+  @media(max-width:720px){
+    .story-grid{grid-template-columns:1fr;gap:2rem}
+    .story-photo{order:-1}
+  }
+
+  .story-photo img{
+    width:100%;border-radius:20px;
+    box-shadow:0 16px 48px rgba(21,51,86,.2);
+    display:block;object-fit:cover;
+    aspect-ratio:4/3;
+  }
+  .story-photo .caption{
+    text-align:center;font-size:.8rem;color:var(--muted);margin-top:.7rem;
+    font-style:italic;
+  }
+
+  .story-text .eyebrow{
+    font-size:.78rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--orange-dark);margin-bottom:.5rem;
+  }
+  .story-text h2{
+    font-size:clamp(1.5rem,3.5vw,2rem);font-weight:800;
+    color:var(--navy);margin-bottom:1.1rem;line-height:1.2;
+  }
+  .story-text p{
+    color:var(--muted);font-size:1rem;line-height:1.8;margin-bottom:.9rem;
+  }
+  .story-text p strong{color:var(--navy)}
+
+  .quote{
+    border-left:4px solid var(--orange);
+    padding:.8rem 0 .8rem 1.2rem;
+    margin:1.5rem 0;
+    font-style:italic;font-size:1.1rem;
+    color:var(--navy);font-weight:600;line-height:1.5;
+  }
+
+  /* PILLARS */
+  .pillars{
+    background:#fff;border:1px solid var(--cream-line);
+    border-radius:20px;padding:2.5rem;margin-bottom:3.5rem;
+    box-shadow:0 4px 16px rgba(21,51,86,.06);
+  }
+  .pillars h3{
+    font-size:1.1rem;font-weight:800;color:var(--navy);
+    margin-bottom:1.4rem;text-align:center;
+  }
+  .pillars-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:1.2rem;
+  }
+  .pillar{
+    background:var(--cream);border:1px solid var(--cream-line);
+    border-radius:14px;padding:1.3rem 1rem;text-align:center;
+  }
+  .pillar .icon{font-size:2rem;display:block;margin-bottom:.5rem}
+  .pillar h4{color:var(--navy);font-size:.95rem;font-weight:700;margin-bottom:.3rem}
+  .pillar p{color:var(--muted);font-size:.85rem;line-height:1.5}
+
+  /* DONATE */
+  .donate-card{
+    position:relative;
+    background:url('assets/bebe.png') center/cover no-repeat;
+    border-radius:20px;overflow:hidden;
+    padding:3.5rem 2rem;text-align:center;
+  }
+  .donate-card::before{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(135deg,rgba(21,51,86,.88),rgba(21,51,86,.78));
+  }
+  .donate-card > *{position:relative}
+  .donate-card h3{font-size:1.7rem;font-weight:800;color:#fff;margin-bottom:.7rem}
+  .donate-card p{color:rgba(255,255,255,.8);margin-bottom:1.8rem;max-width:480px;margin-left:auto;margin-right:auto;line-height:1.65}
+  .donate-btns{display:flex;flex-wrap:wrap;gap:.9rem;justify-content:center}
+  .donate-btns a{
+    display:inline-flex;align-items:center;gap:.5rem;
+    font-weight:700;font-size:1rem;text-decoration:none;
+    padding:.85rem 1.8rem;border-radius:12px;
+    transition:transform .15s,box-shadow .15s;
+  }
+  .donate-btns a:hover{transform:translateY(-2px)}
+  .btn-kofi{background:#FF5E5B;color:#fff;box-shadow:0 6px 18px rgba(255,94,91,.4)}
+  .btn-paypal{background:#009cde;color:#fff;box-shadow:0 6px 18px rgba(0,156,222,.4)}
+
+  /* FOOTER */
+  footer{
+    border-top:1px solid var(--cream-line);
+    padding:2rem 1.25rem;text-align:center;
+    color:var(--muted);font-size:.85rem;margin-top:4rem;
+  }
+  footer a{color:var(--blue)}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="topnav-inner">
+    <a class="topnav-brand" href="index.html">
+      <img src="assets/logo-icon.png" alt="">
+      <span>BGT</span>
+    </a>
+    <a class="back-link" href="index.html">← Volver a la app</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="eyebrow">👨‍👩‍👶 Sobre nosotros</div>
+  <h1>Dos frikis de los juegos de mesa con un bebé recién nacido</h1>
+  <p>Esta es la historia de por qué existe BGT — y de por qué seguimos haciéndola crecer entre pañales y biberones.</p>
+</header>
+
+<main class="content">
+
+  <div class="story-grid">
+    <div class="story-text">
+      <div class="eyebrow">🎲 El origen</div>
+      <h2>Cuando la vida cambia, cambian las partidas</h2>
+      <p>
+        Somos una pareja aficionada a los juegos de mesa — bueno, sobre todo yo —
+        que lleva años disfrutando de este hobby. Cuando llegó nuestro hijo,
+        el tiempo libre se convirtió en un bien escaso y los juegos que antes
+        sacábamos a la mesa empezaron a acumular polvo.
+      </p>
+      <div class="quote">
+        "¿Y si mi mujer no quiere jugar? ¿Y si solo tenemos veinte minutos?
+        ¿Y si el juego funciona mejor con algún jugador más?"
+      </div>
+      <p>
+        De esa frustración nació BGT. No porque sea un proyecto ambicioso,
+        sino porque <strong>necesitaba una solución</strong> y decidí construirla.
+      </p>
+    </div>
+    <div class="story-photo">
+      <img src="assets/nosotros.jpg" alt="Rafel y su pareja, creadores de BGT">
+      <p class="caption">Diciembre de 2025 — poco antes de que llegara el caos (y la alegría)</p>
+    </div>
+  </div>
+
+  <div class="pillars">
+    <h3>🧩 Para qué sirve BGT, de verdad</h3>
+    <div class="pillars-grid">
+      <div class="pillar">
+        <span class="icon">🤖</span>
+        <h4>Jugar en solitario</h4>
+        <p>Cuando tu pareja no puede o no quiere, el bot gestiona el rival por ti.</p>
+      </div>
+      <div class="pillar">
+        <span class="icon">🧮</span>
+        <h4>Agilizar los conteos</h4>
+        <p>Calculadoras de puntuación para no parar la partida buscando la hoja.</p>
+      </div>
+      <div class="pillar">
+        <span class="icon">👥</span>
+        <h4>Añadir jugadores</h4>
+        <p>Juegos que piden mínimo 3 o 4, ahora jugables con bots para completar la mesa.</p>
+      </div>
+      <div class="pillar">
+        <span class="icon">🧪</span>
+        <h4>Probar automas</h4>
+        <p>Implementamos automas fan-made de la comunidad para que puedas testearlos.</p>
+      </div>
+      <div class="pillar">
+        <span class="icon">🌱</span>
+        <h4>Crear comunidad</h4>
+        <p>Un rincón para compartir variantes, votar juegos y hacer crecer el hobby.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="donate-card">
+    <h3>🍼 ¿Te ha servido la app?</h3>
+    <p>BGT es completamente gratis y sin anuncios. Cada aportación va directa a mantener los servidores, añadir juegos nuevos y, seamos sinceros, pagar pañales.</p>
+    <div class="donate-btns">
+      <a class="btn-kofi" href="https://ko-fi.com/carchofo" target="_blank" rel="noopener">❤️ Invítame a un café · Ko-fi</a>
+      <a class="btn-paypal" href="https://www.paypal.com/donate?business=perkatauro%40gmail.com&currency_code=EUR" target="_blank" rel="noopener">🍼 Ayuda con los pañales · PayPal</a>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <p>Código fuente en <a href="https://github.com/Carchofo/BGT" target="_blank" rel="noopener">GitHub · Carchofo/BGT</a></p>
+</footer>
+
+</body>
+</html>
