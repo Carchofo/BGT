@@ -5,29 +5,12 @@
     {"id":"e5f6g7h8","author":"Ana","text":"Primera partida y ya lo entendí todo. La app hace que el setup sea rapidísimo.","date":"2026-07-02T11:05:00Z"}
   ],
   "Criaturas Maravillosas": [
-    {"id":"i9j0k1l2","author":"Dani","text":"Tingent es muy agresivo al principio, tuve que cambiar mi estrategia completamente. Buena implementación.","date":"2026-06-20T20:14:00Z"},
-    {"id":"m3n4o5p6","author":"Rebe_juegos","text":"¿Hay alguna forma de ajustar la dificultad del bot? Estoy empezando y me aplasta.","date":"2026-07-10T09:47:00Z"},
-    {"id":"q7r8s9t0","author":"Carlos","text":"Llevo semanas jugando en solitario con esta app. No me canso del bot de Tingent.","date":"2026-07-18T16:30:00Z"}
+    {"id":"i9j0k1l2","author":"Dani","text":"Tingent es muy agresivo al principio, tuve que cambiar mi estrategia completamente. Buena implementación.","date":"2026-06-20T20:14:00Z"}
   ],
-  "Tiletum": [
-    {"id":"u1v2w3x4","author":"Manu_eu","text":"La app me ayuda a no perder el hilo del turno de Titus. Antes me olvidaba pasos y tenía que relectura las reglas.","date":"2026-07-01T14:22:00Z"}
-  ],
-  "Piratas de Maracaibo": [
-    {"id":"y5z6a7b8","author":"Lola","text":"Jordán navega de forma muy fluida. ¿Está pensado el orden de puertos o es aleatorio?","date":"2026-06-28T19:55:00Z"},
-    {"id":"c9d0e1f2","author":"Paco_dado","text":"Gran trabajo. Antes jugaba siempre con mi hermano, ahora puedo jugar solo cuando él no está.","date":"2026-07-14T10:03:00Z"}
-  ],
-  "Castle Combo": [
-    {"id":"g3h4i5j6","author":"Iker","text":"Anton es muy consistente, nunca comete errores raros. Lo que más me gusta es que no tengo que acordarme de sus reglas.","date":"2026-06-10T21:08:00Z"},
-    {"id":"k7l8m9n0","author":"Sandra_BCN","text":"Me gustaría que Anton tuviera niveles de dificultad. ¿Se puede pedir eso?","date":"2026-07-05T08:30:00Z"}
-  ],
-  "Coimbra": [
-    {"id":"o1p2q3r4","author":"Javi","text":"El dado de colores está muy bien implementado. Ahora la rotación no me despista nada.","date":"2026-07-08T17:45:00Z"}
-  ],
-  "Cascadia": [
-    {"id":"s5t6u7v8","author":"Miriam_TBJ","text":"La calculadora me ha descubierto varios errores que cometía con las águilas. Muy útil para aprender.","date":"2026-06-25T15:20:00Z"},
-    {"id":"w9x0y1z2","author":"Tomás","text":"Jugué toda la tarde probando diferentes configuraciones. La puntuación desglosada es muy clara.","date":"2026-07-12T20:00:00Z"}
-  ],
-  "Viernes": [
-    {"id":"a3b4c5d6","author":"Elena_solo","text":"Viernes es mi juego solitario favorito y la app le da una segunda vida. Perfecto para llevarlo de viaje.","date":"2026-07-03T12:10:00Z"}
-  ]
+  "Tiletum": [],
+  "Piratas de Maracaibo": [],
+  "Castle Combo": [],
+  "Coimbra": [],
+  "Cascadia": [],
+  "Viernes": []
 }
