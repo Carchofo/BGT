@@ -186,10 +186,28 @@
   .sort-btn:hover{border-color:var(--blue)}
   .sort-btn.active{background:var(--navy);border-color:var(--navy);color:#fff}
 
+  /* GAMES SEARCH */
+  .games-search-wrap{margin-bottom:1rem;}
+  .games-search{
+    width:100%;padding:.65rem 1rem;border:2px solid var(--cream-line);
+    border-radius:10px;font-size:.95rem;background:#fff;color:var(--navy);
+    outline:none;transition:border-color .2s;
+  }
+  .games-search:focus{border-color:var(--orange);}
+
   /* GAMES GRID */
   .games-grid{
     display:grid;gap:1.4rem;
     grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  }
+  @media(max-width:700px){
+    .games-grid{grid-template-columns:repeat(2,1fr);gap:.8rem;}
+    .game-card .banner{height:100px;}
+    .game-card .body{padding:.7rem .8rem .9rem;}
+    .game-card h3{font-size:.9rem;margin-bottom:.1rem;}
+    .game-card .bot-name{font-size:.75rem;margin-bottom:.4rem;}
+    .game-card p{font-size:.78rem;margin-bottom:.5rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+    .tag{font-size:.68rem;padding:.18rem .45rem;}
   }
   .game-card{
     background:var(--cream-card);
@@ -720,6 +738,9 @@
   <div class="container">
     <h2 class="section-title" data-i18n="games.title">🎲 Juegos soportados</h2>
     <p class="section-lead" data-i18n-html="games.lead">¿No está el tuyo? <a href="#pedir-juego">Pídelo a la comunidad</a> y lo añadimos — la biblioteca crece con los votos de los jugadores.</p>
+    <div class="games-search-wrap">
+      <input type="search" id="games-search" class="games-search" data-i18n-placeholder="games.search_placeholder" placeholder="Buscar juego...">
+    </div>
     <div class="sort-bar" role="group" aria-label="Ordenar juegos">
       <span class="sort-label" data-i18n="games.sort_label">Ordenar por:</span>
       <button type="button" class="sort-btn active" data-sort="relevance" data-i18n="games.sort_rel">🔥 Relevancia</button>
@@ -1118,6 +1139,20 @@ var BGT_API = (function() {
     bug    : base ? (base + '/webhook/bgt-bug')              : null,
     active : !!base
   };
+})();
+
+// ── Buscador de juegos ──
+(function () {
+  var search = document.getElementById('games-search');
+  if (!search) return;
+  search.addEventListener('input', function () {
+    var q = this.value.toLowerCase().trim();
+    document.querySelectorAll('.game-card[data-game]').forEach(function (card) {
+      var name = (card.getAttribute('data-game') || '').toLowerCase();
+      var text = (card.textContent || '').toLowerCase();
+      card.style.display = (!q || name.includes(q) || text.includes(q)) ? '' : 'none';
+    });
+  });
 })();
 
 // ── Ordenar tarjetas de juego (relevancia / alfabético) ──
@@ -1923,7 +1958,7 @@ var BGT_TRANS = {
     'how.s3_title': 'Juega en solitario o añade jugadores a tus partidas', 'how.s3_body': 'El automa gestiona su turno solo. Tú juegas el tuyo. Sin necesidad de un segundo jugador.',
     'games.title': '🎲 Juegos soportados',
     'games.lead': '¿No está el tuyo? <a href="#pedir-juego">Pídelo a la comunidad</a> y lo añadimos — la biblioteca crece con los votos de los jugadores.',
-    'games.sort_label': 'Ordenar por:', 'games.sort_rel': '🔥 Relevancia', 'games.sort_alpha': '🔤 Alfabético',
+    'games.search_placeholder': 'Buscar juego...', 'games.sort_label': 'Ordenar por:', 'games.sort_rel': '🔥 Relevancia', 'games.sort_alpha': '🔤 Alfabético',
     'games.missing_title': '¿Falta el tuyo?', 'games.missing_sub': '🗳️ Petición de juego',
     'games.missing_desc': 'Cuéntanos qué juego quieres ver en BGT y entrará en la cola de la comunidad.',
     'games.missing_btn': 'Pedir ahora',
@@ -1990,7 +2025,7 @@ var BGT_TRANS = {
     'how.s3_title': 'Play solo or add players to your games', 'how.s3_body': 'The automa manages its turn automatically. You play yours. No second player needed.',
     'games.title': '🎲 Supported games',
     'games.lead': 'Not there yet? <a href="#pedir-juego">Request it from the community</a> and we\'ll add it — the library grows with player votes.',
-    'games.sort_label': 'Sort by:', 'games.sort_rel': '🔥 Relevance', 'games.sort_alpha': '🔤 Alphabetical',
+    'games.search_placeholder': 'Search game...', 'games.sort_label': 'Sort by:', 'games.sort_rel': '🔥 Relevance', 'games.sort_alpha': '🔤 Alphabetical',
     'games.missing_title': 'Missing yours?', 'games.missing_sub': '🗳️ Game request',
     'games.missing_desc': 'Tell us which game you want in BGT and it will enter the community queue.',
     'games.missing_btn': 'Request now',
@@ -2057,7 +2092,7 @@ var BGT_TRANS = {
     'how.s3_title': 'Jouez en solo ou ajoutez des joueurs à vos parties', 'how.s3_body': 'L\'automate gère son tour seul. Vous jouez le vôtre. Pas besoin d\'un deuxième joueur.',
     'games.title': '🎲 Jeux supportés',
     'games.lead': 'Pas le vôtre ? <a href="#pedir-juego">Demandez-le à la communauté</a> et on l\'ajoute — la bibliothèque grandit avec les votes.',
-    'games.sort_label': 'Trier par :', 'games.sort_rel': '🔥 Pertinence', 'games.sort_alpha': '🔤 Alphabétique',
+    'games.search_placeholder': 'Rechercher un jeu...', 'games.sort_label': 'Trier par :', 'games.sort_rel': '🔥 Pertinence', 'games.sort_alpha': '🔤 Alphabétique',
     'games.missing_title': 'Il manque le vôtre ?', 'games.missing_sub': '🗳️ Demande de jeu',
     'games.missing_desc': 'Dites-nous quel jeu vous souhaitez voir dans BGT et il entrera dans la file de la communauté.',
     'games.missing_btn': 'Demander maintenant',
@@ -2124,7 +2159,7 @@ var BGT_TRANS = {
     'how.s3_title': 'Solo spielen oder Mitspieler zu deinen Partien hinzufügen', 'how.s3_body': 'Der Automat verwaltet seinen Zug selbst. Du spielst deinen. Kein zweiter Spieler nötig.',
     'games.title': '🎲 Unterstützte Spiele',
     'games.lead': 'Deins noch nicht dabei? <a href="#pedir-juego">Frag die Community</a> und wir fügen es hinzu — die Bibliothek wächst mit den Abstimmungen.',
-    'games.sort_label': 'Sortieren nach:', 'games.sort_rel': '🔥 Relevanz', 'games.sort_alpha': '🔤 Alphabetisch',
+    'games.search_placeholder': 'Spiel suchen...', 'games.sort_label': 'Sortieren nach:', 'games.sort_rel': '🔥 Relevanz', 'games.sort_alpha': '🔤 Alphabetisch',
     'games.missing_title': 'Deins fehlt?', 'games.missing_sub': '🗳️ Spielanfrage',
     'games.missing_desc': 'Sag uns, welches Spiel du in BGT sehen möchtest, und es kommt in die Community-Warteschlange.',
     'games.missing_btn': 'Jetzt anfragen',
@@ -2191,7 +2226,7 @@ var BGT_TRANS = {
     'how.s3_title': 'Gioca in solitario o aggiungi giocatori alle tue partite', 'how.s3_body': 'L\'automa gestisce il suo turno da solo. Tu giochi il tuo. Senza bisogno di un secondo giocatore.',
     'games.title': '🎲 Giochi supportati',
     'games.lead': 'Non c\'è il tuo? <a href="#pedir-juego">Richiedilo alla community</a> e lo aggiungiamo — la libreria cresce con i voti dei giocatori.',
-    'games.sort_label': 'Ordina per:', 'games.sort_rel': '🔥 Rilevanza', 'games.sort_alpha': '🔤 Alfabetico',
+    'games.search_placeholder': 'Cerca gioco...', 'games.sort_label': 'Ordina per:', 'games.sort_rel': '🔥 Rilevanza', 'games.sort_alpha': '🔤 Alfabetico',
     'games.missing_title': 'Manca il tuo?', 'games.missing_sub': '🗳️ Richiesta gioco',
     'games.missing_desc': 'Dicci quale gioco vuoi vedere in BGT e entrerà nella coda della community.',
     'games.missing_btn': 'Richiedi ora',
