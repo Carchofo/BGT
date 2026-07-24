@@ -35,7 +35,7 @@
     font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
     background-color:var(--cream);
     background-image:
-      linear-gradient(rgba(249,246,236,.86), rgba(249,246,236,.86)),
+      linear-gradient(rgba(249,246,236,.93), rgba(249,246,236,.93)),
       url('assets/bg-fondo1.jpg');
     background-size:cover, cover;
     background-position:center top, center top;
@@ -432,17 +432,17 @@
   .donate-hero{
     position:relative;overflow:hidden;
     background:
-      url('assets/bebe-diagrama.jpg') left center/70% auto no-repeat,
-      url('assets/bg-fondo1.jpg') right center/55% auto no-repeat,
+      url('assets/bebe-diagrama.jpg') left center/60% auto no-repeat,
+      url('assets/bg-fondo1.jpg') right center/50% auto no-repeat,
       var(--navy);
   }
   .donate-hero::before{
     content:'';position:absolute;inset:0;
     background:linear-gradient(to right,
-      rgba(21,51,86,.40) 0%,
-      rgba(21,51,86,.70) 45%,
-      rgba(21,51,86,.75) 55%,
-      rgba(21,51,86,.88) 100%);
+      rgba(21,51,86,.45) 0%,
+      rgba(21,51,86,.72) 48%,
+      rgba(21,51,86,.90) 60%,
+      rgba(21,51,86,.97) 100%);
   }
   .donate-hero-inner{
     position:relative;
@@ -453,7 +453,8 @@
     color:#fff;
   }
   .donate-hero-content{
-    max-width:480px;
+    max-width:420px;
+    margin-right:5%;
     text-align:left;
   }
   @media(max-width:700px){
@@ -1167,11 +1168,13 @@
 
 <section class="donate-hero" id="donaciones">
   <div class="donate-hero-inner">
+    <div class="donate-hero-content">
     <h2>☕ ¿Te ha servido la app?</h2>
     <p>Cada partida solitaria que hayas podido jugar gracias a BGT es un motivo más. Ayúdame a seguir añadiendo juegos y mantener los bots en marcha.</p>
     <div class="donate-hero-btns">
       <a class="btn-kofi" href="https://ko-fi.com/carchofo" target="_blank" rel="noopener">❤️ Ko-fi</a>
       <a class="btn-paypal" href="https://www.paypal.com/donate?business=perkatauro%40gmail.com&currency_code=EUR" target="_blank" rel="noopener">🍼 PayPal · pañales</a>
+    </div>
     </div>
   </div>
 </section>
