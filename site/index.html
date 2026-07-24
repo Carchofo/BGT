@@ -57,7 +57,12 @@
     overflow:hidden;
   }
   @media(max-width:700px){
-    header.hero{ background-image:url('assets/bebe-diagrama-mobile.jpg'); }
+    header.hero{
+      background-image:url('assets/bebe-diagrama-mobile.jpg');
+      background-size:55% auto;
+      background-repeat:no-repeat;
+      background-position:center center;
+    }
   }
   header.hero::before{
     content:'';
@@ -117,7 +122,7 @@
 
   /* PLATFORM BAR */
   .platform-bar{
-    width:100%;background:var(--navy);color:#fff;
+    width:100%;background:var(--orange-dark);color:#fff;
     text-align:center;font-size:.85rem;font-weight:600;
     padding:.55rem 1rem;letter-spacing:.01em;
   }
@@ -437,7 +442,12 @@
     background:url('assets/bebe-diagrama.jpg') center/cover no-repeat;
   }
   @media(max-width:700px){
-    .donate-hero{ background-image:url('assets/bebe-diagrama-mobile.jpg'); }
+    .donate-hero{
+      background-image:url('assets/bebe-diagrama-mobile.jpg');
+      background-size:55% auto;
+      background-repeat:no-repeat;
+      background-position:center center;
+    }
   }
   .donate-hero{
     padding:5rem 1.5rem;
@@ -867,7 +877,7 @@
     </div>
     <div class="games-grid" id="games-grid">
 
-      <div class="game-card" data-game="Spooktacular" data-relevance="7">
+      <div class="game-card" data-game="Spooktacular" data-relevance="7" data-bgg-rank="9999" data-comments="0">
         <img class="banner" src="assets/banner_spooktacular_new.jpg" alt="Banner de Spooktacular">
         <div class="body">
           <h3>Spooktacular</h3>
@@ -881,7 +891,7 @@
         </div>
       </div>
 
-      <div class="game-card" data-game="Criaturas Maravillosas" data-relevance="5">
+      <div class="game-card" data-game="Criaturas Maravillosas" data-relevance="5" data-bgg-rank="480" data-comments="0">
         <img class="banner" src="assets/banner_cm_new.jpg" alt="Banner de Criaturas Maravillosas">
         <div class="body">
           <h3>Criaturas Maravillosas</h3>
@@ -895,7 +905,7 @@
         </div>
       </div>
 
-      <div class="game-card" data-game="Tiletum" data-relevance="4">
+      <div class="game-card" data-game="Tiletum" data-relevance="4" data-bgg-rank="380" data-comments="0">
         <img class="banner" src="assets/banner_tiletum_img.jpg" alt="Banner de Tiletum">
         <div class="body">
           <h3>Tiletum</h3>
@@ -909,7 +919,7 @@
         </div>
       </div>
 
-      <div class="game-card" data-game="Piratas de Maracaibo" data-relevance="11">
+      <div class="game-card" data-game="Piratas de Maracaibo" data-relevance="11" data-bgg-rank="72" data-comments="0">
         <img class="banner" src="assets/banner_maracaibo.jpg" alt="Banner de Piratas de Maracaibo">
         <div class="body">
           <h3>Piratas de Maracaibo</h3>
@@ -923,7 +933,7 @@
         </div>
       </div>
 
-      <div class="game-card" data-game="Castle Combo" data-relevance="18">
+      <div class="game-card" data-game="Castle Combo" data-relevance="18" data-bgg-rank="340" data-comments="0">
         <img class="banner" src="assets/banner_castle_combo.jpg" alt="Banner de Castle Combo">
         <div class="body">
           <h3>Castle Combo</h3>
@@ -937,7 +947,7 @@
         </div>
       </div>
 
-      <div class="game-card" data-game="Coimbra" data-relevance="14">
+      <div class="game-card" data-game="Coimbra" data-relevance="14" data-bgg-rank="195" data-comments="0">
         <img class="banner" src="assets/banner_coimbra.jpg" alt="Banner de Coimbra">
         <div class="body">
           <h3>Coimbra</h3>
@@ -951,7 +961,7 @@
         </div>
       </div>
 
-      <div class="game-card" data-game="Cascadia" data-relevance="23">
+      <div class="game-card" data-game="Cascadia" data-relevance="23" data-bgg-rank="33" data-comments="0">
         <img class="banner" src="assets/banner_cascadia.jpg" alt="Banner de Cascadia">
         <div class="body">
           <h3>Cascadia</h3>
@@ -965,7 +975,7 @@
         </div>
       </div>
 
-      <div class="game-card" data-game="Viernes" data-relevance="9">
+      <div class="game-card" data-game="Viernes" data-relevance="9" data-bgg-rank="178" data-comments="0">
         <img class="banner" src="assets/banner_friday.jpg" alt="Banner de Viernes">
         <div class="body">
           <h3>Viernes</h3>
@@ -1295,27 +1305,59 @@ var BGT_API = (function() {
     return Array.prototype.slice.call(grid.querySelectorAll('.game-card[data-game]'));
   }
 
-  // Algoritmo de relevancia: data-relevance (likes base) + like del usuario actual
+  // Algoritmo de relevancia multicritero:
+  //   base (curador) + likes×2 + boost usuario + bgg_score + contenido×4 + comentarios×3
   function relevanceOf(card) {
-    var base = parseInt(card.dataset.relevance || '0', 10);
-    var liked = card.querySelector('.like-btn.liked') ? 1 : 0;
-    return base + liked;
+    var base     = parseInt(card.dataset.relevance || '0', 10);
+    var likes    = parseInt((card.querySelector('.like-count') || {textContent:'0'}).textContent, 10);
+    var userLike = card.querySelector('.like-btn.liked') ? 3 : 0;
+    var bggRank  = parseInt(card.dataset.bggRank || '9999', 10);
+    var bggScore = bggRank < 9999 ? Math.round(80 / Math.log10(bggRank + 1)) : 0;
+    var content  = card.querySelectorAll('.tag').length;
+    var comments = parseInt(card.dataset.comments || '0', 10);
+    return base + likes * 2 + userLike + bggScore + content * 4 + comments * 3;
   }
 
   function applySort(mode) {
-    var sorted = getCards();
+    var cards = getCards();
+
+    // FLIP — capturar posiciones antes de reordenar
+    var before = {};
+    cards.forEach(function(c) {
+      var r = c.getBoundingClientRect();
+      before[c.dataset.game] = { x: r.left, y: r.top };
+    });
+
     if (mode === 'alpha') {
-      sorted.sort(function (a, b) {
+      cards.sort(function (a, b) {
         return a.dataset.game.localeCompare(b.dataset.game, 'es');
       });
     } else {
-      sorted.sort(function (a, b) {
+      cards.sort(function (a, b) {
         var diff = relevanceOf(b) - relevanceOf(a);
         return diff !== 0 ? diff : a.dataset.game.localeCompare(b.dataset.game, 'es');
       });
     }
-    sorted.forEach(function (card) { grid.appendChild(card); });
+    cards.forEach(function (c) { grid.appendChild(c); });
     if (addCard) grid.appendChild(addCard);
+
+    // FLIP — animar desde posición anterior a la nueva
+    cards.forEach(function(c) {
+      var old = before[c.dataset.game];
+      if (!old) return;
+      var r = c.getBoundingClientRect();
+      var dx = old.x - r.left;
+      var dy = old.y - r.top;
+      if (dx === 0 && dy === 0) return;
+      c.style.transition = 'none';
+      c.style.transform  = 'translate(' + dx + 'px,' + dy + 'px)';
+      requestAnimationFrame(function() {
+        requestAnimationFrame(function() {
+          c.style.transition = 'transform .45s cubic-bezier(.25,.46,.45,.94)';
+          c.style.transform  = '';
+        });
+      });
+    });
   }
 
   buttons.forEach(function (btn) {
@@ -2466,3 +2508,4 @@ function applyLang(lang) {
 </script>
 </body>
 </html>
+
