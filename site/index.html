@@ -35,11 +35,13 @@
     font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
     background-color:var(--cream);
     background-image:
-      linear-gradient(rgba(249,246,236,.93), rgba(249,246,236,.93)),
-      url('assets/bg-fondo1.jpg');
-    background-size:cover, cover;
-    background-position:center top, center top;
-    background-repeat:no-repeat, no-repeat;
+      linear-gradient(rgba(249,246,236,.82), rgba(249,246,236,.82)),
+      url('assets/bg-fondo1.jpg'),
+      url('assets/bg-main.jpg'),
+      url('assets/bg-lapiz.jpg');
+    background-size:cover, 33% auto, 33% auto, 33% auto;
+    background-position:center, left top, center 400px, right top;
+    background-repeat:no-repeat, repeat-y, repeat-y, repeat-y;
     color:var(--ink);
     line-height:1.6;
     min-height:100vh;
@@ -432,16 +434,16 @@
   .donate-hero{
     position:relative;overflow:hidden;
     background:
-      url('assets/bebe-diagrama.jpg') left center/60% auto no-repeat,
+      url('assets/bebe-diagrama.jpg') left center/auto 100% no-repeat,
       url('assets/bg-fondo1.jpg') right center/50% auto no-repeat,
       var(--navy);
   }
   .donate-hero::before{
     content:'';position:absolute;inset:0;
     background:linear-gradient(to right,
-      rgba(21,51,86,.45) 0%,
-      rgba(21,51,86,.72) 48%,
-      rgba(21,51,86,.90) 60%,
+      rgba(21,51,86,.35) 0%,
+      rgba(21,51,86,.72) 42%,
+      rgba(21,51,86,.93) 54%,
       rgba(21,51,86,.97) 100%);
   }
   .donate-hero-inner{
@@ -453,8 +455,8 @@
     color:#fff;
   }
   .donate-hero-content{
-    max-width:420px;
-    margin-right:5%;
+    max-width:440px;
+    margin-right:4%;
     text-align:left;
   }
   @media(max-width:700px){
@@ -500,7 +502,7 @@
   footer a{color:var(--blue)}
 
   /* TOPNAV */
-  body{padding-top:56px}
+  body{padding-top:90px}
   .topnav{
     position:fixed;top:0;left:0;right:0;z-index:100;
     background:rgba(249,246,236,.92);backdrop-filter:blur(6px);

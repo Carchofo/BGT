@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sobre nosotros — BGT</title>
-<meta name="description" content="Quiénes somos: una pareja con un bebé recién nacido y una gran pasión por los juegos de mesa.">
+<meta name="description" content="Quiénes somos: un friky, una maravillosa mujer que lo aguanta y un bebé recién nacido con pasión por los juegos de mesa.">
 <link rel="icon" type="image/png" href="assets/logo-icon.png">
 <style>
   :root{
@@ -48,17 +48,26 @@
   /* HERO */
   .hero{
     position:relative;
-    background:url('assets/bebe-diagrama.jpg') center/cover no-repeat;
+    background:
+      linear-gradient(160deg,rgba(21,51,86,.88),rgba(21,51,86,.76)),
+      url('assets/bebe-diagrama.jpg') center/60% auto no-repeat,
+      url('assets/bg-lapiz.jpg') center/cover;
     padding:5rem 1.5rem 4rem;
     text-align:center;overflow:hidden;
   }
   @media(max-width:700px){
-    .hero{ background-image:url('assets/bebe-diagrama-mobile.jpg'); }
+    .hero{
+      background:
+        linear-gradient(160deg,rgba(21,51,86,.88),rgba(21,51,86,.76)),
+        url('assets/bebe-diagrama.jpg') center/contain no-repeat var(--navy);
+    }
     .donate-card{ background-image:url('assets/bebe-diagrama-mobile.jpg'); }
-  }
-  .hero::before{
-    content:'';position:absolute;inset:0;
-    background:linear-gradient(160deg,rgba(21,51,86,.9),rgba(21,51,86,.78));
+    .content-wrapper{
+      background:url('assets/bg-lapiz.jpg') center top/cover no-repeat scroll;
+    }
+    .content-wrapper::before{
+      background:rgba(249,246,236,.80);
+    }
   }
   .hero > *{position:relative}
   .hero .eyebrow{
@@ -76,7 +85,15 @@
   }
 
   /* MAIN CONTENT */
-  .content{max-width:900px;margin:0 auto;padding:4rem 1.5rem}
+  .content-wrapper{
+    position:relative;
+    background:url('assets/bg-lapiz.jpg') center/cover no-repeat fixed;
+  }
+  .content-wrapper::before{
+    content:'';position:absolute;inset:0;
+    background:rgba(249,246,236,.88);
+  }
+  .content{max-width:900px;margin:0 auto;padding:4rem 1.5rem;position:relative;}
 
   .story-grid{
     display:grid;
@@ -192,10 +209,11 @@
 
 <header class="hero">
   <div class="eyebrow">👨‍👩‍👶 Sobre nosotros</div>
-  <h1>Dos frikis de los juegos de mesa con un bebé recién nacido</h1>
+  <h1>Un Friki, una maravillosa mujer que lo aguanta y un bebé recién nacido</h1>
   <p>Esta es la historia de por qué existe BGT — y de por qué seguimos haciéndola crecer entre pañales y biberones.</p>
 </header>
 
+<div class="content-wrapper">
 <main class="content">
 
   <div class="story-grid">
@@ -213,8 +231,9 @@
         ¿Y si el juego funciona mejor con algún jugador más?"
       </div>
       <p>
-        De esa frustración nació BGT. No porque sea un proyecto ambicioso,
-        sino porque <strong>necesitaba una solución</strong> y decidí construirla.
+        De la necesidad y las ganas de poder jugar nació la idea de crear esta app
+        para ayudar a gente con tesituras similares: <strong>falta de tiempo para quedar,
+        poder dar uso a la ludoteca, probar los juegos...</strong>
       </p>
     </div>
     <div class="story-photo">
@@ -239,7 +258,7 @@
       <div class="pillar">
         <span class="icon">👥</span>
         <h4>Añadir jugadores</h4>
-        <p>Juegos que piden mínimo 3 o 4, ahora jugables con bots para completar la mesa.</p>
+        <p>Juegos que funcionan mejor a más jugadores, ahora jugables con bots para completar la mesa.</p>
       </div>
       <div class="pillar">
         <span class="icon">🧪</span>
@@ -264,6 +283,7 @@
   </div>
 
 </main>
+</div>
 
 <footer>
   <p>Código fuente en <a href="https://github.com/Carchofo/BGT" target="_blank" rel="noopener">GitHub · Carchofo/BGT</a></p>
