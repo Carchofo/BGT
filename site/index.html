@@ -56,6 +56,9 @@
     background:url('assets/bebe-diagrama.jpg') center/cover no-repeat;
     overflow:hidden;
   }
+  @media(max-width:700px){
+    header.hero{ background-image:url('assets/bebe-diagrama-mobile.jpg'); }
+  }
   header.hero::before{
     content:'';
     position:absolute;inset:0;
@@ -432,6 +435,11 @@
   .donate-hero{
     position:relative;
     background:url('assets/bebe-diagrama.jpg') center/cover no-repeat;
+  }
+  @media(max-width:700px){
+    .donate-hero{ background-image:url('assets/bebe-diagrama-mobile.jpg'); }
+  }
+  .donate-hero{
     padding:5rem 1.5rem;
     overflow:hidden;
   }
