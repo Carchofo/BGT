@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BGT Lab — QA Candidatos</title>
+<style>
+  :root{--navy:#153356;--orange:#f97316;--green:#22c55e;--red:#ef4444;--yellow:#eab308;--bg:#f5f0e8;--card:#fff;--muted:#666;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:system-ui,sans-serif;background:var(--bg);color:var(--navy);min-height:100vh;}
+
+  /* HEADER */
+  .header{background:var(--navy);color:#fff;padding:.8rem 1.2rem;display:flex;align-items:center;gap:.8rem;position:sticky;top:0;z-index:100;}
+  .header h1{font-size:1.1rem;font-weight:700;}
+  .badge-lab{background:var(--orange);color:#fff;font-size:.65rem;font-weight:700;padding:.2rem .5rem;border-radius:20px;letter-spacing:.05em;}
+  .version{margin-left:auto;font-size:.75rem;opacity:.6;}
+  .btn-update{background:rgba(255,255,255,.15);border:none;color:#fff;padding:.3rem .8rem;border-radius:6px;cursor:pointer;font-size:.78rem;}
+  .btn-update:hover{background:rgba(255,255,255,.25);}
+
+  /* FILTERS */
+  .toolbar{padding:.8rem 1rem;display:flex;flex-wrap:wrap;gap:.6rem;background:#fff;border-bottom:1px solid #e5e0d8;}
+  .search{flex:1;min-width:160px;padding:.45rem .8rem;border:1.5px solid #ddd;border-radius:8px;font-size:.9rem;}
+  .search:focus{outline:none;border-color:var(--orange);}
+  .filter-btn{padding:.35rem .75rem;border:1.5px solid #ddd;border-radius:20px;background:#fff;cursor:pointer;font-size:.8rem;font-weight:600;}
+  .filter-btn.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+  .filter-btn.alta.active{background:#dc2626;border-color:#dc2626;}
+  .filter-btn.media.active{background:#d97706;border-color:#d97706;}
+  .filter-btn.baja.active{background:#64748b;border-color:#64748b;}
+  .filter-btn.ok.active{background:var(--green);border-color:var(--green);}
+
+  /* STATS */
+  .stats{padding:.5rem 1rem;font-size:.78rem;color:var(--muted);background:#fff;border-bottom:1px solid #e5e0d8;}
+
+  /* GRID */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem;padding:1rem;}
+
+  /* CARD */
+  .card{background:var(--card);border-radius:12px;border:1.5px solid #e5e0d8;overflow:hidden;display:flex;flex-direction:column;}
+  .card.verified{border-color:var(--green);box-shadow:0 0 0 2px rgba(34,197,94,.2);}
+  .card.has-issue{border-color:var(--red);}
+
+  .card-head{padding:.8rem 1rem .6rem;display:flex;align-items:flex-start;gap:.5rem;}
+  .card-title{flex:1;}
+  .card-title h3{font-size:.95rem;font-weight:700;color:var(--navy);}
+  .card-title .sub{font-size:.75rem;color:var(--muted);margin-top:.1rem;}
+  .priority-badge{font-size:.65rem;font-weight:700;padding:.2rem .5rem;border-radius:20px;white-space:nowrap;}
+  .priority-badge.ALTA{background:#fef2f2;color:#dc2626;}
+  .priority-badge.MEDIA{background:#fffbeb;color:#d97706;}
+  .priority-badge.BAJA{background:#f8fafc;color:#64748b;}
+
+  .card-body{padding:0 1rem .6rem;font-size:.82rem;color:var(--muted);flex:1;}
+  .meta{display:flex;gap:.8rem;flex-wrap:wrap;margin-bottom:.4rem;}
+  .meta span{font-size:.75rem;}
+  .notes-input{width:100%;margin-top:.4rem;padding:.4rem .6rem;border:1px solid #ddd;border-radius:6px;font-size:.78rem;resize:vertical;min-height:50px;font-family:inherit;}
+  .notes-input:focus{outline:none;border-color:var(--orange);}
+
+  .card-foot{padding:.6rem 1rem .8rem;display:flex;gap:.5rem;flex-wrap:wrap;border-top:1px solid #f0ece4;}
+  .btn{padding:.32rem .7rem;border-radius:6px;border:none;cursor:pointer;font-size:.75rem;font-weight:600;}
+  .btn-check{background:#f0fdf4;color:#166534;border:1.5px solid #86efac;}
+  .btn-check.on{background:var(--green);color:#fff;border-color:var(--green);}
+  .btn-issue{background:#fef2f2;color:#991b1b;border:1.5px solid #fca5a5;}
+  .btn-bgg{background:#f0f9ff;color:#0369a1;border:1.5px solid #7dd3fc;}
+  .btn-prod{background:var(--navy);color:#fff;border:1.5px solid var(--navy);}
+  .btn-prod:disabled{opacity:.4;cursor:not-allowed;}
+
+  /* ISSUE MODAL */
+  .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;}
+  .modal-bg.open{display:flex;}
+  .modal{background:#fff;border-radius:14px;padding:1.4rem;width:90%;max-width:420px;}
+  .modal h3{margin-bottom:.8rem;font-size:1rem;}
+  .modal textarea{width:100%;min-height:100px;padding:.6rem;border:1.5px solid #ddd;border-radius:8px;font-size:.88rem;font-family:inherit;resize:vertical;}
+  .modal textarea:focus{outline:none;border-color:var(--orange);}
+  .modal-foot{display:flex;gap:.6rem;margin-top:.8rem;justify-content:flex-end;}
+  .btn-cancel{background:#f1f5f9;color:#333;border:none;padding:.4rem .9rem;border-radius:7px;cursor:pointer;}
+  .btn-send{background:var(--red);color:#fff;border:none;padding:.4rem .9rem;border-radius:7px;cursor:pointer;font-weight:700;}
+
+  /* TOAST */
+  .toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--navy);color:#fff;padding:.7rem 1.2rem;border-radius:10px;font-size:.85rem;opacity:0;transition:opacity .3s;z-index:300;pointer-events:none;}
+  .toast.show{opacity:1;}
+
+  /* EXPORT */
+  .export-bar{padding:.7rem 1rem;background:#fff;border-top:2px solid var(--orange);display:none;}
+  .export-bar.show{display:block;}
+  .export-bar pre{font-size:.72rem;background:#f8f8f8;padding:.6rem;border-radius:6px;overflow-x:auto;max-height:120px;}
+
+  @media(max-width:600px){.grid{grid-template-columns:1fr;padding:.6rem;}}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>BGT Lab</h1>
+  <span class="badge-lab">🚧 EN CONSTRUCCIÓN</span>
+  <span class="version" id="version-label">cargando...</span>
+  <button class="btn-update" onclick="checkUpdate()">↻ Actualizar</button>
+</div>
+
+<div class="toolbar">
+  <input class="search" id="search" placeholder="Buscar candidato..." oninput="render()">
+  <button class="filter-btn active" data-f="TODOS" onclick="setFilter(this)">Todos</button>
+  <button class="filter-btn alta" data-f="ALTA" onclick="setFilter(this)">🔴 Alta</button>
+  <button class="filter-btn media" data-f="MEDIA" onclick="setFilter(this)">🟡 Media</button>
+  <button class="filter-btn baja" data-f="BAJA" onclick="setFilter(this)">⚪ Baja</button>
+  <button class="filter-btn ok" data-f="OK" onclick="setFilter(this)">✅ Verificados</button>
+</div>
+<div class="stats" id="stats"></div>
+
+<div class="grid" id="grid"></div>
+
+<div class="export-bar" id="export-bar">
+  <b style="font-size:.82rem">📋 JSON para BGT producción:</b>
+  <pre id="export-json"></pre>
+  <button class="btn" style="background:var(--navy);color:#fff;margin-top:.4rem" onclick="copyExport()">Copiar</button>
+  <button class="btn" style="background:#f1f5f9;margin-top:.4rem;margin-left:.4rem" onclick="document.getElementById('export-bar').classList.remove('show')">Cerrar</button>
+</div>
+
+<!-- ISSUE MODAL -->
+<div class="modal-bg" id="modal-bg">
+  <div class="modal">
+    <h3>🐛 Reportar problema — <span id="modal-game-name"></span></h3>
+    <textarea id="modal-issue-text" placeholder="Describe el problema: reglas incorrectas, falta automa, imagen mala, otro..."></textarea>
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+      <button class="btn-send" onclick="sendIssue()">Enviar al equipo</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── CONFIG ──
+var N8N_WEBHOOK = 'http://192.168.0.25:5678/webhook/bgt-lab-issue';
+var RADAR_URL   = '../candidates/bgg-solo-radar-kaggle.json';
+var VERSION     = '1.0.' + (new Date().toISOString().slice(0,10).replace(/-/g,''));
+
+// ── STATE ──
+var games = [];
+var state = {};  // {bgg_id: {verified, notes, issues}}
+var currentFilter = 'TODOS';
+var currentIssueGame = null;
+
+// ── INIT ──
+document.getElementById('version-label').textContent = 'v' + VERSION;
+loadState();
+fetch(RADAR_URL)
+  .then(r => r.json())
+  .then(data => {
+    games = data.candidates || [];
+    render();
+  })
+  .catch(() => {
+    document.getElementById('grid').innerHTML = '<p style="padding:2rem;color:red">Error cargando candidatos. ¿Está el servidor corriendo?</p>';
+  });
+
+// ── RENDER ──
+function render() {
+  var q = document.getElementById('search').value.toLowerCase();
+  var filtered = games.filter(function(g) {
+    var matchQ = !q || g.name.toLowerCase().includes(q);
+    var matchF = currentFilter === 'TODOS' ||
+                 (currentFilter === 'OK' && (state[g.bgg_id]||{}).verified) ||
+                 g.priority === currentFilter;
+    return matchQ && matchF;
+  });
+
+  var verified = games.filter(g => (state[g.bgg_id]||{}).verified).length;
+  document.getElementById('stats').textContent =
+    'Mostrando ' + filtered.length + ' de ' + games.length + ' candidatos · ' + verified + ' verificados ✅';
+
+  document.getElementById('grid').innerHTML = filtered.map(function(g) {
+    var s = state[g.bgg_id] || {};
+    return '<div class="card' + (s.verified?' verified':'') + (s.issue?' has-issue':'') + '" id="card-'+g.bgg_id+'">' +
+      '<div class="card-head">' +
+        '<div class="card-title">' +
+          '<h3>' + g.name + '</h3>' +
+          '<div class="sub">' + g.year + ' · ★' + g.rating + ' · ' + g.min_p + '-' + g.max_p + 'p</div>' +
+        '</div>' +
+        '<span class="priority-badge ' + g.priority + '">' + g.priority + '</span>' +
+      '</div>' +
+      '<div class="card-body">' +
+        '<div class="meta">' +
+          '<span>' + (g.has_automa?'🤖 Automa':'') + '</span>' +
+          '<span>' + (g.has_solo?'🎯 Solo oficial':'') + '</span>' +
+          '<span>Complejidad: ' + g.complexity + '</span>' +
+        '</div>' +
+        '<textarea class="notes-input" placeholder="Notas internas..." onchange="saveNote('+g.bgg_id+',this.value)">' + (s.notes||'') + '</textarea>' +
+      '</div>' +
+      '<div class="card-foot">' +
+        '<button class="btn btn-check' + (s.verified?' on':'') + '" onclick="toggleVerify('+g.bgg_id+')">' +
+          (s.verified ? '✅ Verificado' : '☐ Verificar') +
+        '</button>' +
+        '<button class="btn btn-issue" onclick="openModal('+g.bgg_id+',\''+g.name.replace(/'/g,"\\'")+'\')">' +
+          '🐛 Problema' +
+        '</button>' +
+        '<a class="btn btn-bgg" href="'+g.bgg_url+'" target="_blank">BGG ↗</a>' +
+        '<button class="btn btn-prod" onclick="exportToProd('+g.bgg_id+')" ' + (!s.verified?'disabled title="Verifica primero"':'') + '>' +
+          '→ Producción' +
+        '</button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+
+  // exportar verified al bar si hay alguno
+  var hasVerified = games.some(g => (state[g.bgg_id]||{}).verified);
+  updateExportBar();
+}
+
+// ── FILTER ──
+function setFilter(btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentFilter = btn.dataset.f;
+  render();
+}
+
+// ── VERIFY ──
+function toggleVerify(id) {
+  if (!state[id]) state[id] = {};
+  state[id].verified = !state[id].verified;
+  saveState();
+  render();
+  toast(state[id].verified ? '✅ Verificado' : 'Verificación eliminada');
+}
+
+// ── NOTES ──
+function saveNote(id, val) {
+  if (!state[id]) state[id] = {};
+  state[id].notes = val;
+  saveState();
+}
+
+// ── ISSUE MODAL ──
+function openModal(id, name) {
+  currentIssueGame = {id: id, name: name};
+  document.getElementById('modal-game-name').textContent = name;
+  document.getElementById('modal-issue-text').value = '';
+  document.getElementById('modal-bg').classList.add('open');
+}
+function closeModal() {
+  document.getElementById('modal-bg').classList.remove('open');
+  currentIssueGame = null;
+}
+function sendIssue() {
+  var text = document.getElementById('modal-issue-text').value.trim();
+  if (!text) { alert('Escribe el problema primero'); return; }
+  var g = currentIssueGame;
+  var payload = { game: g.name, bgg_id: g.id, issue: text, ts: new Date().toISOString() };
+
+  if (!state[g.id]) state[g.id] = {};
+  state[g.id].issue = text;
+  saveState();
+
+  fetch(N8N_WEBHOOK, {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify(payload)
+  }).catch(() => {});
+
+  closeModal();
+  render();
+  toast('🐛 Problema enviado al equipo');
+}
+
+// ── EXPORT TO PROD ──
+function exportToProd(id) {
+  var g = games.find(x => x.bgg_id === id);
+  if (!g) return;
+  var s = state[id] || {};
+  var snippet = {
+    name: g.name,
+    bgg_id: g.bgg_id,
+    rating: g.rating,
+    notes: s.notes || '',
+    verified_by: 'BGT Lab',
+    verified_at: new Date().toISOString().slice(0,10)
+  };
+  document.getElementById('export-json').textContent = JSON.stringify(snippet, null, 2);
+  document.getElementById('export-bar').classList.add('show');
+  document.getElementById('export-bar').scrollIntoView({behavior:'smooth'});
+}
+
+function updateExportBar() {}
+
+function copyExport() {
+  navigator.clipboard.writeText(document.getElementById('export-json').textContent);
+  toast('📋 Copiado al portapapeles');
+}
+
+// ── UPDATE ──
+function checkUpdate() {
+  toast('↻ Recargando...');
+  setTimeout(() => location.reload(true), 500);
+}
+
+// ── PERSIST ──
+function saveState() {
+  try { localStorage.setItem('bgt_lab_state', JSON.stringify(state)); } catch(e){}
+}
+function loadState() {
+  try { state = JSON.parse(localStorage.getItem('bgt_lab_state') || '{}'); } catch(e){ state={}; }
+}
+
+// ── TOAST ──
+function toast(msg) {
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => el.classList.remove('show'), 2500);
+}
+</script>
+</body>
+</html>
