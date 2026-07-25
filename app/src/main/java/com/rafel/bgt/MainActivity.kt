@@ -49,6 +49,7 @@ import com.rafel.bgt.ui.util.SoundSettings
 private const val PREFS_NAME = "tbg_prefs"
 private const val KEY_DISCLAIMER = "disclaimer_accepted"
 private const val KEY_WHATS_NEW_SEEN = "whats_new_seen_v"
+private const val KEY_WELCOME_SEEN = "welcome_seen"
 
 private val WHATS_NEW = listOf(
     "🍼 Botón de donación en pantalla principal",
@@ -98,6 +99,7 @@ class MainActivity : ComponentActivity() {
                 }
                 var updateInfo by remember { mutableStateOf<UpdateInfo?>(null) }
                 var showWhatsNew by remember { mutableStateOf(false) }
+                var showWelcome by remember { mutableStateOf(!prefs.getBoolean(KEY_WELCOME_SEEN, false)) }
                 var currentVersion by remember { mutableStateOf("") }
 
                 LaunchedEffect(Unit) {
@@ -114,7 +116,16 @@ class MainActivity : ComponentActivity() {
 
                 BGTApp()
 
-                if (showWhatsNew && !showDisclaimer) {
+                if (showWelcome && !showDisclaimer) {
+                    WelcomeDialog(
+                        onDismiss = {
+                            prefs.edit().putBoolean(KEY_WELCOME_SEEN, true).apply()
+                            showWelcome = false
+                        }
+                    )
+                }
+
+                if (showWhatsNew && !showDisclaimer && !showWelcome) {
                     WhatsNewDialog(
                         version = currentVersion,
                         onDismiss = {
@@ -258,6 +269,58 @@ private fun UpdateDialog(
         dismissButton = {
             TextButton(onClick = onDismiss) {
                 Text("Ahora no", color = GhostWhite.copy(alpha = 0.55f))
+            }
+        },
+        containerColor = CardBackground
+    )
+}
+
+@Composable
+private fun WelcomeDialog(onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Text(
+                "👋 ¡Bienvenido a BGT!",
+                fontWeight = FontWeight.Bold,
+                color = GhostWhite
+            )
+        },
+        text = {
+            LazyColumn(modifier = Modifier.fillMaxWidth()) {
+                item {
+                    Text(
+                        "Aquí encontrarás automas fan-made para jugar solo a tus juegos favoritos.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = GhostWhite,
+                        modifier = Modifier.padding(bottom = 12.dp)
+                    )
+                }
+                item {
+                    Text(
+                        "Eres de los primeros en descargarte la app, y eso la hace especial. " +
+                        "Cada sugerencia, petición o aporte que hagas ayuda a construir algo que es de todos.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = GhostWhite.copy(alpha = 0.85f),
+                        modifier = Modifier.padding(bottom = 12.dp)
+                    )
+                }
+                item {
+                    Text(
+                        "🎲 ¿Echas de menos un juego? ¿Algo no funciona como debería? Cuéntanoslo — todas las peticiones serán atendidas.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = HalloweenOrange,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = onDismiss,
+                colors = ButtonDefaults.buttonColors(containerColor = HalloweenOrange)
+            ) {
+                Text("¡Vamos a jugar!", fontWeight = FontWeight.Bold)
             }
         },
         containerColor = CardBackground
