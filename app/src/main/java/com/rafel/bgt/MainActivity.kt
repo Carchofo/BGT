@@ -310,7 +310,15 @@ private fun WelcomeDialog(onDismiss: () -> Unit) {
                         "🎲 ¿Echas de menos un juego? ¿Algo no funciona como debería? Cuéntanoslo — todas las peticiones serán atendidas.",
                         style = MaterialTheme.typography.bodyMedium,
                         color = HalloweenOrange,
-                        fontWeight = FontWeight.SemiBold
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier.padding(bottom = 12.dp)
+                    )
+                }
+                item {
+                    Text(
+                        "📰 Sigue las novedades en la sección News de nuestra web — ahí encontrarás todo lo que vamos añadiendo.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = GhostWhite.copy(alpha = 0.7f)
                     )
                 }
             }
