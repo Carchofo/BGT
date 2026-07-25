@@ -1460,18 +1460,21 @@ var BGT_API = (function() {
     .then(function (rel) {
       var v = rel.tag_name || rel.name || '';
       if (v) document.getElementById('version-label').textContent = 'versión ' + v;
-      var downloads = (rel.assets || []).reduce(function (sum, a) {
-        return sum + (a.download_count || 0);
-      }, 0);
-      var meta = [];
-      if (rel.published_at) {
-        meta.push('Publicada el ' + new Date(rel.published_at).toLocaleDateString('es-ES'));
-      }
-      meta.push('<span>' + downloads.toLocaleString('es-ES') + '</span> descargas');
-      document.getElementById('release-meta').innerHTML = meta.join(' · ');
-      // Enlace directo al APK si existe
       var apk = (rel.assets || []).find(function (a) { return /\.apk$/i.test(a.name); });
       if (apk) document.getElementById('download-btn').href = apk.browser_download_url;
+      var latestDate = rel.published_at;
+      // Sumar descargas de todas las releases
+      return fetch('https://api.github.com/repos/Carchofo/BGT/releases')
+        .then(function (r2) { return r2.json(); })
+        .then(function (releases) {
+          var total = releases.reduce(function (sum, r) {
+            return sum + (r.assets || []).reduce(function (s, a) { return s + (a.download_count || 0); }, 0);
+          }, 0);
+          var meta = [];
+          if (latestDate) meta.push('Publicada el ' + new Date(latestDate).toLocaleDateString('es-ES'));
+          meta.push('<span>' + total.toLocaleString('es-ES') + '</span> descargas');
+          document.getElementById('release-meta').innerHTML = meta.join(' · ');
+        });
     })
     .catch(function () {
       document.getElementById('release-meta').textContent = '';
