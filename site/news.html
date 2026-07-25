@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Novedades — BGT Board Game Tools</title>
+<meta name="description" content="Historial de actualizaciones y novedades de BGT — Board Game Tools.">
+<link rel="canonical" href="https://carchofo.github.io/BGT/news.html">
+<link rel="icon" type="image/png" href="assets/logo-icon.png">
+<style>
+  :root{
+    --navy:#153356;--orange:#F38222;--cream:#F9F6EC;--ink:#1E2A33;--muted:#6B7280;
+    --card:#FFFFFF;--line:#E4DDC8;--green:#2a7a2a;--green-bg:#e6f4e6;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--cream);color:var(--ink);line-height:1.6;min-height:100vh}
+  a{color:var(--orange);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .container{max-width:760px;margin:0 auto;padding:0 1.25rem}
+
+  nav{background:var(--navy);padding:.9rem 1.25rem;display:flex;align-items:center;gap:1rem}
+  nav img{width:30px}
+  nav a.brand{color:#fff;font-weight:800;font-size:1rem;text-decoration:none}
+  nav a.back{color:var(--orange);font-size:.9rem;margin-left:auto}
+
+  .page-header{padding:3rem 0 2rem;text-align:center}
+  .page-header h1{font-size:2rem;font-weight:800;color:var(--navy)}
+  .page-header p{color:var(--muted);margin-top:.5rem}
+
+  .timeline{padding:1rem 0 4rem;display:flex;flex-direction:column;gap:1.5rem}
+
+  .release{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:1.5rem;position:relative}
+  .release-header{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;flex-wrap:wrap}
+  .release-version{background:var(--navy);color:#fff;font-weight:800;font-size:.9rem;padding:.25rem .75rem;border-radius:20px}
+  .release-date{color:var(--muted);font-size:.85rem}
+  .release-badge{background:var(--green-bg);color:var(--green);font-size:.75rem;font-weight:700;padding:.2rem .6rem;border-radius:20px}
+
+  .release-items{list-style:none;display:flex;flex-direction:column;gap:.5rem}
+  .release-items li{display:flex;gap:.6rem;font-size:.95rem;color:var(--ink)}
+  .release-items li::before{content:'';display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--orange);margin-top:.55rem;flex-shrink:0}
+
+  .release-note{margin-top:1rem;padding:.75rem 1rem;background:#FFF8F2;border-left:3px solid var(--orange);border-radius:0 8px 8px 0;font-size:.9rem;color:var(--ink)}
+
+  footer{text-align:center;padding:2rem;color:var(--muted);font-size:.85rem;border-top:1px solid var(--line)}
+</style>
+</head>
+<body>
+
+<nav>
+  <img src="assets/logo-icon.png" alt="BGT">
+  <a class="brand" href="index.html">BGT — Board Game Tools</a>
+  <a class="back" href="index.html">← Volver</a>
+</nav>
+
+<div class="container">
+  <div class="page-header">
+    <h1>🎲 Novedades</h1>
+    <p>Historial de actualizaciones de la app</p>
+  </div>
+
+  <div class="timeline">
+
+    <div class="release">
+      <div class="release-header">
+        <span class="release-version">v0.9</span>
+        <span class="release-date">Julio 2026</span>
+        <span class="release-badge">Última versión</span>
+      </div>
+      <ul class="release-items">
+        <li>Mensaje de bienvenida para nuevos usuarios — ¡los primeros son los que hacen crecer esto!</li>
+        <li>Keystore de firma renovado para mayor seguridad</li>
+      </ul>
+      <div class="release-note">
+        Si ya tenías la app instalada, necesitarás desinstalarla y volver a instalar esta versión una sola vez.
+      </div>
+    </div>
+
+    <div class="release">
+      <div class="release-header">
+        <span class="release-version">v0.8</span>
+        <span class="release-date">Julio 2026</span>
+      </div>
+      <ul class="release-items">
+        <li>Nuevo icono con el logo BGT</li>
+        <li>8 juegos: Cascadia, Castle Combo, Coimbra, Maracaibo, Viernes, Spooktacular, Criaturas Maravillosas, Tiletum</li>
+        <li>Calculadora de puntuación para Cascadia</li>
+        <li>Reglas en pantalla para todos los juegos</li>
+        <li>Modo silencio, favoritos y filtros por tipo</li>
+        <li>Reportar bugs y enviar aportes desde la app</li>
+        <li>Auto-actualización al haber nueva versión</li>
+      </ul>
+    </div>
+
+    <div class="release">
+      <div class="release-header">
+        <span class="release-version">v1.0 (beta)</span>
+        <span class="release-date">Junio 2026</span>
+      </div>
+      <ul class="release-items">
+        <li>Primera versión pública</li>
+        <li>Automas para los primeros juegos</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  BGT — Board Game Tools · <a href="https://github.com/Carchofo/BGT" target="_blank" rel="noopener">GitHub</a>
+</footer>
+
+</body>
+</html>
