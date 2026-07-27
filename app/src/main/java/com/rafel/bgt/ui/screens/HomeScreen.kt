@@ -126,7 +126,8 @@ private val GAMES = listOf(
     GameItem(
         id = "splendor", title = "Splendor",
         subtitle = "El mercado de gemas • Automa fan-made vs IA",
-        hasBanner = false, available = true, route = "splendor_solo", tag = "DISPONIBLE",
+        hasBanner = true, available = true, route = "splendor_solo", tag = "DISPONIBLE",
+        bannerRes = R.drawable.banner_splendor,
         features = setOf(GameFeature.SOLO, GameFeature.RULES)
     ),
     GameItem(id = "g5", title = "Próximamente", subtitle = ""),
