@@ -53,9 +53,10 @@ private const val KEY_WHATS_NEW_SEEN = "whats_new_seen_v"
 private const val KEY_WELCOME_SEEN = "welcome_seen"
 
 private val WHATS_NEW = listOf(
+    "💎 Splendor — nuevo automa fan-made (Normal y Difícil), créditos a dukefanblue2005",
     "🍼 Botón de donación en pantalla principal",
     "🎨 Nuevo icono de la app con el logo BGT",
-    "🤖 8 juegos: Cascadia, Castle Combo, Coimbra, Maracaibo, Viernes, Spooktacular, Criaturas Maravillosas, Tiletum",
+    "🤖 9 juegos: Cascadia, Castle Combo, Coimbra, Maracaibo, Viernes, Spooktacular, Criaturas Maravillosas, Tiletum, Splendor",
     "📊 Calculadora de puntuación para Cascadia",
     "📖 Reglas en pantalla para todos los juegos",
     "🔇 Modo silencio",

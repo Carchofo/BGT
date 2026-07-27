@@ -5,6 +5,19 @@ Cada versiÃ³n: **Added** (nuevo), **Fixed** (bug), **Changed** (mejora).
 
 ---
 
+## [v0.9.2] 2026-07-27 — Splendor automa (beta)
+
+### Added
+- **Splendor** — automa fan-made en pruebas. Mazo de 10 cartas con 3 fases de dificultad creciente, modos Normal y Difícil. Créditos al autor original del automa: [dukefanblue2005](https://boardgamegeek.com/geeklist/273639) (BGG)
+- Mensaje de bienvenida para usuarios nuevos
+- Sección News en la web con historial de versiones
+
+### Changed
+- Icono corregido: fondo navy en lugar de blanco
+- Firma de la app renovada (reinstalación única necesaria desde versiones anteriores)
+
+---
+
 ## [v1.1] 2026-06-22 â€” Pipeline bugs, About screen, R8
 
 ### Added
