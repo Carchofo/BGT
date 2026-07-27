@@ -123,10 +123,15 @@ private val GAMES = listOf(
         bannerRes = R.drawable.banner_friday,
         features = setOf(GameFeature.SOLO, GameFeature.RULES, GameFeature.SCORING)
     ),
+    GameItem(
+        id = "splendor", title = "Splendor",
+        subtitle = "El mercado de gemas • Automa fan-made vs IA",
+        hasBanner = false, available = true, route = "splendor_solo", tag = "DISPONIBLE",
+        features = setOf(GameFeature.SOLO, GameFeature.RULES)
+    ),
     GameItem(id = "g5", title = "Próximamente", subtitle = ""),
     GameItem(id = "g6", title = "Próximamente", subtitle = ""),
     GameItem(id = "g7", title = "Próximamente", subtitle = ""),
-    GameItem(id = "g8", title = "Próximamente", subtitle = ""),
 )
 
 // Pre-sorted: available games A-Z, then "Próximamente" slots at end
