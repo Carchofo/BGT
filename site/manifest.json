@@ -1,0 +1,20 @@
+{
+  "name": "BGT — Board Game Tools",
+  "short_name": "BGT",
+  "description": "Automas fan-made para jugar en solitario a tus juegos de mesa favoritos",
+  "start_url": "/BGT/",
+  "scope": "/BGT/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#153356",
+  "theme_color": "#153356",
+  "lang": "es",
+  "icons": [
+    { "src": "assets/logo-icon.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "assets/logo-icon.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "categories": ["games", "entertainment"],
+  "screenshots": [
+    { "src": "assets/solo-hero-es.png", "sizes": "1280x720", "type": "image/png" }
+  ]
+}

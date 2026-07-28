@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Castle Combo — Solitario</title>
+  <meta name="description" content="Compañero de juego para Castle Combo solitario con Anton el automa." />
+  <meta name="theme-color" content="#0E0E1F" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Castle Combo" />
+  <link rel="manifest" href="data:application/json;charset=utf-8,%7B%22name%22%3A%22Castle+Combo+Solitario%22%2C%22short_name%22%3A%22Castle+Combo%22%2C%22start_url%22%3A%22.%2Fcastlecombo.html%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230E0E1F%22%2C%22theme_color%22%3A%22%230E0E1F%22%2C%22icons%22%3A%5B%5D%7D" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0E0E1F;
+      --surface:   #151528;
+      --surface2:  #1C1C36;
+      --border:    #2A2A4A;
+      --gold:      #DAA520;
+      --gold-dim:  #9A7315;
+      --gold-glow: rgba(218,165,32,0.18);
+      --brown:     #8B4513;
+      --brown-lt:  #A0522D;
+      --text:      #E8DCB8;
+      --text-dim:  #9A9070;
+      --text-mute: #5A5440;
+      --success:   #4CAF50;
+      --danger:    #E05252;
+      --radius:    10px;
+      --tab-h:     54px;
+      --header-h:  56px;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Layout shell ── */
+    #app {
+      display: flex;
+      flex-direction: column;
+      height: 100dvh;
+      max-width: 480px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    /* ── Header ── */
+    header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 16px;
+      height: var(--header-h);
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .back-btn {
+      color: var(--gold);
+      text-decoration: none;
+      font-size: 14px;
+      opacity: 0.8;
+      white-space: nowrap;
+      transition: opacity .15s;
+    }
+    .back-btn:hover { opacity: 1; }
+    .header-title {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 17px;
+      font-weight: bold;
+      color: var(--gold);
+      letter-spacing: .03em;
+      flex: 1;
+      text-align: center;
+    }
+    .header-crown {
+      font-size: 20px;
+      opacity: .7;
+    }
+
+    /* ── Tabs nav ── */
+    nav {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      height: var(--tab-h);
+      background: var(--surface);
+      border-bottom: 2px solid var(--border);
+      flex-shrink: 0;
+    }
+    .tab-btn {
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      color: var(--text-dim);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      transition: color .15s, border-color .15s;
+      padding-bottom: 3px;
+      line-height: 1.2;
+    }
+    .tab-btn .tab-icon { font-size: 18px; }
+    .tab-btn.active {
+      color: var(--gold);
+      border-bottom-color: var(--gold);
+    }
+    .tab-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
+
+    /* ── Content area ── */
+    main {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .tab-panel { display: none; padding: 16px; }
+    .tab-panel.active { display: block; }
+
+    /* ── Section headings ── */
+    .section-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--text-mute);
+      margin-bottom: 10px;
+      margin-top: 20px;
+    }
+    .section-label:first-child { margin-top: 0; }
+
+    /* ── Card ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      margin-bottom: 10px;
+    }
+    .card-title {
+      font-family: Georgia, serif;
+      font-size: 13px;
+      font-weight: bold;
+      color: var(--gold);
+      letter-spacing: .02em;
+      margin-bottom: 4px;
+    }
+    .card-sub {
+      font-size: 12px;
+      color: var(--text-dim);
+      line-height: 1.4;
+    }
+
+    /* ── Difficulty selector ── */
+    .diff-group {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .diff-btn {
+      background: var(--surface2);
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-dim);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 10px 4px;
+      cursor: pointer;
+      text-align: center;
+      transition: all .15s;
+      line-height: 1.3;
+    }
+    .diff-btn .diff-icon { display: block; font-size: 20px; margin-bottom: 3px; }
+    .diff-btn.active {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: var(--gold-glow);
+    }
+    .diff-btn:focus-visible { outline: 2px solid var(--gold); }
+
+    /* ── Turn indicator ── */
+    .turn-display {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    .turn-number {
+      font-family: Georgia, serif;
+      font-size: 44px;
+      font-weight: bold;
+      color: var(--gold);
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+    }
+    .turn-label {
+      font-size: 11px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-mute);
+      margin-top: 2px;
+    }
+    .turn-who {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .04em;
+    }
+    .turn-who.player {
+      background: rgba(218,165,32,.15);
+      color: var(--gold);
+      border: 1px solid var(--gold-dim);
+    }
+    .turn-who.anton {
+      background: rgba(139,69,19,.2);
+      color: #D4855A;
+      border: 1px solid var(--brown);
+    }
+    .turn-nav {
+      display: flex;
+      gap: 10px;
+      margin-top: 12px;
+      justify-content: center;
+    }
+    .turn-pip {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--border);
+      transition: background .2s;
+      flex-shrink: 0;
+    }
+    .turn-pip.done { background: var(--gold-dim); }
+    .turn-pip.current { background: var(--gold); box-shadow: 0 0 6px var(--gold); }
+    .turn-pip.anton-pip { background: var(--border); }
+    .turn-pip.anton-pip.done { background: var(--brown-lt); }
+    .turn-pip.anton-pip.current { background: #D4855A; box-shadow: 0 0 6px var(--brown-lt); }
+
+    .turn-controls {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .btn {
+      flex: 1;
+      padding: 13px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity .15s, transform .08s;
+      letter-spacing: .03em;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn:focus-visible { outline: 2px solid var(--gold); }
+    .btn-prev {
+      background: var(--surface2);
+      color: var(--text-dim);
+      border: 1px solid var(--border);
+    }
+    .btn-next {
+      background: var(--gold);
+      color: #0E0E1F;
+    }
+    .btn-next:disabled {
+      background: var(--gold-dim);
+      opacity: .5;
+      cursor: default;
+    }
+    .btn-reset {
+      background: var(--surface2);
+      color: var(--danger);
+      border: 1px solid rgba(224,82,82,.3);
+      font-size: 12px;
+      padding: 10px;
+      flex: none;
+      width: auto;
+      padding: 10px 14px;
+    }
+
+    /* ── Counter rows ── */
+    .counter-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      margin-bottom: 8px;
+    }
+    .counter-icon { font-size: 24px; flex-shrink: 0; width: 32px; text-align: center; }
+    .counter-info { flex: 1; min-width: 0; }
+    .counter-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .counter-desc { font-size: 11px; color: var(--text-mute); margin-top: 1px; }
+    .counter-controls {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      flex-shrink: 0;
+    }
+    .ctr-btn {
+      width: 38px;
+      height: 38px;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      color: var(--text);
+      font-size: 20px;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background .1s;
+      flex-shrink: 0;
+    }
+    .ctr-btn:first-child { border-radius: 8px 0 0 8px; }
+    .ctr-btn:last-child  { border-radius: 0 8px 8px 0; }
+    .ctr-btn:hover { background: var(--border); }
+    .ctr-btn:active { background: var(--gold-glow); }
+    .ctr-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
+    .ctr-value {
+      min-width: 42px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      color: var(--gold);
+      background: var(--surface2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ── Score tab ── */
+    .score-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .score-col {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+    }
+    .score-col.player { border-top: 3px solid var(--gold); }
+    .score-col.anton  { border-top: 3px solid var(--brown-lt); }
+    .score-col-title {
+      font-family: Georgia, serif;
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .score-col.player .score-col-title { color: var(--gold); }
+    .score-col.anton  .score-col-title { color: #D4855A; }
+
+    .score-line {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      padding: 5px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .score-line:last-child { border-bottom: none; }
+    .score-line-icon { font-size: 16px; flex-shrink: 0; }
+    .score-line-label { flex: 1; font-size: 12px; color: var(--text-dim); }
+    .score-line-val {
+      font-size: 16px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      color: var(--text);
+    }
+    .score-line-val.neg { color: var(--danger); }
+
+    .score-total-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .score-total {
+      flex: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      text-align: center;
+    }
+    .score-total-num {
+      font-family: Georgia, serif;
+      font-size: 38px;
+      font-weight: bold;
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+    }
+    .score-total.player .score-total-num { color: var(--gold); }
+    .score-total.anton  .score-total-num { color: #D4855A; }
+    .score-total-label {
+      font-size: 10px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-mute);
+      margin-top: 4px;
+    }
+
+    .result-banner {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .result-banner .result-emoji { font-size: 36px; }
+    .result-banner .result-text {
+      font-family: Georgia, serif;
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: 6px;
+      color: var(--gold);
+    }
+    .result-banner .result-sub {
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-top: 4px;
+    }
+
+    /* ── Score input rows ── */
+    .score-input-group { margin-bottom: 6px; }
+
+    /* ── Rules tab ── */
+    .rules-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      margin-bottom: 10px;
+    }
+    .rules-block h3 {
+      font-family: Georgia, serif;
+      font-size: 14px;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+    .rules-block ol, .rules-block ul {
+      padding-left: 18px;
+      font-size: 13px;
+      color: var(--text-dim);
+      line-height: 1.65;
+    }
+    .rules-block li { margin-bottom: 3px; }
+    .rules-block p {
+      font-size: 13px;
+      color: var(--text-dim);
+      line-height: 1.65;
+      margin-bottom: 6px;
+    }
+    .rules-block p:last-child { margin-bottom: 0; }
+    .tag {
+      display: inline-block;
+      background: var(--gold-glow);
+      color: var(--gold);
+      border: 1px solid var(--gold-dim);
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 1px 6px;
+      letter-spacing: .04em;
+      vertical-align: middle;
+    }
+    .tag.brown {
+      background: rgba(139,69,19,.2);
+      color: #D4855A;
+      border-color: var(--brown);
+    }
+    .diff-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      margin-top: 8px;
+    }
+    .diff-table th {
+      text-align: left;
+      color: var(--text-mute);
+      font-weight: 600;
+      letter-spacing: .05em;
+      padding: 4px 6px;
+      border-bottom: 1px solid var(--border);
+    }
+    .diff-table td {
+      padding: 5px 6px;
+      color: var(--text-dim);
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+    .diff-table tr:last-child td { border-bottom: none; }
+
+    /* ── Setup tab ── */
+    .setup-step {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 10px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+    }
+    .setup-num {
+      font-family: Georgia, serif;
+      font-size: 22px;
+      font-weight: bold;
+      color: var(--gold-dim);
+      font-variant-numeric: tabular-nums;
+      line-height: 1.1;
+      flex-shrink: 0;
+      width: 28px;
+      text-align: right;
+    }
+    .setup-text { font-size: 13px; color: var(--text-dim); line-height: 1.55; }
+    .setup-text strong { color: var(--text); font-weight: 600; }
+
+    /* ── Misc ── */
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 14px 0;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--gold-glow);
+      border: 1px solid var(--gold-dim);
+      border-radius: 6px;
+      padding: 2px 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--gold);
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root:not([data-theme="dark"]) {
+        --bg:        #F0EDD8;
+        --surface:   #FAF7EC;
+        --surface2:  #EDE9D5;
+        --border:    #D4CCAA;
+        --text:      #2C2510;
+        --text-dim:  #6B5E3A;
+        --text-mute: #9A8A6A;
+        --gold:      #8B6914;
+        --gold-dim:  #6B5010;
+        --gold-glow: rgba(139,105,20,.12);
+        --brown:     #7A3A10;
+        --brown-lt:  #9A4A20;
+      }
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+
+  <!-- Header -->
+  <header>
+    <a href="index.html" class="back-btn">← Volver</a>
+    <span class="header-title">Castle Combo</span>
+    <span class="header-crown">♟</span>
+  </header>
+
+  <!-- Nav tabs -->
+  <nav>
+    <button class="tab-btn active" data-tab="solo" onclick="switchTab('solo')">
+      <span class="tab-icon">⚔️</span>Solitario
+    </button>
+    <button class="tab-btn" data-tab="score" onclick="switchTab('score')">
+      <span class="tab-icon">📊</span>Puntos
+    </button>
+    <button class="tab-btn" data-tab="rules" onclick="switchTab('rules')">
+      <span class="tab-icon">📜</span>Reglas
+    </button>
+    <button class="tab-btn" data-tab="setup" onclick="switchTab('setup')">
+      <span class="tab-icon">🏰</span>Setup
+    </button>
+  </nav>
+
+  <!-- Main content -->
+  <main>
+
+    <!-- ══ TAB: SOLITARIO ══ -->
+    <div class="tab-panel active" id="tab-solo">
+
+      <div class="section-label">Dificultad</div>
+      <div class="diff-group">
+        <button class="diff-btn active" data-diff="0" onclick="setDifficulty(0)">
+          <span class="diff-icon">🌿</span>Fácil
+        </button>
+        <button class="diff-btn" data-diff="1" onclick="setDifficulty(1)">
+          <span class="diff-icon">⚔️</span>Normal
+        </button>
+        <button class="diff-btn" data-diff="2" onclick="setDifficulty(2)">
+          <span class="diff-icon">💀</span>Difícil
+        </button>
+      </div>
+
+      <div class="section-label">Turno actual</div>
+      <div class="turn-display">
+        <div class="turn-number" id="turn-num">1</div>
+        <div class="turn-label">de 9 turnos</div>
+        <div>
+          <span class="turn-who player" id="turn-who">Tu turno</span>
+        </div>
+        <div class="turn-nav" id="turn-pips"></div>
+      </div>
+
+      <div class="turn-controls">
+        <button class="btn btn-prev" onclick="prevTurn()">◀ Anterior</button>
+        <button class="btn btn-reset" onclick="resetGame()">↺</button>
+        <button class="btn btn-next" id="btn-next" onclick="nextTurn()">Siguiente ▶</button>
+      </div>
+
+      <div class="section-label" style="margin-top:20px;">Recursos de Anton</div>
+
+      <div class="counter-row">
+        <span class="counter-icon">🪙</span>
+        <div class="counter-info">
+          <div class="counter-name">Monedas</div>
+          <div class="counter-desc" id="desc-coins">Vale 1 PV c/u</div>
+        </div>
+        <div class="counter-controls">
+          <button class="ctr-btn" onclick="change('coins',-1)" aria-label="Quitar moneda">−</button>
+          <div class="ctr-value" id="val-coins">0</div>
+          <button class="ctr-btn" onclick="change('coins',1)" aria-label="Añadir moneda">+</button>
+        </div>
+      </div>
+
+      <div class="counter-row">
+        <span class="counter-icon">🗝️</span>
+        <div class="counter-info">
+          <div class="counter-name">Llaves</div>
+          <div class="counter-desc" id="desc-keys">Vale 1 PV c/u</div>
+        </div>
+        <div class="counter-controls">
+          <button class="ctr-btn" onclick="change('keys',-1)" aria-label="Quitar llave">−</button>
+          <div class="ctr-value" id="val-keys">0</div>
+          <button class="ctr-btn" onclick="change('keys',1)" aria-label="Añadir llave">+</button>
+        </div>
+      </div>
+
+      <div class="counter-row">
+        <span class="counter-icon">🏷️</span>
+        <div class="counter-info">
+          <div class="counter-name">Descuentos</div>
+          <div class="counter-desc" id="desc-disc">Vale 2 PV c/u (descuento doble = 2)</div>
+        </div>
+        <div class="counter-controls">
+          <button class="ctr-btn" onclick="change('disc',-1)" aria-label="Quitar descuento">−</button>
+          <div class="ctr-value" id="val-disc">0</div>
+          <button class="ctr-btn" onclick="change('disc',1)" aria-label="Añadir descuento">+</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ══ TAB: PUNTUACIÓN ══ -->
+    <div class="tab-panel" id="tab-score">
+
+      <div class="section-label">Tu puntuación</div>
+      <div class="counter-row">
+        <span class="counter-icon">🃏</span>
+        <div class="counter-info">
+          <div class="counter-name">Tus cartas (PV)</div>
+          <div class="counter-desc">PV directos de tus cartas</div>
+        </div>
+        <div class="counter-controls">
+          <button class="ctr-btn" onclick="change('pCards',-1)">−</button>
+          <div class="ctr-value" id="val-pCards">0</div>
+          <button class="ctr-btn" onclick="change('pCards',1)">+</button>
+        </div>
+      </div>
+      <div class="counter-row">
+        <span class="counter-icon">🗝️</span>
+        <div class="counter-info">
+          <div class="counter-name">Tus llaves</div>
+          <div class="counter-desc" id="desc-pkeys">Vale 1 PV c/u</div>
+        </div>
+        <div class="counter-controls">
+          <button class="ctr-btn" onclick="change('pKeys',-1)">−</button>
+          <div class="ctr-value" id="val-pKeys">0</div>
+          <button class="ctr-btn" onclick="change('pKeys',1)">+</button>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="section-label">Puntuación de Anton</div>
+
+      <div class="counter-row">
+        <span class="counter-icon">🃏</span>
+        <div class="counter-info">
+          <div class="counter-name">Cartas de Anton</div>
+          <div class="counter-desc">PV directos de sus cartas</div>
+        </div>
+        <div class="counter-controls">
+          <button class="ctr-btn" onclick="change('aCards',-1)">−</button>
+          <div class="ctr-value" id="val-aCards">0</div>
+          <button class="ctr-btn" onclick="change('aCards',1)">+</button>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:8px;">
+        <div class="card-title">Recursos finales de Anton</div>
+        <div class="card-sub">Los contadores del tab Solitario se usan aquí automáticamente.</div>
+      </div>
+
+      <div class="score-grid">
+        <div class="score-col player">
+          <div class="score-col-title">Tú</div>
+          <div class="score-line">
+            <span class="score-line-icon">🃏</span>
+            <span class="score-line-label">Cartas</span>
+            <span class="score-line-val" id="sp-cards">0</span>
+          </div>
+          <div class="score-line">
+            <span class="score-line-icon">🗝️</span>
+            <span class="score-line-label">Llaves</span>
+            <span class="score-line-val" id="sp-keys">0</span>
+          </div>
+        </div>
+        <div class="score-col anton">
+          <div class="score-col-title">Anton</div>
+          <div class="score-line">
+            <span class="score-line-icon">🃏</span>
+            <span class="score-line-label">Cartas</span>
+            <span class="score-line-val" id="sa-cards">0</span>
+          </div>
+          <div class="score-line">
+            <span class="score-line-icon">🗝️</span>
+            <span class="score-line-label">Llaves</span>
+            <span class="score-line-val" id="sa-keys">0</span>
+          </div>
+          <div class="score-line">
+            <span class="score-line-icon">🪙</span>
+            <span class="score-line-label">Monedas</span>
+            <span class="score-line-val" id="sa-coins">0</span>
+          </div>
+          <div class="score-line">
+            <span class="score-line-icon">🏷️</span>
+            <span class="score-line-label">Descuentos</span>
+            <span class="score-line-val" id="sa-disc">0</span>
+          </div>
+          <div class="score-line" id="row-sinrecurso" style="display:none;">
+            <span class="score-line-icon">❌</span>
+            <span class="score-line-label">Sin recurso</span>
+            <span class="score-line-val neg" id="sa-sinrecurso">0</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="score-total-row">
+        <div class="score-total player">
+          <div class="score-total-num" id="total-player">0</div>
+          <div class="score-total-label">Tu total</div>
+        </div>
+        <div class="score-total anton">
+          <div class="score-total-num" id="total-anton">0</div>
+          <div class="score-total-label">Anton total</div>
+        </div>
+      </div>
+
+      <div class="result-banner" id="result-banner">
+        <div class="result-emoji" id="result-emoji">🏰</div>
+        <div class="result-text" id="result-text">Partida en curso</div>
+        <div class="result-sub" id="result-sub">Completa los 9 turnos y cuenta los PV</div>
+      </div>
+
+    </div>
+
+    <!-- ══ TAB: REGLAS ══ -->
+    <div class="tab-panel" id="tab-rules">
+
+      <div class="rules-block">
+        <h3>🏰 Solitario — Resumen</h3>
+        <p>Juegas contra <strong>Anton</strong>, el automa. La partida dura <strong>9 turnos</strong>. Los turnos <span class="tag brown">impares</span> son tuyos; los turnos <span class="tag">pares</span> son de Anton (2, 4, 6, 8).</p>
+      </div>
+
+      <div class="rules-block">
+        <h3>⚖️ Valor de recursos por dificultad</h3>
+        <table class="diff-table">
+          <thead>
+            <tr>
+              <th>Recurso</th>
+              <th>🌿 Fácil</th>
+              <th>⚔️ Normal</th>
+              <th>💀 Difícil</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>🗝️ Llaves</td><td>1 PV</td><td>1 PV</td><td>2 PV</td></tr>
+            <tr><td>🪙 Monedas</td><td>÷2 PV</td><td>1 PV</td><td>×2 PV</td></tr>
+            <tr><td>🏷️ Descuentos</td><td>1 PV</td><td>2 PV</td><td>3 PV</td></tr>
+            <tr><td>❌ Sin recurso</td><td>—</td><td>—</td><td>−1 PV</td></tr>
+          </tbody>
+        </table>
+        <p style="margin-top:8px;font-size:11px;">Monedas en Fácil: se dividen entre 2 (redondeando hacia abajo).</p>
+      </div>
+
+      <div class="rules-block">
+        <h3>🎴 Turno de Anton (7 pasos)</h3>
+        <ol>
+          <li>Anton roba 1 carta de su mazo</li>
+          <li>Si es su turno (par), <strong>ejecuta la acción</strong> de la carta</li>
+          <li>Recoge los <strong>recursos impresos</strong> en la carta (monedas / llaves / descuentos)</li>
+          <li>Si la carta tiene <strong>efecto especial</strong>, aplícalo</li>
+          <li>Si no puede ejecutar la acción principal, <strong>pasa</strong> (no pierde recursos)</li>
+          <li><strong>Compra</strong> una carta del mercado si tiene los recursos necesarios</li>
+          <li><strong>Repone</strong> el mercado con la carta superior del mazo central</li>
+        </ol>
+      </div>
+
+      <div class="rules-block">
+        <h3>📊 Puntuación final</h3>
+        <p><strong>Tú:</strong> PV de tus cartas + llaves × valor según dificultad.</p>
+        <p><strong>Anton:</strong> PV de sus cartas + llaves × valor + monedas × valor + descuentos × valor. En Difícil, resta 1 PV por cada recurso que no pudo recoger.</p>
+        <p>Gana quien tenga más PV. En empate, <strong>gana Anton</strong>.</p>
+      </div>
+
+      <div class="rules-block">
+        <h3>🏷️ Descuento doble</h3>
+        <p>Si una carta de Anton tiene un <strong>descuento doble</strong>, cuenta como <strong>2 descuentos</strong> en el contador.</p>
+      </div>
+
+    </div>
+
+    <!-- ══ TAB: SETUP ══ -->
+    <div class="tab-panel" id="tab-setup">
+
+      <div class="rules-block">
+        <h3>🏰 Preparación</h3>
+        <p>Prepara el juego de Castle Combo como de costumbre con las siguientes modificaciones para el solitario:</p>
+      </div>
+
+      <div class="setup-step">
+        <div class="setup-num">1</div>
+        <div class="setup-text"><strong>Elige la dificultad</strong> en el tab Solitario. Esto cambia el valor de los recursos de Anton al final.</div>
+      </div>
+
+      <div class="setup-step">
+        <div class="setup-num">2</div>
+        <div class="setup-text">Prepara el <strong>mazo de Anton</strong>: baraja las 18 cartas del automa y colócalas boca abajo.</div>
+      </div>
+
+      <div class="setup-step">
+        <div class="setup-num">3</div>
+        <div class="setup-text">Prepara el <strong>mercado central</strong> como en el juego normal: 4 cartas visibles + mazo central.</div>
+      </div>
+
+      <div class="setup-step">
+        <div class="setup-num">4</div>
+        <div class="setup-text"><strong>Tú empiezas.</strong> Los turnos impares (1, 3, 5, 7, 9) son tuyos; los pares (2, 4, 6, 8) son de Anton.</div>
+      </div>
+
+      <div class="setup-step">
+        <div class="setup-num">5</div>
+        <div class="setup-text">Usa los <strong>contadores de recursos</strong> para llevar la cuenta de lo que acumula Anton a lo largo de la partida.</div>
+      </div>
+
+      <div class="setup-step">
+        <div class="setup-num">6</div>
+        <div class="setup-text">Al final de los 9 turnos, ve al tab <strong>Puntuación</strong> e introduce los PV de cartas de cada uno.</div>
+      </div>
+
+      <div class="card" style="background:var(--gold-glow); border-color: var(--gold-dim);">
+        <div class="card-title">💡 Tip</div>
+        <div class="card-sub">Reinicia los contadores de recursos al empezar una nueva partida con el botón ↺ del tab Solitario.</div>
+      </div>
+
+    </div>
+
+  </main>
+</div>
+
+<script>
+  // ── State ──
+  const state = {
+    difficulty: 0,   // 0=Fácil, 1=Normal, 2=Difícil
+    turn: 1,
+    coins: 0,
+    keys: 0,
+    disc: 0,
+    pCards: 0,
+    pKeys: 0,
+    aCards: 0,
+  };
+
+  const TOTAL_TURNS = 9;
+
+  // ── Tab switching ──
+  function switchTab(id) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelector(`[data-tab="${id}"]`).classList.add('active');
+    document.getElementById(`tab-${id}`).classList.add('active');
+    updateScore(); // always refresh when switching to score
+  }
+
+  // ── Difficulty ──
+  function setDifficulty(d) {
+    state.difficulty = d;
+    document.querySelectorAll('.diff-btn').forEach(b => {
+      b.classList.toggle('active', +b.dataset.diff === d);
+    });
+    updateResourceDescriptions();
+    updateScore();
+    save();
+  }
+
+  function diffLabel() { return ['🌿 Fácil','⚔️ Normal','💀 Difícil'][state.difficulty]; }
+
+  function updateResourceDescriptions() {
+    const d = state.difficulty;
+    const keyPV   = d === 2 ? '2 PV c/u' : '1 PV c/u';
+    const coinPV  = d === 0 ? '½ PV c/u (÷2 final)' : d === 1 ? '1 PV c/u' : '2 PV c/u';
+    const discPV  = d === 0 ? '1 PV c/u' : d === 1 ? '2 PV c/u' : '3 PV c/u';
+    document.getElementById('desc-coins').textContent = coinPV;
+    document.getElementById('desc-keys').textContent  = keyPV;
+    document.getElementById('desc-disc').textContent  = discPV + ' (descuento doble = 2)';
+    document.getElementById('desc-pkeys').textContent = keyPV;
+  }
+
+  // ── Turn ──
+  function isAntonTurn(t) { return t % 2 === 0; }
+
+  function renderTurn() {
+    const t = state.turn;
+    document.getElementById('turn-num').textContent = t;
+    const who = document.getElementById('turn-who');
+    if (isAntonTurn(t)) {
+      who.textContent = '⚔ Turno de Anton';
+      who.className = 'turn-who anton';
+    } else {
+      who.textContent = '🛡 Tu turno';
+      who.className = 'turn-who player';
+    }
+    // Pips
+    const pips = document.getElementById('turn-pips');
+    pips.innerHTML = '';
+    for (let i = 1; i <= TOTAL_TURNS; i++) {
+      const pip = document.createElement('div');
+      const isAnton = isAntonTurn(i);
+      pip.className = 'turn-pip' + (isAnton ? ' anton-pip' : '');
+      if (i < t) pip.classList.add('done');
+      else if (i === t) pip.classList.add('current');
+      pip.title = `Turno ${i}${isAnton ? ' (Anton)' : ' (Tú)'}`;
+      pips.appendChild(pip);
+    }
+    document.getElementById('btn-next').disabled = t >= TOTAL_TURNS;
+  }
+
+  function nextTurn() {
+    if (state.turn < TOTAL_TURNS) { state.turn++; renderTurn(); save(); }
+  }
+  function prevTurn() {
+    if (state.turn > 1) { state.turn--; renderTurn(); save(); }
+  }
+  function resetGame() {
+    if (!confirm('¿Reiniciar la partida? Se borrarán todos los contadores.')) return;
+    state.turn = 1;
+    state.coins = state.keys = state.disc = 0;
+    state.pCards = state.pKeys = state.aCards = 0;
+    renderTurn();
+    renderCounters();
+    updateScore();
+    save();
+  }
+
+  // ── Counters ──
+  const counterKeys = ['coins','keys','disc','pCards','pKeys','aCards'];
+  function change(key, delta) {
+    state[key] = Math.max(0, state[key] + delta);
+    renderCounters();
+    updateScore();
+    save();
+  }
+  function renderCounters() {
+    counterKeys.forEach(k => {
+      const el = document.getElementById(`val-${k}`);
+      if (el) el.textContent = state[k];
+    });
+  }
+
+  // ── Score calculation ──
+  function calcAntonResources() {
+    const d = state.difficulty;
+    const keyPV  = d === 2 ? 2 : 1;
+    const coinPV = d === 0 ? 0.5 : d === 1 ? 1 : 2;
+    const discPV = d === 0 ? 1 : d === 1 ? 2 : 3;
+    const keyScore  = state.keys * keyPV;
+    const coinScore = d === 0 ? Math.floor(state.coins / 2) : state.coins * coinPV;
+    const discScore = state.disc * discPV;
+    return { keyScore, coinScore, discScore };
+  }
+
+  function updateScore() {
+    const d = state.difficulty;
+    const { keyScore, coinScore, discScore } = calcAntonResources();
+
+    const playerTotal = state.pCards + state.pKeys * (d === 2 ? 2 : 1);
+    const antonBase   = state.aCards + keyScore + coinScore + discScore;
+    const sinRecurso  = d === 2 ? -1 : 0; // placeholder, user hasn't input this
+    const antonTotal  = antonBase; // sin recurso tracked separately if needed
+
+    // Score column detail
+    document.getElementById('sp-cards').textContent = state.pCards;
+    document.getElementById('sp-keys').textContent  = state.pKeys * (d === 2 ? 2 : 1);
+    document.getElementById('sa-cards').textContent = state.aCards;
+    document.getElementById('sa-keys').textContent  = keyScore;
+    document.getElementById('sa-coins').textContent = coinScore;
+    document.getElementById('sa-disc').textContent  = discScore;
+
+    // Sin recurso row (only in Difícil — user marks it manually, we show row)
+    const sinRecRow = document.getElementById('row-sinrecurso');
+    sinRecRow.style.display = d === 2 ? '' : 'none';
+
+    document.getElementById('total-player').textContent = playerTotal;
+    document.getElementById('total-anton').textContent  = antonTotal;
+
+    // Result
+    const diff = playerTotal - antonTotal;
+    const emoji = document.getElementById('result-emoji');
+    const txt   = document.getElementById('result-text');
+    const sub   = document.getElementById('result-sub');
+
+    if (state.turn < TOTAL_TURNS) {
+      emoji.textContent = '⏳';
+      txt.textContent   = 'Partida en curso';
+      sub.textContent   = `Turno ${state.turn} de ${TOTAL_TURNS}`;
+    } else if (diff > 0) {
+      emoji.textContent = '🏆';
+      txt.textContent   = '¡Victoria!';
+      sub.textContent   = `Ganaste por ${diff} PV. Bien hecho, ${diffLabel()}.`;
+    } else if (diff === 0) {
+      emoji.textContent = '🤝';
+      txt.textContent   = 'Empate — gana Anton';
+      sub.textContent   = 'En empate el automa siempre gana.';
+    } else {
+      emoji.textContent = '💀';
+      txt.textContent   = 'Anton gana';
+      sub.textContent   = `Anton te superó por ${Math.abs(diff)} PV.`;
+    }
+  }
+
+  // ── Persistence ──
+  function save() {
+    try { localStorage.setItem('castlecombo_state', JSON.stringify(state)); } catch(e) {}
+  }
+  function load() {
+    try {
+      const s = localStorage.getItem('castlecombo_state');
+      if (s) Object.assign(state, JSON.parse(s));
+    } catch(e) {}
+  }
+
+  // ── Init ──
+  load();
+  setDifficulty(state.difficulty);
+  renderTurn();
+  renderCounters();
+  updateScore();
+
+  // ── SW registration ──
+  if ('serviceWorker' in navigator) {
+    const swSrc = `
+const CACHE = 'castlecombo-v1';
+self.addEventListener('install', e => {
+  e.waitUntil(caches.open(CACHE).then(c => c.addAll([location.pathname])));
+  self.skipWaiting();
+});
+self.addEventListener('activate', e => {
+  e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));
+  self.clients.claim();
+});
+self.addEventListener('fetch', e => {
+  e.respondWith(caches.match(e.request).then(r => r || fetch(e.request)));
+});
+`;
+    const blob = new Blob([swSrc], { type: 'application/javascript' });
+    const swURL = URL.createObjectURL(blob);
+    navigator.serviceWorker.register(swURL).catch(() => {});
+  }
+</script>
+</body>
+</html>

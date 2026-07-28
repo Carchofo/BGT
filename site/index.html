@@ -38,6 +38,12 @@
 <meta name="author" content="BGT — Board Game Tools">
 <link rel="canonical" href="https://carchofo.github.io/BGT/">
 <link rel="icon" type="image/png" href="assets/logo-icon.png">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="assets/logo-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="BGT">
+<meta name="theme-color" content="#153356">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -789,6 +795,24 @@
   .bug-report-status{font-size:.83rem;font-weight:600;display:none}
   .bug-report-status.ok{display:block;color:#2e6b3a}
   .bug-report-status.err{display:block;color:#c0392b}
+  /* Play web button */
+  .modal-play-btn{
+    display:inline-flex;align-items:center;gap:.5rem;
+    margin-bottom:1rem;
+    background:linear-gradient(135deg,var(--navy),var(--navy-light));
+    color:#fff;font-weight:700;font-size:1rem;text-decoration:none;
+    padding:.75rem 1.8rem;border-radius:12px;width:100%;justify-content:center;
+    box-shadow:0 4px 14px rgba(21,51,86,.25);
+    transition:filter .15s ease;
+  }
+  .modal-play-btn:hover{filter:brightness(1.15)}
+  .card-play-link{
+    display:inline-flex;align-items:center;gap:.3rem;
+    font-size:.82rem;font-weight:700;color:#fff;text-decoration:none;
+    background:var(--navy);padding:.28rem .75rem;border-radius:999px;
+    transition:background .15s ease;
+  }
+  .card-play-link:hover{background:var(--navy-light)}
   /* Foro link */
   .modal-forum-row{
     border-top:1px solid var(--cream-line);
@@ -932,7 +956,7 @@
         </div>
         <div class="card-footer">
           <button class="like-btn" data-game="Spooktacular"><span class="like-heart">♡</span> <span class="like-count">0</span></button>
-          <span style="font-size:.72rem;font-weight:700;color:#2a7a2a;background:#e6f4e6;border-radius:4px;padding:2px 7px;">✓ Testeado</span>
+          <a class="card-play-link" href="spooktacular.html">▶ Jugar</a>
           <a class="game-thread-link" href="https://github.com/Carchofo/BGT/discussions?discussions_q=Spooktacular" target="_blank" rel="noopener">💬 Foro</a>
         </div>
       </div>
@@ -947,6 +971,7 @@
         </div>
         <div class="card-footer">
           <button class="like-btn" data-game="Criaturas Maravillosas"><span class="like-heart">♡</span> <span class="like-count">0</span></button>
+          <a class="card-play-link" href="criaturas.html">▶ Jugar</a>
           <a class="game-thread-link" href="https://github.com/Carchofo/BGT/discussions?discussions_q=Criaturas%20Maravillosas" target="_blank" rel="noopener">💬 Foro</a>
         </div>
       </div>
@@ -961,6 +986,7 @@
         </div>
         <div class="card-footer">
           <button class="like-btn" data-game="Tiletum"><span class="like-heart">♡</span> <span class="like-count">0</span></button>
+          <a class="card-play-link" href="tiletum.html">▶ Jugar</a>
           <a class="game-thread-link" href="https://github.com/Carchofo/BGT/discussions?discussions_q=Tiletum" target="_blank" rel="noopener">💬 Foro</a>
         </div>
       </div>
@@ -975,6 +1001,7 @@
         </div>
         <div class="card-footer">
           <button class="like-btn" data-game="Piratas de Maracaibo"><span class="like-heart">♡</span> <span class="like-count">0</span></button>
+          <a class="card-play-link" href="maracaibo.html">▶ Jugar</a>
           <a class="game-thread-link" href="https://github.com/Carchofo/BGT/discussions?discussions_q=Piratas%20de%20Maracaibo" target="_blank" rel="noopener">💬 Foro</a>
         </div>
       </div>
@@ -989,6 +1016,7 @@
         </div>
         <div class="card-footer">
           <button class="like-btn" data-game="Castle Combo"><span class="like-heart">♡</span> <span class="like-count">0</span></button>
+          <a class="card-play-link" href="castlecombo.html">▶ Jugar</a>
           <a class="game-thread-link" href="https://github.com/Carchofo/BGT/discussions?discussions_q=Castle%20Combo" target="_blank" rel="noopener">💬 Foro</a>
         </div>
       </div>
@@ -1003,6 +1031,7 @@
         </div>
         <div class="card-footer">
           <button class="like-btn" data-game="Coimbra"><span class="like-heart">♡</span> <span class="like-count">0</span></button>
+          <a class="card-play-link" href="coimbra.html">▶ Jugar</a>
           <a class="game-thread-link" href="https://github.com/Carchofo/BGT/discussions?discussions_q=Coimbra" target="_blank" rel="noopener">💬 Foro</a>
         </div>
       </div>
@@ -1017,6 +1046,7 @@
         </div>
         <div class="card-footer">
           <button class="like-btn" data-game="Cascadia"><span class="like-heart">♡</span> <span class="like-count">0</span></button>
+          <a class="card-play-link" href="cascadia.html">▶ Jugar</a>
           <a class="game-thread-link" href="https://github.com/Carchofo/BGT/discussions?discussions_q=Cascadia" target="_blank" rel="noopener">💬 Foro</a>
         </div>
       </div>
@@ -1031,6 +1061,7 @@
         </div>
         <div class="card-footer">
           <button class="like-btn" data-game="Viernes"><span class="like-heart">♡</span> <span class="like-count">0</span></button>
+          <a class="card-play-link" href="viernes.html">▶ Jugar</a>
           <a class="game-thread-link" href="https://github.com/Carchofo/BGT/discussions?discussions_q=Viernes" target="_blank" rel="noopener">💬 Foro</a>
         </div>
       </div>
@@ -1045,6 +1076,7 @@
         </div>
         <div class="card-footer">
           <button class="like-btn" data-game="Splendor"><span class="like-heart">♡</span> <span class="like-count">0</span></button>
+          <a class="card-play-link" href="splendor.html">▶ Jugar</a>
           <a class="game-thread-link" href="https://github.com/Carchofo/BGT/discussions?discussions_q=Splendor" target="_blank" rel="noopener">💬 Foro</a>
         </div>
       </div>
@@ -1294,6 +1326,8 @@
         <div class="modal-tools-title" data-i18n="modal.tools_title">Herramientas incluidas</div>
         <div class="tags" id="modal-tags"></div>
       </div>
+
+      <a class="modal-play-btn" id="modal-play" href="#" target="_blank" style="display:none">▶ Jugar en el navegador</a>
 
       <button type="button" class="bug-report-btn" id="bug-report-toggle" data-i18n="modal.bug_btn">🐛 Reportar fallo o mejora</button>
       <form class="bug-report-form" id="bug-report-form">
@@ -1688,56 +1722,72 @@ var KOFI_USERNAME = 'carchofo';
       bot: '🤖 Bot: Killtron-3000',
       desc: 'Enfréntate al robot asesino del cine: tres mazos de programa (A→B→C) que se ejecutan cada turno de forma automática. Gestiona su movimiento, ataques y puntuación sin tocar nada.',
       tools: [{label:'Bot solitario',cls:'bot'},{label:'Resumen reglas',cls:'rules'}],
-      discussions: 'Spooktacular'
+      discussions: 'Spooktacular',
+      playUrl: 'spooktacular.html'
     },
     'Criaturas Maravillosas': {
       banner: 'assets/banner_cm_new.jpg',
       bot: '🦋 Bot: Tingent',
       desc: 'Un rival artificial con tracker propio de zonas y puntuación. Roba cartas, ocupa zonas y compite contigo hasta el recuento final. Incluye todos los niveles de dificultad del modo solitario oficial.',
       tools: [{label:'Bot solitario',cls:'bot'},{label:'Calculadora',cls:'calc'},{label:'Resumen reglas',cls:'rules'}],
-      discussions: 'Criaturas%20Maravillosas'
+      discussions: 'Criaturas%20Maravillosas',
+      playUrl: 'criaturas.html'
     },
     'Tiletum': {
       banner: 'assets/banner_tiletum_img.jpg',
       bot: '🏛️ Bot: Titus',
       desc: 'El mercader automático que recorre Europa: mazo de decisiones propio para jugar el modo solitario sin gestionar tú al rival. Elige dados, activa acciones y puntúa con las reglas oficiales.',
       tools: [{label:'Bot solitario',cls:'bot'},{label:'Resumen reglas',cls:'rules'}],
-      discussions: 'Tiletum'
+      discussions: 'Tiletum',
+      playUrl: 'tiletum.html'
     },
     'Piratas de Maracaibo': {
       banner: 'assets/banner_maracaibo.jpg',
       bot: '🏴‍☠️ Bot: Jordán',
       desc: 'Un pirata automático que navega el Caribe: gestiona su ruta y sus acciones para que solo te preocupes de tu turno. Soporta los niveles de dificultad del solitario de Philip Eklund.',
       tools: [{label:'Bot solitario',cls:'bot'},{label:'Resumen reglas',cls:'rules'}],
-      discussions: 'Piratas%20de%20Maracaibo'
+      discussions: 'Piratas%20de%20Maracaibo',
+      playUrl: 'maracaibo.html'
     },
     'Castle Combo': {
       banner: 'assets/banner_castle_combo.jpg',
       bot: '🏰 Bot: Anton',
       desc: 'El rival automático para el modo solitario: elige cartas, construye su castillo y puntúa contra ti. Los contadores de Anton se gestionan solos, tú solo decides tu turno.',
       tools: [{label:'Bot solitario',cls:'bot'},{label:'Resumen reglas',cls:'rules'}],
-      discussions: 'Castle%20Combo'
+      discussions: 'Castle%20Combo',
+      playUrl: 'castlecombo.html'
     },
     'Coimbra': {
       banner: 'assets/banner_coimbra.jpg',
       bot: '🎓 Bot solitario',
       desc: 'Automatiza al rival en la ciudad universitaria portuguesa: dados, influencia y viajes gestionados por la app. El estado de la partida se guarda aunque salgas o rotes el móvil.',
       tools: [{label:'Bot solitario',cls:'bot'},{label:'Resumen reglas',cls:'rules'}],
-      discussions: 'Coimbra'
+      discussions: 'Coimbra',
+      playUrl: 'coimbra.html'
     },
     'Cascadia': {
       banner: 'assets/banner_cascadia.jpg',
       bot: '🌲 Calculadora de puntuación',
       desc: 'Introduce tus cartas de fauna y hábitats al terminar la partida y obtén el desglose completo de puntos al instante. Soporta todas las tarjetas de objetivos y cualquier número de jugadores.',
       tools: [{label:'Calculadora',cls:'calc'}],
-      discussions: 'Cascadia'
+      discussions: 'Cascadia',
+      playUrl: 'cascadia.html'
     },
     'Viernes': {
       banner: 'assets/banner_friday.jpg',
       bot: '🧭 Ayuda de juego solitario',
       desc: 'Asistente para el clásico solitario de Friedemann Friese: gestiona fases, peligros y evolución de Robinson. La app lleva la cuenta de las cartas de peligro, las de pelea y los puntos de vida.',
       tools: [{label:'Solitario',cls:'bot'},{label:'Resumen reglas',cls:'rules'}],
-      discussions: 'Viernes'
+      discussions: 'Viernes',
+      playUrl: 'viernes.html'
+    },
+    'Splendor': {
+      banner: 'assets/banner_splendor.jpg',
+      bot: '💎 Automa fan-made',
+      desc: 'Mazo de 10 cartas con 3 fases de dificultad creciente. El automa toma gemas y compra cartas del mercado. Modos Normal y Difícil.',
+      tools: [{label:'Bot solitario',cls:'bot'},{label:'Resumen reglas',cls:'rules'}],
+      discussions: 'Splendor',
+      playUrl: 'splendor.html'
     }
   };
 
@@ -2030,6 +2080,13 @@ var KOFI_USERNAME = 'carchofo';
     }).join('');
     document.getElementById('modal-discuss').href =
       'https://github.com/Carchofo/BGT/discussions?discussions_q=' + g.discussions;
+    var playBtn = document.getElementById('modal-play');
+    if (g.playUrl) {
+      playBtn.href = g.playUrl;
+      playBtn.style.display = 'flex';
+    } else {
+      playBtn.style.display = 'none';
+    }
     renderVariants(gameKey);
     renderComments(gameKey);
     renderBotRating(gameKey);
@@ -2614,6 +2671,11 @@ function applyLang(lang) {
     el.style.display = 'flex';
   }
 })();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
 </script>
 </body>
 </html>

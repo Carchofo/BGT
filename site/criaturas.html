@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1A140A">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Criaturas Maravillosas — Solitario</title>
+<link rel="manifest" href="manifest.json">
+<style>
+  :root {
+    --bg: #1A140A;
+    --card: #2C2018;
+    --border: #5C4A2A;
+    --amber: #D4A017;
+    --brown: #7B4A1E;
+    --text: #E8D5A0;
+    --muted: #9A8060;
+    --yellow-zone: #D4A017;
+    --brown-zone: #7B4A1E;
+    --radius: 10px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  header {
+    background: var(--card);
+    border-bottom: 2px solid var(--border);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  header a {
+    color: var(--amber);
+    text-decoration: none;
+    font-size: 14px;
+    opacity: 0.8;
+  }
+  header h1 {
+    font-size: 18px;
+    color: var(--amber);
+    flex: 1;
+    text-align: center;
+  }
+  /* TABS */
+  .tabs {
+    display: flex;
+    background: var(--card);
+    border-bottom: 2px solid var(--border);
+    overflow-x: auto;
+  }
+  .tab-btn {
+    flex: 1;
+    min-width: 70px;
+    padding: 10px 8px;
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 12px;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .tab-btn.active {
+    color: var(--amber);
+    border-bottom-color: var(--amber);
+  }
+  .tab-content { display: none; flex: 1; overflow-y: auto; padding: 16px; }
+  .tab-content.active { display: block; }
+
+  /* SETUP */
+  .diff-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 16px 0;
+  }
+  .diff-card {
+    background: var(--card);
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+  }
+  .diff-card:hover { border-color: var(--amber); }
+  .diff-card.selected { border-color: var(--amber); background: #3D2E15; }
+  .diff-card .stars { font-size: 18px; margin-bottom: 6px; }
+  .diff-card .name { font-size: 15px; font-weight: bold; color: var(--amber); }
+  .diff-card .info { font-size: 11px; color: var(--muted); margin-top: 4px; }
+  .btn-primary {
+    width: 100%;
+    padding: 14px;
+    background: var(--amber);
+    color: #1A140A;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: opacity 0.2s;
+  }
+  .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn-secondary {
+    padding: 10px 20px;
+    background: var(--card);
+    color: var(--amber);
+    border: 2px solid var(--amber);
+    border-radius: var(--radius);
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-secondary:hover { background: var(--amber); color: #1A140A; }
+
+  /* GAME */
+  .section-title {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .game-section { margin-bottom: 18px; }
+
+  /* TRACKER */
+  .tracker-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 4px;
+    margin-bottom: 8px;
+  }
+  .tracker-cell {
+    aspect-ratio: 1;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: bold;
+    border: 2px solid transparent;
+    transition: all 0.2s;
+    position: relative;
+  }
+  .tracker-cell.yellow-zone {
+    background: #3D2E00;
+    color: var(--amber);
+    border-color: #5C4500;
+  }
+  .tracker-cell.brown-zone {
+    background: #3D1E0A;
+    color: #C07040;
+    border-color: #5C2E15;
+  }
+  .tracker-cell.current {
+    border-color: var(--amber);
+    box-shadow: 0 0 8px var(--amber);
+    transform: scale(1.05);
+    z-index: 1;
+  }
+  .tracker-cell.current.brown-zone {
+    border-color: #C07040;
+    box-shadow: 0 0 8px #C07040;
+  }
+  .zone-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+  .zone-badge.yellow { background: #3D2E00; color: var(--amber); border: 1px solid var(--amber); }
+  .zone-badge.brown { background: #3D1E0A; color: #C07040; border: 1px solid #C07040; }
+
+  /* CARD */
+  .card-display {
+    background: var(--card);
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+  }
+  .card-number {
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .card-action {
+    font-size: 15px;
+    color: var(--text);
+    line-height: 1.5;
+    margin-bottom: 8px;
+  }
+  .card-advance {
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    display: inline-block;
+    margin-bottom: 12px;
+  }
+  .card-advance.yes { background: #1A3020; color: #4CAF50; border: 1px solid #2E7040; }
+  .card-advance.no { background: #301A1A; color: #CF6679; border: 1px solid #7A2030; }
+
+  .tracker-action-box {
+    background: #3D2E00;
+    border: 1px solid #5C4500;
+    border-radius: var(--radius);
+    padding: 12px;
+    margin-top: 10px;
+  }
+  .tracker-action-box .action-icon { font-size: 18px; margin-right: 6px; }
+  .tracker-action-box .action-title { font-weight: bold; color: var(--amber); font-size: 13px; }
+  .tracker-action-box .action-desc { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+  .reshuffle-alert {
+    background: #3D1E0A;
+    border: 2px solid #C07040;
+    border-radius: var(--radius);
+    padding: 12px;
+    margin-top: 10px;
+    text-align: center;
+    color: #C07040;
+    font-weight: bold;
+    font-size: 14px;
+  }
+
+  .cards-remaining {
+    font-size: 12px;
+    color: var(--muted);
+    text-align: center;
+    margin-bottom: 12px;
+  }
+
+  .game-over-box {
+    background: var(--card);
+    border: 2px solid var(--amber);
+    border-radius: var(--radius);
+    padding: 20px;
+    text-align: center;
+  }
+  .game-over-box h2 { color: var(--amber); font-size: 20px; margin-bottom: 8px; }
+  .game-over-box p { color: var(--muted); font-size: 14px; margin-bottom: 16px; }
+
+  /* SCORE */
+  .score-section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px;
+    margin-bottom: 14px;
+  }
+  .score-section h3 {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .score-section.player h3 { color: #4A9EFF; }
+  .score-section.tingent h3 { color: #CF6679; }
+  .score-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    gap: 8px;
+  }
+  .score-row label { flex: 1; font-size: 13px; color: var(--text); }
+  .score-row input[type=number] {
+    width: 64px;
+    padding: 6px 8px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-size: 14px;
+    text-align: center;
+  }
+  .score-row .mult { font-size: 11px; color: var(--muted); white-space: nowrap; }
+  .score-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 8px;
+    border-top: 1px solid var(--border);
+    margin-top: 4px;
+  }
+  .score-total span { font-size: 14px; color: var(--muted); }
+  .score-total strong { font-size: 20px; color: var(--amber); }
+  .result-box {
+    background: var(--card);
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    text-align: center;
+    margin-top: 14px;
+  }
+  .result-box.win { border-color: #4A9EFF; }
+  .result-box.loss { border-color: #CF6679; }
+  .result-box .result-icon { font-size: 36px; margin-bottom: 8px; }
+  .result-box .result-text { font-size: 18px; font-weight: bold; }
+  .result-box.win .result-text { color: #4A9EFF; }
+  .result-box.loss .result-text { color: #CF6679; }
+  .result-box .diff-text { font-size: 14px; color: var(--muted); margin-top: 4px; }
+
+  /* RULES */
+  .rules-section { margin-bottom: 20px; }
+  .rules-section h3 {
+    color: var(--amber);
+    font-size: 15px;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+  .rules-section p, .rules-section li {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.6;
+    margin-bottom: 6px;
+  }
+  .rules-section ul { padding-left: 18px; }
+  .rules-section .note {
+    background: var(--card);
+    border-left: 3px solid var(--amber);
+    padding: 8px 12px;
+    border-radius: 0 6px 6px 0;
+    margin: 8px 0;
+  }
+  .pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: bold;
+    margin: 2px;
+  }
+  .pill.y { background: #3D2E00; color: var(--amber); border: 1px solid #5C4500; }
+  .pill.br { background: #3D1E0A; color: #C07040; border: 1px solid #5C2E15; }
+</style>
+</head>
+<body>
+<header>
+  <a href="index.html">← Volver</a>
+  <h1>🐾 Criaturas Maravillosas</h1>
+  <div style="width:56px"></div>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="showTab('setup')">⚙️ Setup</button>
+  <button class="tab-btn" onclick="showTab('game')" id="tab-game">🎮 Solitario</button>
+  <button class="tab-btn" onclick="showTab('score')">📊 Puntuación</button>
+  <button class="tab-btn" onclick="showTab('rules')">📖 Reglas</button>
+</div>
+
+<!-- SETUP TAB -->
+<div id="tab-setup" class="tab-content active">
+  <p class="section-title" style="margin-top:8px">Selecciona dificultad</p>
+  <div class="diff-grid">
+    <div class="diff-card" onclick="selectDiff(0)" id="diff-0">
+      <div class="stars">⭐</div>
+      <div class="name">Perezoso</div>
+      <div class="info">Inicio: 1 pto · Marrón: pos 16 · FD: 1 pto</div>
+    </div>
+    <div class="diff-card" onclick="selectDiff(1)" id="diff-1">
+      <div class="stars">⭐⭐</div>
+      <div class="name">Facilón</div>
+      <div class="info">Inicio: 2 ptos · Marrón: pos 13 · FD: 2 ptos</div>
+    </div>
+    <div class="diff-card" onclick="selectDiff(2)" id="diff-2">
+      <div class="stars">⭐⭐⭐</div>
+      <div class="name">Salvaje</div>
+      <div class="info">Inicio: 3 ptos · Marrón: pos 11 · FD: 3 ptos</div>
+    </div>
+    <div class="diff-card" onclick="selectDiff(3)" id="diff-3">
+      <div class="stars">⭐⭐⭐⭐</div>
+      <div class="name">Terrorífico</div>
+      <div class="info">Inicio: 4 ptos · Marrón: pos 4 · FD: 3 ptos</div>
+    </div>
+  </div>
+  <button class="btn-primary" id="start-btn" onclick="startGame()" disabled>Empezar partida</button>
+</div>
+
+<!-- GAME TAB -->
+<div id="tab-game" class="tab-content">
+  <div id="game-area">
+    <p style="color:var(--muted);text-align:center;margin-top:40px">Selecciona una dificultad y pulsa Empezar.</p>
+  </div>
+</div>
+
+<!-- SCORE TAB -->
+<div id="tab-score" class="tab-content">
+  <div class="score-section player">
+    <h3>👤 Jugador</h3>
+    <div class="score-row">
+      <label>Cartas fin de partida (PV)</label>
+      <input type="number" id="p-fp" value="0" min="0" oninput="calcScore()">
+      <span class="mult">× 1</span>
+    </div>
+    <div class="score-row">
+      <label>Cartas criatura (sellos rojos)</label>
+      <input type="number" id="p-criat" value="0" min="0" oninput="calcScore()">
+      <span class="mult">suma</span>
+    </div>
+    <div class="score-row">
+      <label>Logros 6 PV</label>
+      <input type="number" id="p-l6" value="0" min="0" oninput="calcScore()">
+      <span class="mult">× 6</span>
+    </div>
+    <div class="score-row">
+      <label>Logros 12 PV</label>
+      <input type="number" id="p-l12" value="0" min="0" oninput="calcScore()">
+      <span class="mult">× 12</span>
+    </div>
+    <div class="score-row">
+      <label>Logros 15 PV</label>
+      <input type="number" id="p-l15" value="0" min="0" oninput="calcScore()">
+      <span class="mult">× 15</span>
+    </div>
+    <div class="score-row">
+      <label>Trofeos</label>
+      <input type="number" id="p-trof" value="0" min="0" oninput="calcScore()">
+      <span class="mult">× 3</span>
+    </div>
+    <div class="score-row">
+      <label>Recursos + Cazamariposas</label>
+      <input type="number" id="p-rec" value="0" min="0" oninput="calcScore()">
+      <span class="mult">÷ 4</span>
+    </div>
+    <div class="score-total">
+      <span>Total Jugador</span>
+      <strong id="p-total">0</strong>
+    </div>
+  </div>
+
+  <div class="score-section tingent">
+    <h3>🤖 Tingent</h3>
+    <div class="score-row">
+      <label>Cartas FP bocarriba</label>
+      <input type="number" id="t-fp" value="0" min="0" oninput="calcScore()">
+      <span class="mult">× 5</span>
+    </div>
+    <div class="score-row">
+      <label>Criaturas bocarriba (suma PV)</label>
+      <input type="number" id="t-criat" value="0" min="0" oninput="calcScore()">
+      <span class="mult">suma</span>
+    </div>
+    <div class="score-row">
+      <label>Logros completados (suma PV)</label>
+      <input type="number" id="t-logros" value="0" min="0" oninput="calcScore()">
+      <span class="mult">suma</span>
+    </div>
+    <div class="score-row">
+      <label>Trofeos</label>
+      <input type="number" id="t-trof" value="0" min="0" oninput="calcScore()">
+      <span class="mult">× 3</span>
+    </div>
+    <div class="score-row">
+      <label>Huevos</label>
+      <input type="number" id="t-huev" value="0" min="0" oninput="calcScore()">
+      <span class="mult">× 1</span>
+    </div>
+    <div class="score-row">
+      <label>Cartas bocabajo</label>
+      <input type="number" id="t-fd" value="0" min="0" oninput="calcScore()">
+      <span class="mult" id="t-fd-mult">× ?</span>
+    </div>
+    <div class="score-total">
+      <span>Total Tingent</span>
+      <strong id="t-total">0</strong>
+    </div>
+  </div>
+
+  <div id="result-box" class="result-box" style="display:none">
+    <div class="result-icon" id="res-icon"></div>
+    <div class="result-text" id="res-text"></div>
+    <div class="diff-text" id="res-diff"></div>
+  </div>
+</div>
+
+<!-- RULES TAB -->
+<div id="tab-rules" class="tab-content">
+  <div class="rules-section">
+    <h3>🎯 Objetivo</h3>
+    <p>Jugar Criaturas Maravillosas en solitario contra Tingent, el oponente autómata. Termina la partida con más puntos que Tingent.</p>
+  </div>
+  <div class="rules-section">
+    <h3>⚙️ Setup</h3>
+    <ul>
+      <li>Elige dificultad. El marcador Tingent empieza en la posición indicada por <strong>startingPts</strong>.</li>
+      <li>Baraja el mazo de Tingent (12 cartas). El tracker empieza en posición 1.</li>
+      <li>Zona <span class="pill y">Amarilla</span>: posiciones anteriores a brownThreshold.</li>
+      <li>Zona <span class="pill br">Marrón</span>: posiciones desde brownThreshold en adelante.</li>
+    </ul>
+  </div>
+  <div class="rules-section">
+    <h3>🔄 Turno de Tingent</h3>
+    <p>Al final de cada turno tuyo, roba la carta superior del mazo de Tingent. Aplica la acción según la zona actual:</p>
+    <ul>
+      <li><span class="pill y">Amarilla</span>: usa la acción amarilla de la carta.</li>
+      <li><span class="pill br">Marrón</span>: usa la acción marrón de la carta.</li>
+    </ul>
+    <p>Si la carta <strong>avanza el tracker</strong>, mueve el marcador una posición. Si llega a brownThreshold, entra en zona marrón y se baraja el mazo de nuevo.</p>
+    <div class="note">⚠️ Al entrar en zona marrón, la acción del tracker puede reclamar trofeos adicionales para Tingent.</div>
+  </div>
+  <div class="rules-section">
+    <h3>🗺️ Acciones del Tracker</h3>
+    <ul>
+      <li>🗺️ <strong>REVEAL_TERRAIN</strong>: Revela el océano con huevo (empate → más a la izquierda). Sin huevo → más a la izquierda.</li>
+      <li>⏱️ <strong>TIME_ADVANCE</strong>: Avanza el marcador de la Tabla de Tiempo. Aplica el efecto. Recarga Tingent.</li>
+      <li>🟡 <strong>CLAIM_YELLOW</strong>: Tingent reclama el trofeo amarillo disponible.</li>
+      <li>🟤 <strong>CLAIM_BROWN</strong>: Tingent reclama un trofeo marrón disponible.</li>
+      <li>🔵 <strong>CLAIM_BLUE</strong>: Tingent reclama un trofeo azul disponible.</li>
+      <li>🔄🟤 <strong>TURN_BROWN</strong>: Entra en zona marrón + Tingent reclama el logro azul de más PV.</li>
+      <li>🔄🟤⏱ <strong>TURN_BROWN_TIME</strong>: Entra en zona marrón + avanza el marcador de Tiempo.</li>
+    </ul>
+  </div>
+  <div class="rules-section">
+    <h3>📊 Puntuación final</h3>
+    <p><strong>Jugador:</strong> Cartas FP (PV) + Criaturas (sellos rojos) + Logros (6/12/15 PV) + Trofeos (×3) + (Recursos+Cazamariposas) ÷ 4</p>
+    <p><strong>Tingent:</strong> Cartas FP bocarriba (×5) + Criaturas bocarriba (PV) + Logros (PV) + Trofeos (×3) + Huevos (×1) + Cartas bocabajo (×ptsPerFaceDown)</p>
+  </div>
+</div>
+
+<script>
+// ======= DATA =======
+const DIFFICULTIES = [
+  { name: 'Perezoso',    stars: 1, startingPts: 1, brownThreshold: 16, ptsPerFaceDown: 1 },
+  { name: 'Facilón',     stars: 2, startingPts: 2, brownThreshold: 13, ptsPerFaceDown: 2 },
+  { name: 'Salvaje',     stars: 3, startingPts: 3, brownThreshold: 11, ptsPerFaceDown: 3 },
+  { name: 'Terrorífico', stars: 4, startingPts: 4, brownThreshold:  4, ptsPerFaceDown: 3 },
+];
+
+// Track actions for each position 1-24 (index 0 = pos 1)
+const TRACKS = {
+  0: ['NONE','NONE','REVEAL_TERRAIN','TIME_ADVANCE','NONE','NONE','REVEAL_TERRAIN','TIME_ADVANCE','CLAIM_YELLOW','NONE','NONE','REVEAL_TERRAIN','TIME_ADVANCE','CLAIM_BLUE','NONE','NONE','CLAIM_BROWN','CLAIM_YELLOW','TIME_ADVANCE','CLAIM_BROWN','CLAIM_BLUE','TIME_ADVANCE','CLAIM_BROWN','TIME_ADVANCE'],
+  1: ['NONE','NONE','REVEAL_TERRAIN','TIME_ADVANCE','NONE','NONE','CLAIM_YELLOW','TIME_ADVANCE','REVEAL_TERRAIN','NONE','NONE','CLAIM_BLUE','TURN_BROWN_TIME','REVEAL_TERRAIN','CLAIM_BROWN','CLAIM_YELLOW','NONE','CLAIM_BROWN','TIME_ADVANCE','CLAIM_BLUE','CLAIM_BROWN','TIME_ADVANCE','TIME_ADVANCE','TIME_ADVANCE'],
+  2: ['NONE','NONE','REVEAL_TERRAIN','TIME_ADVANCE','NONE','NONE','CLAIM_YELLOW','TIME_ADVANCE','REVEAL_TERRAIN','NONE','TURN_BROWN','TIME_ADVANCE','REVEAL_TERRAIN','CLAIM_BROWN','CLAIM_YELLOW','TIME_ADVANCE','CLAIM_BROWN','NONE','CLAIM_BLUE','CLAIM_BROWN','TIME_ADVANCE','TIME_ADVANCE','TIME_ADVANCE','TIME_ADVANCE'],
+  3: Array(24).fill('NONE'),
+};
+
+const ACTION_INFO = {
+  NONE: null,
+  REVEAL_TERRAIN:  { icon: '🗺️', title: 'Revelar Terreno', desc: 'Revela el océano con huevo (empate → más a la izquierda). Sin huevo → más a la izquierda.' },
+  TIME_ADVANCE:    { icon: '⏱️', title: 'Avance de Tiempo', desc: 'Avanza el marcador de la Tabla de Tiempo. Aplica el efecto. Recarga Tingent.' },
+  CLAIM_YELLOW:    { icon: '🟡', title: 'Trofeo Amarillo', desc: 'Tingent reclama el trofeo amarillo disponible.' },
+  CLAIM_BROWN:     { icon: '🟤', title: 'Trofeo Marrón', desc: 'Tingent reclama un trofeo marrón disponible.' },
+  CLAIM_BLUE:      { icon: '🔵', title: 'Trofeo Azul', desc: 'Tingent reclama un trofeo azul disponible.' },
+  TURN_BROWN:      { icon: '🔄🟤', title: 'Zona Marrón + Logro Azul', desc: 'El marcador entra en zona marrón. Tingent reclama el logro azul de más PV.' },
+  TURN_BROWN_TIME: { icon: '🔄🟤⏱', title: 'Zona Marrón + Tiempo', desc: 'El marcador entra en zona marrón. Avanza el marcador de Tiempo.' },
+};
+
+const DECK = [
+  { id:1,  yellow:'Capitán → máx. Flor 🌸 + robar carta',           brown:'Cazamariposas 🦋',                         advances:true },
+  { id:2,  yellow:'Capitán → máx. Seta 🍄 + robar carta',           brown:'Capitán → máx. Coral 🪸',                  advances:true },
+  { id:3,  yellow:'Capitán → máx. Coral 🪸 + robar carta',          brown:'Capitán → máx. Flor 🌸',                   advances:true },
+  { id:4,  yellow:'Roba 2 cartas bocabajo 📥📥',                     brown:'Cazamariposas 🦋',                         advances:true },
+  { id:5,  yellow:'Cazamariposas 🦋 + Huevo 🥚',                    brown:'Huevo 🥚 + Cazamariposas 🦋',              advances:true },
+  { id:6,  yellow:'Tripulante + carta bocarriba 📋',                 brown:'Capitán + carta bocarriba 📋',             advances:true },
+  { id:7,  yellow:'Tripulante + carta bocabajo 📥',                  brown:'Capitán + carta bocarriba 📋',             advances:false },
+  { id:8,  yellow:'Cazamariposas 🦋 + carta bocarriba 📋',          brown:'Capitán → máx. Seta 🍄 + Huevo 🥚',       advances:true },
+  { id:9,  yellow:'Tripulante + carta bocabajo 📥',                  brown:'Capitán + carta bocarriba 📋',             advances:false },
+  { id:10, yellow:'Capitán → máx. Coral 🪸 + robar carta',          brown:'Capitán → máx. Flor 🌸',                   advances:true },
+  { id:11, yellow:'Tripulante + Huevo del mapa 🥚',                  brown:'Capitán + 2 Huevos 🥚🥚',                  advances:false },
+  { id:12, yellow:'Tripulante + carta bocabajo 📥',                  brown:'Capitán + 2 cartas bocarriba 📋📋',        advances:false },
+];
+
+// ======= STATE =======
+let state = {
+  diffIdx: null,
+  running: false,
+  trackerPos: 1,  // 1-24
+  isBrown: false,
+  deck: [],
+  cardIdx: 0,
+  reshuffled: false,
+  justEntered: false,
+  justReshuffle: false,
+};
+
+// ======= TABS =======
+function showTab(name) {
+  document.querySelectorAll('.tab-btn').forEach((b,i) => {
+    b.classList.toggle('active', ['setup','game','score','rules'][i] === name);
+  });
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+}
+
+// ======= SETUP =======
+function selectDiff(idx) {
+  state.diffIdx = idx;
+  document.querySelectorAll('.diff-card').forEach((c,i) => c.classList.toggle('selected', i===idx));
+  document.getElementById('start-btn').disabled = false;
+}
+
+function shuffle(arr) {
+  for (let i=arr.length-1;i>0;i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]] = [arr[j],arr[i]];
+  }
+  return arr;
+}
+
+function startGame() {
+  const d = DIFFICULTIES[state.diffIdx];
+  state.running = true;
+  state.trackerPos = 1;
+  state.isBrown = d.brownThreshold <= 1;
+  state.deck = shuffle([...DECK]);
+  state.cardIdx = 0;
+  state.justEntered = false;
+  state.justReshuffle = false;
+  showTab('game');
+  renderGame();
+  // update score tab mult
+  document.getElementById('t-fd-mult').textContent = '× ' + d.ptsPerFaceDown;
+}
+
+// ======= GAME RENDER =======
+function renderGame() {
+  const area = document.getElementById('game-area');
+  if (!state.running) {
+    area.innerHTML = '<p style="color:var(--muted);text-align:center;margin-top:40px">Selecciona una dificultad y pulsa Empezar.</p>';
+    return;
+  }
+  const d = DIFFICULTIES[state.diffIdx];
+  const pos = state.trackerPos;
+  const brown = state.isBrown;
+  const card = state.deck[state.cardIdx % state.deck.length];
+  const action = card[brown ? 'brown' : 'yellow'];
+  const trackAct = TRACKS[state.diffIdx][pos - 1];
+  const actInfo = ACTION_INFO[trackAct];
+  const isLast = pos >= 24;
+  const remaining = state.deck.length - (state.cardIdx % state.deck.length);
+
+  let trackerHtml = '<div class="tracker-grid">';
+  for (let i=1;i<=24;i++) {
+    const isBrownCell = i >= d.brownThreshold;
+    const isCurrent = i === pos;
+    trackerHtml += `<div class="tracker-cell ${isBrownCell?'brown-zone':'yellow-zone'} ${isCurrent?'current':''}">${i}</div>`;
+  }
+  trackerHtml += '</div>';
+
+  const zoneBadge = brown
+    ? '<span class="zone-badge brown">🟤 Zona Marrón</span>'
+    : '<span class="zone-badge yellow">🟡 Zona Amarilla</span>';
+
+  let trackerActHtml = '';
+  if (actInfo) {
+    trackerActHtml = `<div class="tracker-action-box">
+      <div><span class="action-icon">${actInfo.icon}</span><span class="action-title">${actInfo.title}</span></div>
+      <div class="action-desc">${actInfo.desc}</div>
+    </div>`;
+  }
+
+  let reshuffleHtml = '';
+  if (state.justReshuffle) {
+    reshuffleHtml = `<div class="reshuffle-alert">🔀 ¡Zona Marrón! Baraja el mazo de Tingent de nuevo.</div>`;
+  }
+
+  let buttonHtml = '';
+  if (isLast) {
+    buttonHtml = `<div class="game-over-box">
+      <h2>🏁 Fin de partida</h2>
+      <p>El tracker ha llegado a la posición 24. Pasa a la pestaña Puntuación para calcular el resultado.</p>
+      <button class="btn-secondary" onclick="showTab('score')">Ver Puntuación</button>
+      <br><br>
+      <button class="btn-secondary" onclick="resetGame()">Nueva partida</button>
+    </div>`;
+  } else {
+    buttonHtml = `<button class="btn-primary" onclick="nextTurn()">🃏 Robar carta / Siguiente turno</button>`;
+  }
+
+  area.innerHTML = `
+    <div class="game-section">
+      <div class="section-title">Tracker Tingent — Pos ${pos}/24 (Marrón: pos ≥ ${d.brownThreshold})</div>
+      ${trackerHtml}
+      ${zoneBadge}
+    </div>
+    <div class="game-section">
+      <div class="section-title">Carta actual de Tingent</div>
+      <div class="card-display">
+        <div class="card-number">Carta #${card.id} de ${state.deck.length}</div>
+        <div class="card-action">${action}</div>
+        <span class="card-advance ${card.advances?'yes':'no'}">${card.advances ? '⬆️ Avanza el tracker' : '— No avanza el tracker'}</span>
+        ${actInfo ? `<div class="section-title" style="margin-top:4px">Acción del tracker (pos ${pos}):</div>` : ''}
+        ${trackerActHtml}
+        ${reshuffleHtml}
+      </div>
+    </div>
+    <div class="cards-remaining">Cartas restantes en mazo: ${remaining} / ${state.deck.length}</div>
+    ${buttonHtml}
+  `;
+  state.justReshuffle = false;
+}
+
+function nextTurn() {
+  const d = DIFFICULTIES[state.diffIdx];
+  const card = state.deck[state.cardIdx % state.deck.length];
+
+  // advance card index
+  state.cardIdx++;
+
+  // advance tracker if card does
+  if (card.advances && state.trackerPos < 24) {
+    state.trackerPos++;
+    // check if entered brown zone
+    if (!state.isBrown && state.trackerPos >= d.brownThreshold) {
+      state.isBrown = true;
+      state.justReshuffle = true;
+      state.deck = shuffle([...DECK]);
+      state.cardIdx = 0;
+    }
+  }
+
+  renderGame();
+}
+
+function resetGame() {
+  state.running = false;
+  state.diffIdx = null;
+  document.querySelectorAll('.diff-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('start-btn').disabled = true;
+  showTab('setup');
+}
+
+// ======= SCORE =======
+function calcScore() {
+  const pFP = +document.getElementById('p-fp').value || 0;
+  const pCriat = +document.getElementById('p-criat').value || 0;
+  const pL6 = +document.getElementById('p-l6').value || 0;
+  const pL12 = +document.getElementById('p-l12').value || 0;
+  const pL15 = +document.getElementById('p-l15').value || 0;
+  const pTrof = +document.getElementById('p-trof').value || 0;
+  const pRec = +document.getElementById('p-rec').value || 0;
+  const playerTotal = pFP + pCriat + pL6*6 + pL12*12 + pL15*15 + pTrof*3 + Math.floor(pRec/4);
+
+  const tFP = +document.getElementById('t-fp').value || 0;
+  const tCriat = +document.getElementById('t-criat').value || 0;
+  const tLogros = +document.getElementById('t-logros').value || 0;
+  const tTrof = +document.getElementById('t-trof').value || 0;
+  const tHuev = +document.getElementById('t-huev').value || 0;
+  const tFD = +document.getElementById('t-fd').value || 0;
+  const pfd = state.diffIdx !== null ? DIFFICULTIES[state.diffIdx].ptsPerFaceDown : 0;
+  const tingentTotal = tFP*5 + tCriat + tLogros + tTrof*3 + tHuev + tFD*pfd;
+
+  document.getElementById('p-total').textContent = playerTotal;
+  document.getElementById('t-total').textContent = tingentTotal;
+
+  const box = document.getElementById('result-box');
+  box.style.display = 'block';
+  const diff = playerTotal - tingentTotal;
+  if (diff > 0) {
+    box.className = 'result-box win';
+    document.getElementById('res-icon').textContent = '🏆';
+    document.getElementById('res-text').textContent = '¡Victoria!';
+    document.getElementById('res-diff').textContent = `Ganaste por ${diff} punto${diff===1?'':'s'}`;
+  } else if (diff < 0) {
+    box.className = 'result-box loss';
+    document.getElementById('res-icon').textContent = '💀';
+    document.getElementById('res-text').textContent = 'Derrota';
+    document.getElementById('res-diff').textContent = `Perdiste por ${Math.abs(diff)} punto${Math.abs(diff)===1?'':'s'}`;
+  } else {
+    box.className = 'result-box';
+    document.getElementById('res-icon').textContent = '🤝';
+    document.getElementById('res-text').textContent = 'Empate';
+    document.getElementById('res-diff').textContent = 'Misma puntuación — gana Tingent en empate.';
+  }
+}
+
+// ======= SW =======
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>

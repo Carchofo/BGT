@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Spooktacular Automa — BGT</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="assets/logo-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="BGT Spooktacular">
+<meta name="theme-color" content="#0D0D1A">
+<style>
+  :root {
+    --bg: #0D0D1A; --card: #161625; --orange: #F38222; --purple: #6622BB;
+    --green: #1A7A50; --deck-a: #CC4400; --deck-b: #6622BB; --deck-c: #1A7A50;
+    --white: #F5F5F5; --muted: rgba(255,255,255,0.5); --border: rgba(255,255,255,0.12);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html, body { height:100%; background:var(--bg); color:#fff; font-family:'Segoe UI',system-ui,sans-serif; overflow:hidden; }
+
+  .screen { display:none; flex-direction:column; height:100%; }
+  .screen.active { display:flex; }
+
+  /* Topbar */
+  .topbar {
+    background:var(--bg); border-bottom:1px solid var(--border);
+    padding:12px 16px; display:flex; align-items:center; gap:12px; flex-shrink:0;
+  }
+  .topbar-back { background:none; border:none; color:var(--orange); font-size:22px; cursor:pointer; padding:4px 8px; }
+  .topbar-title { flex:1; }
+  .topbar-title h1 { font-size:1.1rem; font-weight:800; }
+  .topbar-title p  { font-size:.7rem; color:var(--orange); opacity:.8; }
+  .topbar-reset { background:none; border:none; color:var(--orange); font-size:20px; cursor:pointer; padding:4px 8px; }
+
+  /* Tabs bottom */
+  .tabs { display:flex; background:var(--bg); border-top:1px solid var(--border); flex-shrink:0; }
+  .tab { flex:1; padding:10px 4px; background:none; border:none; color:var(--muted); font-size:.72rem; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:3px; }
+  .tab.active { color:var(--orange); }
+  .tab-icon { font-size:18px; }
+
+  .content { flex:1; overflow-y:auto; padding:14px 14px 8px; display:flex; flex-direction:column; gap:12px; -webkit-overflow-scrolling:touch; }
+
+  .card { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:16px; display:flex; flex-direction:column; gap:10px; }
+  .card-title { color:var(--orange); font-weight:700; font-size:.95rem; }
+
+  .setup-hero { text-align:center; padding:20px 0 8px; }
+  .setup-hero .emoji { font-size:52px; }
+  .setup-hero h2 { font-size:1.3rem; font-weight:900; margin-top:8px; }
+  .setup-hero p { color:var(--muted); font-size:.8rem; margin-top:6px; }
+
+  .rule-row { display:flex; gap:8px; align-items:flex-start; font-size:.82rem; color:rgba(255,255,255,.75); }
+  .rule-dot { color:var(--orange); flex-shrink:0; margin-top:2px; }
+
+  .start-btn { width:100%; padding:14px; border-radius:12px; border:none; background:var(--orange); color:#fff; font-size:1rem; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; }
+
+  /* Turn */
+  .turn-row { display:flex; justify-content:space-between; align-items:center; }
+  .turn-num { font-size:1.8rem; font-weight:900; color:var(--orange); }
+  .turn-sub { font-size:.75rem; color:var(--muted); }
+
+  /* Deck tabs A/B/C */
+  .deck-tabs { display:flex; gap:8px; flex-shrink:0; }
+  .deck-tab { flex:1; padding:8px 4px; border-radius:8px; border:2px solid transparent; background:none; color:var(--muted); font-size:.85rem; font-weight:700; cursor:pointer; text-align:center; transition:all .15s; }
+  .deck-tab.active-a { border-color:var(--deck-a); color:var(--deck-a); background:rgba(204,68,0,.1); }
+  .deck-tab.active-b { border-color:var(--deck-b); color:var(--deck-b); background:rgba(102,34,187,.1); }
+  .deck-tab.active-c { border-color:var(--deck-c); color:var(--deck-c); background:rgba(26,122,80,.1); }
+
+  /* Card display */
+  .game-card {
+    border-radius:14px; padding:18px; display:flex; flex-direction:column; gap:12px;
+    border:2px solid transparent;
+  }
+  .game-card.deck-a { border-color:var(--deck-a); background:rgba(204,68,0,.08); }
+  .game-card.deck-b { border-color:var(--deck-b); background:rgba(102,34,187,.08); }
+  .game-card.deck-c { border-color:var(--deck-c); background:rgba(26,122,80,.08); }
+
+  .card-deck-badge { font-size:.72rem; font-weight:700; padding:3px 10px; border-radius:20px; display:inline-block; }
+  .badge-a { background:var(--deck-a); color:#fff; }
+  .badge-b { background:var(--deck-b); color:#fff; }
+  .badge-c { background:var(--deck-c); color:#fff; }
+
+  .card-name { font-size:1.3rem; font-weight:900; }
+  .card-desc { font-size:.85rem; color:rgba(255,255,255,.75); font-style:italic; border-left:3px solid; padding-left:10px; }
+  .card-desc.da { border-color:var(--deck-a); }
+  .card-desc.db { border-color:var(--deck-b); }
+  .card-desc.dc { border-color:var(--deck-c); }
+
+  .steps-title { font-size:.78rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; }
+  .steps-list { display:flex; flex-direction:column; gap:6px; }
+  .step-row { display:flex; gap:10px; align-items:flex-start; font-size:.83rem; }
+  .step-num { font-weight:800; color:var(--orange); flex-shrink:0; width:18px; }
+
+  .dynamic-note { font-size:.78rem; padding:8px 12px; border-radius:8px; background:rgba(243,130,34,.1); border:1px solid rgba(243,130,34,.3); color:rgba(255,255,255,.85); }
+
+  .next-btn { width:100%; padding:14px; border-radius:12px; border:none; background:var(--orange); color:#fff; font-size:1rem; font-weight:800; cursor:pointer; }
+
+  /* Counters */
+  .counter-row { display:flex; align-items:center; justify-content:space-between; }
+  .counter-info { flex:1; }
+  .counter-label { font-size:.88rem; color:rgba(255,255,255,.85); }
+  .counter-sub   { font-size:.72rem; color:var(--muted); margin-top:2px; }
+  .counter-ctrl  { display:flex; align-items:center; gap:4px; }
+  .ctrl-btn { width:36px; height:36px; border-radius:50%; border:none; background:none; font-size:22px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+  .ctrl-btn.orange { color:var(--orange); }
+  .ctrl-btn.purple { color:var(--purple); }
+  .ctrl-val  { width:40px; text-align:center; font-weight:700; font-size:1.2rem; }
+
+  .result-bar { padding:12px 14px; border-radius:10px; border:2px solid; text-align:center; font-weight:700; font-size:1rem; }
+
+  hr.divider { border:none; border-top:1px solid var(--border); }
+
+  .color-priority { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .color-dot { width:22px; height:22px; border-radius:50%; flex-shrink:0; }
+  .color-arr { color:var(--muted); font-size:.9rem; }
+
+  .deck-legend { display:flex; flex-direction:column; gap:6px; }
+  .deck-leg { display:flex; gap:10px; align-items:center; font-size:.82rem; }
+  .deck-color { width:14px; height:14px; border-radius:3px; flex-shrink:0; }
+</style>
+</head>
+<body>
+
+<!-- ══ PANTALLA JUEGO ══ -->
+<div class="screen active" id="screen-game">
+  <div class="topbar">
+    <button class="topbar-back" onclick="goHome()">←</button>
+    <div class="topbar-title">
+      <h1>Killtron</h1>
+      <p>Terror en el Silver Cinema</p>
+    </div>
+    <button class="topbar-reset" onclick="resetGame()" title="Nuevo turno / Reiniciar">↺</button>
+  </div>
+
+  <div style="display:flex;flex:1;flex-direction:column;overflow:hidden">
+    <div class="content" id="game-content">
+
+      <!-- Turno -->
+      <div class="card" style="padding:12px 16px">
+        <div class="turn-row">
+          <div>
+            <div class="turn-num" id="turn-display">1</div>
+            <div class="turn-sub" id="turn-sub">Turno</div>
+          </div>
+          <button class="next-btn" style="width:auto;padding:10px 20px;font-size:.9rem" onclick="nextTurn()">Siguiente turno →</button>
+        </div>
+      </div>
+
+      <!-- Deck tabs -->
+      <div class="deck-tabs" id="deck-tabs">
+        <button class="deck-tab active-a" id="dtab-A" onclick="showDeck('A')">A · <span id="dtab-A-name">Forcejeo</span></button>
+        <button class="deck-tab" id="dtab-B" onclick="showDeck('B')">B · <span id="dtab-B-name">Avalancha</span></button>
+        <button class="deck-tab" id="dtab-C" onclick="showDeck('C')">C · <span id="dtab-C-name">Acosar</span></button>
+      </div>
+
+      <!-- Card A -->
+      <div class="game-card deck-a" id="card-A">
+        <div><span class="card-deck-badge badge-a">Mazo A</span></div>
+        <div class="card-name" id="cA-name">Forcejeo</div>
+        <div class="card-desc da" id="cA-desc"></div>
+        <div class="steps-title">Pasos</div>
+        <div class="steps-list" id="cA-steps"></div>
+        <div class="dynamic-note" id="cA-note" style="display:none"></div>
+      </div>
+
+      <!-- Card B -->
+      <div class="game-card deck-b" id="card-B" style="display:none">
+        <div><span class="card-deck-badge badge-b">Mazo B</span></div>
+        <div class="card-name" id="cB-name">Avalancha</div>
+        <div class="card-desc db" id="cB-desc"></div>
+        <div class="steps-title">Pasos</div>
+        <div class="steps-list" id="cB-steps"></div>
+      </div>
+
+      <!-- Card C -->
+      <div class="game-card deck-c" id="card-C" style="display:none">
+        <div><span class="card-deck-badge badge-c">Mazo C</span></div>
+        <div class="card-name" id="cC-name">Acosar</div>
+        <div class="card-desc dc" id="cC-desc"></div>
+        <div class="steps-title">Pasos</div>
+        <div class="steps-list" id="cC-steps"></div>
+      </div>
+
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" id="tab-game" onclick="switchTab('game')"><span class="tab-icon">👻</span><span>Automa</span></button>
+      <button class="tab" id="tab-score" onclick="switchTab('score')"><span class="tab-icon">🏆</span><span>Puntuación</span></button>
+      <button class="tab" id="tab-setup" onclick="switchTab('setup')"><span class="tab-icon">📋</span><span>Setup</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PANTALLA SCORE ══ -->
+<div class="screen" id="screen-score">
+  <div class="topbar">
+    <button class="topbar-back" onclick="goHome()">←</button>
+    <div class="topbar-title">
+      <h1>Puntuación</h1>
+      <p>Terror en el Silver Cinema</p>
+    </div>
+  </div>
+  <div class="content">
+    <div class="card">
+      <div class="card-title">Tus puntos</div>
+      <div class="counter-row">
+        <div class="counter-info">
+          <div class="counter-label">Puntos del jugador</div>
+          <div class="counter-sub">Ajusta manualmente durante la partida</div>
+        </div>
+        <div class="counter-ctrl">
+          <button class="ctrl-btn orange" onclick="adjScore(-1)">−</button>
+          <div class="ctrl-val" id="score-val">0</div>
+          <button class="ctrl-btn orange" onclick="adjScore(1)">+</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="result-bar" id="result-bar" style="border-color:var(--muted);color:var(--muted)">
+      Juega tu primera partida
+    </div>
+
+    <div class="card">
+      <div class="card-title">Resultados</div>
+      <div class="rule-row"><span class="rule-dot" style="color:#C62828">●</span><span><strong style="color:#C62828">0–9 pts</strong> — Derrota</span></div>
+      <div class="rule-row"><span class="rule-dot" style="color:var(--orange)">●</span><span><strong style="color:var(--orange)">10–19 pts</strong> — Sobreviviste</span></div>
+      <div class="rule-row"><span class="rule-dot" style="color:var(--green)">●</span><span><strong style="color:var(--green)">20–29 pts</strong> — Victoria</span></div>
+      <div class="rule-row"><span class="rule-dot" style="color:#FFD700">●</span><span><strong style="color:#FFD700">30+ pts</strong> — Victoria Perfecta</span></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Turno actual</div>
+      <div style="font-size:1.4rem;font-weight:900;color:var(--orange)" id="score-turn-display">1</div>
+      <div style="font-size:.78rem;color:var(--muted)">Turno de Killtron</div>
+    </div>
+  </div>
+  <div class="tabs">
+    <button class="tab" id="tab-game2" onclick="switchTab('game')"><span class="tab-icon">👻</span><span>Automa</span></button>
+    <button class="tab active" id="tab-score2" onclick="switchTab('score')"><span class="tab-icon">🏆</span><span>Puntuación</span></button>
+    <button class="tab" id="tab-setup2" onclick="switchTab('setup')"><span class="tab-icon">📋</span><span>Setup</span></button>
+  </div>
+</div>
+
+<!-- ══ PANTALLA SETUP ══ -->
+<div class="screen" id="screen-setup">
+  <div class="topbar">
+    <button class="topbar-back" onclick="goHome()">←</button>
+    <div class="topbar-title">
+      <h1>Preparación</h1>
+      <p>Terror en el Silver Cinema</p>
+    </div>
+  </div>
+  <div class="content">
+    <div class="setup-hero">
+      <div class="emoji">🎃</div>
+      <h2>Spooktacular</h2>
+      <p>Killtron — automa para 2 jugadores</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Configuración inicial</div>
+      <div class="rule-row"><span class="rule-dot">•</span><span>Prepara el tablero para <strong>2 jugadores</strong> según el reglamento base</span></div>
+      <div class="rule-row"><span class="rule-dot">•</span><span>Coloca a Killtron en la posición inicial indicada</span></div>
+      <div class="rule-row"><span class="rule-dot">•</span><span>Distribuye los espectadores (tokens de colores) en las estancias del Silver Cinema</span></div>
+      <div class="rule-row"><span class="rule-dot">•</span><span>La pila de Killtron empieza vacía — irá acumulando espectadores devorados</span></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Mazos de Killtron</div>
+      <div class="deck-legend">
+        <div class="deck-leg"><div class="deck-color" style="background:var(--deck-a)"></div><strong>Mazo A (naranja)</strong> — Forcejeo · Despliegue · Sobresalto</div>
+        <div class="deck-leg"><div class="deck-color" style="background:var(--deck-b)"></div><strong>Mazo B (morado)</strong> — Avalancha · Buscar · Arco Voltaico</div>
+        <div class="deck-leg"><div class="deck-color" style="background:var(--deck-c)"></div><strong>Mazo C (verde)</strong> — Acosar · Exterminar · Comer</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Mecánica de turnos</div>
+      <div class="rule-row"><span class="rule-dot">•</span><span>Cada turno se roba 1 carta de cada mazo (A, B, C)</span></div>
+      <div class="rule-row"><span class="rule-dot">•</span><span>Cada mazo tiene 3 cartas; al agotarse se baraja de nuevo</span></div>
+      <div class="rule-row"><span class="rule-dot">•</span><span><strong>La carta C siempre se resuelve primero</strong> — determina el movimiento de Killtron</span></div>
+      <div class="rule-row"><span class="rule-dot">•</span><span>Despliegue y Sobresalto dependen de qué carta C salió este turno</span></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Prioridad de colores</div>
+      <div class="color-priority">
+        <div class="color-dot" style="background:#C62828"></div><span style="font-size:.8rem">Rojo</span>
+        <span class="color-arr">→</span>
+        <div class="color-dot" style="background:#DAA520"></div><span style="font-size:.8rem">Amarillo</span>
+        <span class="color-arr">→</span>
+        <div class="color-dot" style="background:#2E7D32"></div><span style="font-size:.8rem">Verde</span>
+        <span class="color-arr">→</span>
+        <div class="color-dot" style="background:#1565C0"></div><span style="font-size:.8rem">Azul</span>
+        <span class="color-arr">→</span>
+        <div class="color-dot" style="background:#6622BB"></div><span style="font-size:.8rem">Morado</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Movimiento según carta C</div>
+      <div class="rule-row"><span class="rule-dot">•</span><span><strong>Exterminar / Acosar:</strong> Killtron va a la estancia con más espectadores</span></div>
+      <div class="rule-row"><span class="rule-dot">•</span><span><strong>Comer:</strong> Killtron va a la estancia con más colores distintos que no tiene en su pila</span></div>
+    </div>
+
+    <div style="height:8px"></div>
+  </div>
+  <div class="tabs">
+    <button class="tab" id="tab-game3" onclick="switchTab('game')"><span class="tab-icon">👻</span><span>Automa</span></button>
+    <button class="tab" id="tab-score3" onclick="switchTab('score')"><span class="tab-icon">🏆</span><span>Puntuación</span></button>
+    <button class="tab active" id="tab-setup3" onclick="switchTab('setup')"><span class="tab-icon">📋</span><span>Setup</span></button>
+  </div>
+</div>
+
+<script>
+// ── Definición de cartas ─────────────────────────────────────────────
+const CARDS = {
+  A: [
+    {
+      name: 'Forcejeo',
+      desc: 'Mueve a una figura desde una estancia conectada a la tuya',
+      steps: [
+        'Killtron intenta mover a un jugador de una estancia conectada a la suya',
+        'Empate entre jugadores: elige al que tenga más puntos',
+        'Si no puede mover ningún jugador, mueve un espectador que no tenga',
+        'Prioridad de colores: Rojo → Amarillo → Verde → Azul → Morado'
+      ],
+      dynamic: false
+    },
+    {
+      name: 'Despliegue',
+      desc: 'Killtron se desplaza según la carta final del turno (carta C)',
+      steps: [], // dinámico
+      dynamic: true
+    },
+    {
+      name: 'Sobresalto',
+      desc: 'Killtron se mueve y juega 1 carta extra del Mazo A',
+      steps: [
+        'Killtron se mueve exactamente igual que Despliegue (según carta C)',
+        'Revela la carta superior del Mazo A',
+        'La carta extra se resuelve completamente antes de continuar',
+        'Si el Mazo A está vacío, se rebaraja antes de revelar'
+      ],
+      dynamic: true
+    }
+  ],
+  B: [
+    {
+      name: 'Avalancha',
+      desc: 'Mueve a TODOS los jugadores de su estancia actual',
+      steps: [
+        'Mueve a TODOS los jugadores que estén en la estancia de Killtron',
+        'Los envía a la estancia con menos espectadores',
+        'En caso de empate: elige la estancia con menos puertas',
+        'Killtron gana 2 puntos por cada jugador movido'
+      ]
+    },
+    {
+      name: 'Buscar',
+      desc: 'Añade 3 espectadores al tablero y juega 1 carta extra del Mazo B',
+      steps: [
+        'Añade 3 espectadores a la estancia con menos figuras en total',
+        'En caso de empate: tú eliges la estancia',
+        'Revela la carta superior del Mazo B',
+        'Si el Mazo B está vacío, se rebaraja antes de revelar'
+      ]
+    },
+    {
+      name: 'Arco Voltaico',
+      desc: 'Roba 1 punto a cada jugador en su estancia y en las adyacentes',
+      steps: [
+        'Identifica todos los jugadores en la estancia actual de Killtron',
+        'También afecta a jugadores en todas las estancias conectadas',
+        'Cada jugador afectado pierde 1 punto de su marcador',
+        'Un jugador con 0 puntos no pierde nada'
+      ]
+    }
+  ],
+  C: [
+    {
+      name: 'Acosar',
+      desc: 'Asusta a los espectadores dos veces completas',
+      steps: [
+        '1ª ronda: por cada puerta, mueve 1 espectador hacia fuera (+1 pto por espectador)',
+        'Empieza por la puerta de arriba y avanza en sentido horario',
+        'Prioridad de colores: Rojo → Amarillo → Verde → Azul → Morado',
+        '2ª ronda: repite el proceso completo desde la puerta de arriba'
+      ]
+    },
+    {
+      name: 'Exterminar',
+      desc: 'Asusta a los espectadores una vez',
+      steps: [
+        'Por cada puerta de la estancia, mueve 1 espectador hacia fuera',
+        'Empieza por la puerta de arriba y avanza en sentido horario',
+        'Prioridad de colores: Rojo → Amarillo → Verde → Azul → Morado',
+        'Killtron gana 1 punto por cada espectador que pasó por una puerta'
+      ]
+    },
+    {
+      name: 'Comer',
+      desc: 'Devora 1 espectador de cada color disponible en su estancia',
+      steps: [
+        'Devora 1 espectador de cada color disponible en su estancia',
+        'Prioridad de colores: Rojo → Amarillo → Verde → Azul → Morado',
+        'Si acumula 1 de cada color (los 5): entrega el set y gana un ticket',
+        'Tras completar un set: añade 3 espectadores a la estancia con menos figuras'
+      ]
+    }
+  ]
+};
+
+// Movimiento dinámico según carta C
+function getDynamicSteps(cardCName) {
+  if (cardCName === 'Exterminar' || cardCName === 'Acosar') {
+    return [
+      'La carta C es "' + cardCName + '" → Killtron va a la estancia con MÁS espectadores',
+      'En caso de empate: elige la estancia más cercana',
+      'Si ya está en esa estancia, no se mueve',
+      'Tras moverse, resuelve la carta C normalmente'
+    ];
+  } else {
+    // Comer
+    return [
+      'La carta C es "Comer" → Killtron va a la estancia con más COLORES DISTINTOS que no tiene en su pila',
+      'Cuenta colores que Killtron NO tiene aún acumulados',
+      'En caso de empate: elige la estancia con más espectadores en total',
+      'Tras moverse, resuelve la carta C normalmente'
+    ];
+  }
+}
+
+// ── Estado ────────────────────────────────────────────────────────────
+let state = {
+  turn: 1,
+  deckIdxA: 0, deckIdxB: 0, deckIdxC: 0,
+  orderA: [0,1,2], orderB: [0,1,2], orderC: [0,1,2],
+  currentA: 0, currentB: 0, currentC: 0,
+  activeDeck: 'A',
+  playerScore: 0
+};
+
+function shuffle(a) {
+  const b = [...a];
+  for (let i = b.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i+1));
+    [b[i], b[j]] = [b[j], b[i]];
+  }
+  return b;
+}
+
+function drawCards() {
+  // Draw from each deck
+  state.currentA = state.orderA[state.deckIdxA];
+  state.currentB = state.orderB[state.deckIdxB];
+  state.currentC = state.orderC[state.deckIdxC];
+
+  // Advance indices, reshuffle if needed
+  state.deckIdxA++;
+  if (state.deckIdxA >= 3) { state.deckIdxA = 0; state.orderA = shuffle([0,1,2]); }
+  state.deckIdxB++;
+  if (state.deckIdxB >= 3) { state.deckIdxB = 0; state.orderB = shuffle([0,1,2]); }
+  state.deckIdxC++;
+  if (state.deckIdxC >= 3) { state.deckIdxC = 0; state.orderC = shuffle([0,1,2]); }
+}
+
+// ── Render ─────────────────────────────────────────────────────────────
+function renderAll() {
+  const cA = CARDS.A[state.currentA];
+  const cB = CARDS.B[state.currentB];
+  const cC = CARDS.C[state.currentC];
+
+  // Turn
+  document.getElementById('turn-display').textContent = state.turn;
+  document.getElementById('turn-sub').textContent = 'Turno de Killtron';
+  document.getElementById('score-turn-display').textContent = state.turn;
+
+  // Deck tabs names
+  document.getElementById('dtab-A-name').textContent = cA.name;
+  document.getElementById('dtab-B-name').textContent = cB.name;
+  document.getElementById('dtab-C-name').textContent = cC.name;
+
+  // Card A
+  document.getElementById('cA-name').textContent = cA.name;
+  document.getElementById('cA-desc').textContent = cA.desc;
+  const stepsA = cA.dynamic ? getDynamicSteps(cC.name) : cA.steps;
+  renderSteps('cA-steps', stepsA);
+  const noteA = document.getElementById('cA-note');
+  if (cA.dynamic) {
+    noteA.style.display = '';
+    noteA.textContent = '⚡ Movimiento determinado por la carta C: ' + cC.name;
+  } else {
+    noteA.style.display = 'none';
+  }
+
+  // Card B
+  document.getElementById('cB-name').textContent = cB.name;
+  document.getElementById('cB-desc').textContent = cB.desc;
+  renderSteps('cB-steps', cB.steps);
+
+  // Card C
+  document.getElementById('cC-name').textContent = cC.name;
+  document.getElementById('cC-desc').textContent = cC.desc;
+  renderSteps('cC-steps', cC.steps);
+
+  // Score
+  renderScore();
+}
+
+function renderSteps(elId, steps) {
+  const el = document.getElementById(elId);
+  el.innerHTML = steps.map((s, i) =>
+    `<div class="step-row"><span class="step-num">${i+1}</span><span>${s}</span></div>`
+  ).join('');
+}
+
+function renderScore() {
+  const s = state.playerScore;
+  const el = document.getElementById('result-bar');
+  document.getElementById('score-val').textContent = s;
+  if (s < 10) {
+    el.textContent = `${s} pts — Derrota`;
+    el.style.borderColor = '#C62828'; el.style.color = '#C62828';
+    el.style.background = 'rgba(198,40,40,.1)';
+  } else if (s < 20) {
+    el.textContent = `${s} pts — Sobreviviste`;
+    el.style.borderColor = 'var(--orange)'; el.style.color = 'var(--orange)';
+    el.style.background = 'rgba(243,130,34,.1)';
+  } else if (s < 30) {
+    el.textContent = `${s} pts — Victoria`;
+    el.style.borderColor = 'var(--green)'; el.style.color = 'var(--green)';
+    el.style.background = 'rgba(26,122,80,.1)';
+  } else {
+    el.textContent = `${s} pts — Victoria Perfecta 🎃`;
+    el.style.borderColor = '#FFD700'; el.style.color = '#FFD700';
+    el.style.background = 'rgba(255,215,0,.1)';
+  }
+}
+
+// ── Deck tab display ──────────────────────────────────────────────────
+function showDeck(deck) {
+  state.activeDeck = deck;
+  ['A','B','C'].forEach(d => {
+    document.getElementById('card-' + d).style.display = d === deck ? '' : 'none';
+    const btn = document.getElementById('dtab-' + d);
+    btn.className = 'deck-tab';
+    if (d === deck) btn.classList.add('active-' + d.toLowerCase());
+  });
+}
+
+// ── Actions ───────────────────────────────────────────────────────────
+function nextTurn() {
+  state.turn++;
+  drawCards();
+  showDeck('A');
+  renderAll();
+  document.getElementById('game-content').scrollTo(0, 0);
+}
+
+function adjScore(delta) {
+  state.playerScore = Math.max(0, state.playerScore + delta);
+  renderScore();
+}
+
+function resetGame() {
+  state.turn = 1;
+  state.deckIdxA = 0; state.deckIdxB = 0; state.deckIdxC = 0;
+  state.orderA = shuffle([0,1,2]);
+  state.orderB = shuffle([0,1,2]);
+  state.orderC = shuffle([0,1,2]);
+  state.playerScore = 0;
+  drawCards();
+  showDeck('A');
+  renderAll();
+  switchTab('game');
+}
+
+function goHome() { window.location.href = 'index.html'; }
+
+// ── Navigation ────────────────────────────────────────────────────────
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function switchTab(tab) {
+  const map = { game: 'screen-game', score: 'screen-score', setup: 'screen-setup' };
+  showScreen(map[tab]);
+  ['game','score','setup'].forEach(t => {
+    ['','2','3'].forEach(n => {
+      const el = document.getElementById(`tab-${t}${n}`);
+      if (el) el.classList.toggle('active', t === tab);
+    });
+  });
+}
+
+// ── Init ──────────────────────────────────────────────────────────────
+state.orderA = shuffle([0,1,2]);
+state.orderB = shuffle([0,1,2]);
+state.orderC = shuffle([0,1,2]);
+drawCards();
+renderAll();
+showDeck('A');
+
+// ── Service Worker ────────────────────────────────────────────────────
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
+</script>
+</body>
+</html>

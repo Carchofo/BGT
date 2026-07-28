@@ -1,0 +1,1423 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0A1628">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Maracaibo Solo">
+<title>Maracaibo — Solitario vs Jordán</title>
+<link rel="manifest" href="manifest.json">
+<style>
+  :root {
+    --bg: #0A1628;
+    --card: #111D30;
+    --card2: #162238;
+    --gold: #D4A017;
+    --orange: #F38222;
+    --text: #E8DCC8;
+    --text-muted: #8A9BB5;
+    --border: #1E3050;
+    --success: #2ECC71;
+    --danger: #E74C3C;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overscroll-behavior: none;
+  }
+
+  /* ─── HEADER ─── */
+  header {
+    background: linear-gradient(135deg, #0A1628 0%, #0D1F3C 100%);
+    border-bottom: 2px solid var(--gold);
+    padding: 12px 16px 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .back-btn {
+    color: var(--gold);
+    text-decoration: none;
+    font-size: 18px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: background 0.2s;
+  }
+  .back-btn:hover { background: rgba(212,160,23,.15); }
+
+  .header-title {
+    flex: 1;
+  }
+  .header-title h1 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 0.5px;
+  }
+  .header-title p {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 1px;
+  }
+
+  .skull { font-size: 22px; }
+
+  /* ─── TABS ─── */
+  .tabs-nav {
+    display: flex;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .tabs-nav::-webkit-scrollbar { display: none; }
+
+  .tab-btn {
+    flex: 1;
+    min-width: 70px;
+    padding: 10px 4px;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .tab-btn.active {
+    color: var(--gold);
+    border-bottom-color: var(--gold);
+  }
+  .tab-btn .tab-icon { display: block; font-size: 18px; margin-bottom: 2px; }
+
+  /* ─── CONTENT ─── */
+  .tab-panel { display: none; padding: 16px; max-width: 600px; margin: 0 auto; }
+  .tab-panel.active { display: block; }
+
+  /* ─── CARDS ─── */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+  .card-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* ─── SLIDER ─── */
+  .slider-wrap { margin: 8px 0; }
+  .slider-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .slider-label span { font-size: 13px; color: var(--text-muted); }
+  .difficulty-badge {
+    font-size: 13px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+    background: var(--card2);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+  }
+
+  input[type=range] {
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    appearance: none;
+    background: var(--border);
+    outline: none;
+    cursor: pointer;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    appearance: none;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--gold);
+    cursor: pointer;
+    border: 3px solid var(--bg);
+    box-shadow: 0 2px 6px rgba(0,0,0,.5);
+  }
+
+  /* ─── TOGGLE ─── */
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+  }
+  .toggle-label { font-size: 14px; }
+  .toggle-sublabel { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+  .toggle {
+    position: relative;
+    width: 48px; height: 26px;
+    flex-shrink: 0;
+  }
+  .toggle input { opacity: 0; width: 0; height: 0; }
+  .toggle-slider {
+    position: absolute;
+    inset: 0;
+    background: var(--border);
+    border-radius: 13px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  .toggle-slider::before {
+    content: '';
+    position: absolute;
+    width: 20px; height: 20px;
+    left: 3px; top: 3px;
+    background: white;
+    border-radius: 50%;
+    transition: 0.3s;
+  }
+  input:checked + .toggle-slider { background: var(--gold); }
+  input:checked + .toggle-slider::before { transform: translateX(22px); }
+
+  /* ─── BUTTONS ─── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 18px;
+    border-radius: var(--radius-sm);
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 100%;
+  }
+  .btn-gold {
+    background: var(--gold);
+    color: #0A1628;
+  }
+  .btn-gold:hover { filter: brightness(1.1); }
+
+  .btn-outline {
+    background: transparent;
+    border: 2px solid var(--gold);
+    color: var(--gold);
+  }
+  .btn-outline:hover { background: rgba(212,160,23,.1); }
+
+  .btn-orange {
+    background: var(--orange);
+    color: white;
+  }
+
+  .btn-danger {
+    background: rgba(231,76,60,.15);
+    border: 1px solid var(--danger);
+    color: var(--danger);
+  }
+
+  /* ─── PREP STEPS ─── */
+  .prep-step {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .prep-step:last-child { border-bottom: none; }
+  .prep-num {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: var(--gold);
+    color: #0A1628;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .prep-text { font-size: 13px; line-height: 1.5; color: var(--text); }
+  .prep-text strong { color: var(--gold); }
+
+  /* ─── MARKER TRACK ─── */
+  .marker-track {
+    display: flex;
+    gap: 8px;
+    margin: 12px 0;
+  }
+  .marker-pos {
+    flex: 1;
+    padding: 8px 4px;
+    border-radius: var(--radius-sm);
+    border: 2px solid var(--border);
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: var(--card2);
+  }
+  .marker-pos.active {
+    border-color: var(--gold);
+    background: rgba(212,160,23,.15);
+  }
+  .marker-pos .pos-icon { font-size: 20px; }
+  .marker-pos .pos-num { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+
+  /* ─── COUNTERS ─── */
+  .counters-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .counter-item {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .counter-label { font-size: 11px; color: var(--text-muted); text-align: center; line-height: 1.3; }
+  .counter-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .counter-val {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--gold);
+    min-width: 32px;
+    text-align: center;
+  }
+  .cnt-btn {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: none;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+  }
+  .cnt-btn-minus { background: rgba(231,76,60,.2); color: var(--danger); }
+  .cnt-btn-plus  { background: rgba(212,160,23,.2); color: var(--gold); }
+  .cnt-btn:active { transform: scale(0.9); }
+
+  /* ─── JORDAN TURN PANEL ─── */
+  .turn-panel {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 12px;
+  }
+  .turn-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .turn-header-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--orange);
+  }
+  .turn-chevron {
+    font-size: 12px;
+    color: var(--text-muted);
+    transition: transform 0.3s;
+  }
+  .turn-panel.open .turn-chevron { transform: rotate(180deg); }
+  .turn-body {
+    display: none;
+    padding: 0 16px 16px;
+    border-top: 1px solid var(--border);
+  }
+  .turn-panel.open .turn-body { display: block; }
+
+  /* ─── ACTION STEPS ─── */
+  .action-block {
+    margin: 12px 0;
+    padding: 12px;
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--gold);
+    background: rgba(255,255,255,.03);
+  }
+  .action-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--gold);
+    margin-bottom: 6px;
+  }
+  .action-text { font-size: 12px; color: var(--text); line-height: 1.6; }
+  .action-text .val { color: var(--orange); font-weight: 700; }
+
+  .bonus-action {
+    border-color: var(--orange);
+  }
+  .bonus-action .action-title { color: var(--orange); }
+
+  /* ─── UPGRADE SELECTOR ─── */
+  .upgrade-options {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 10px;
+  }
+  .upgrade-opt {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--card);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 13px;
+  }
+  .upgrade-opt:hover { border-color: var(--gold); background: rgba(212,160,23,.08); }
+  .upgrade-opt.disabled { opacity: 0.4; cursor: not-allowed; }
+  .upgrade-opt.disabled:hover { border-color: var(--border); background: var(--card); }
+
+  /* ─── VP BANNER ─── */
+  .vp-banner {
+    background: linear-gradient(135deg, rgba(212,160,23,.15), rgba(243,130,34,.1));
+    border: 1px solid var(--gold);
+    border-radius: var(--radius);
+    padding: 14px;
+    text-align: center;
+    margin-bottom: 12px;
+  }
+  .vp-banner-num {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--gold);
+  }
+  .vp-banner-label { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+  /* ─── SCORE TABLE ─── */
+  .score-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .score-table th {
+    text-align: left;
+    padding: 8px;
+    color: var(--text-muted);
+    font-size: 11px;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+  }
+  .score-table th:not(:first-child) { text-align: right; }
+  .score-table td {
+    padding: 8px;
+    border-bottom: 1px solid rgba(30,48,80,.5);
+    vertical-align: middle;
+  }
+  .score-table td:not(:first-child) { text-align: right; font-weight: 600; }
+  .score-table tr:last-child td { border-bottom: none; }
+  .score-table .total-row td {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--gold);
+    border-top: 2px solid var(--gold);
+    padding-top: 12px;
+  }
+
+  .winner-banner {
+    text-align: center;
+    padding: 20px;
+    border-radius: var(--radius);
+    margin-bottom: 16px;
+    font-size: 20px;
+    font-weight: 700;
+  }
+  .winner-you { background: linear-gradient(135deg, rgba(46,204,113,.2), rgba(46,204,113,.05)); border: 2px solid var(--success); color: var(--success); }
+  .winner-jordan { background: linear-gradient(135deg, rgba(231,76,60,.2), rgba(231,76,60,.05)); border: 2px solid var(--danger); color: var(--danger); }
+  .winner-tie { background: rgba(255,255,255,.05); border: 2px solid var(--text-muted); color: var(--text-muted); }
+
+  /* ─── SCORE COUNTERS ─── */
+  .score-input-group {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(30,48,80,.5);
+  }
+  .score-input-group:last-child { border-bottom: none; }
+  .score-input-label { font-size: 13px; flex: 1; }
+  .score-input-sub { font-size: 10px; color: var(--text-muted); }
+  .score-input-right { display: flex; align-items: center; gap: 8px; }
+  .score-input-val { font-size: 18px; font-weight: 700; color: var(--gold); min-width: 28px; text-align: right; }
+
+  /* ─── RULES ─── */
+  .rule-accordion { margin-bottom: 8px; }
+  .rule-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gold);
+  }
+  .rule-header.open { border-radius: var(--radius-sm) var(--radius-sm) 0 0; border-bottom: none; }
+  .rule-body {
+    display: none;
+    padding: 12px;
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  }
+  .rule-body.open { display: block; }
+  .rule-body ul { padding-left: 16px; }
+  .rule-body li { font-size: 12px; color: var(--text); line-height: 1.8; }
+  .rule-body li::marker { color: var(--gold); }
+
+  /* ─── GULF STATUS ─── */
+  .gulf-toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(243,130,34,.1);
+    border: 1px solid rgba(243,130,34,.3);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    margin-bottom: 10px;
+  }
+
+  /* ─── ROUND COUNTER ─── */
+  .round-badge {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 12px;
+    color: var(--text-muted);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* ─── SEPARATOR ─── */
+  .sep {
+    height: 1px;
+    background: var(--border);
+    margin: 12px 0;
+  }
+
+  /* ─── SCROLLABLE STATS ─── */
+  .stats-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 10px;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin: 2px;
+  }
+  .stats-pill strong { color: var(--gold); }
+
+  .stats-pills-row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+
+  /* ─── LOG ─── */
+  .log-list {
+    max-height: 200px;
+    overflow-y: auto;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 8px;
+    margin-top: 8px;
+  }
+  .log-entry {
+    font-size: 11px;
+    color: var(--text-muted);
+    padding: 4px 0;
+    border-bottom: 1px solid rgba(30,48,80,.3);
+    display: flex;
+    gap: 6px;
+  }
+  .log-entry:last-child { border-bottom: none; }
+  .log-entry .log-icon { flex-shrink: 0; }
+  .log-entry .log-msg { color: var(--text); }
+
+  /* ─── UTILITY ─── */
+  .text-muted { color: var(--text-muted); font-size: 12px; }
+  .text-gold { color: var(--gold); }
+  .text-orange { color: var(--orange); }
+  .mt-8 { margin-top: 8px; }
+  .mt-12 { margin-top: 12px; }
+
+  .notice {
+    background: rgba(212,160,23,.08);
+    border: 1px solid rgba(212,160,23,.25);
+    border-radius: var(--radius-sm);
+    padding: 10px;
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 360px) {
+    .counters-grid { grid-template-columns: 1fr 1fr; }
+    .tab-btn { font-size: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="back-btn">←</a>
+  <div class="header-title">
+    <h1>☠ Maracaibo Solo</h1>
+    <p>Automa: Jordán el Corsario</p>
+  </div>
+  <span class="skull">⚓</span>
+</header>
+
+<nav class="tabs-nav">
+  <button class="tab-btn active" onclick="showTab('setup')">
+    <span class="tab-icon">⚙️</span>Setup
+  </button>
+  <button class="tab-btn" onclick="showTab('game')">
+    <span class="tab-icon">🗡️</span>Solitario
+  </button>
+  <button class="tab-btn" onclick="showTab('score')">
+    <span class="tab-icon">🏆</span>Puntuación
+  </button>
+  <button class="tab-btn" onclick="showTab('rules')">
+    <span class="tab-icon">📜</span>Reglas
+  </button>
+</nav>
+
+<!-- ══════════════════════════════════════
+     TAB SETUP
+══════════════════════════════════════ -->
+<div id="tab-setup" class="tab-panel active">
+
+  <div class="card">
+    <div class="card-title">⚔️ Dificultad</div>
+    <div class="slider-wrap">
+      <div class="slider-label">
+        <span>Cartas B: <strong id="bCardsNum">0</strong></span>
+        <span class="difficulty-badge" id="difficultyBadge">Corsario</span>
+      </div>
+      <input type="range" id="bCardsSlider" min="0" max="6" value="0" oninput="updateDifficulty()">
+      <div style="display:flex;justify-content:space-between;margin-top:4px">
+        <span class="text-muted">Fácil</span>
+        <span class="text-muted">Difícil</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🗺️ Opciones</div>
+    <div class="toggle-row">
+      <div>
+        <div class="toggle-label">Expansión</div>
+        <div class="toggle-sublabel">Con expansión de Maracaibo</div>
+      </div>
+      <label class="toggle">
+        <input type="checkbox" id="expansionToggle">
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📋 Preparación</div>
+    <div id="prepSteps"></div>
+  </div>
+
+  <button class="btn btn-gold" onclick="startGame()">⚓ Comenzar Partida</button>
+</div>
+
+<!-- ══════════════════════════════════════
+     TAB GAME
+══════════════════════════════════════ -->
+<div id="tab-game" class="tab-panel">
+
+  <!-- Ronda -->
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+    <span class="round-badge">🌊 Ronda <span id="roundNum">1</span> / 4</span>
+    <button class="btn btn-outline" style="width:auto;padding:6px 14px;font-size:12px" onclick="nextRound()">Fin de ronda →</button>
+  </div>
+
+  <!-- Marcador de Jordán -->
+  <div class="card">
+    <div class="card-title">🗺️ Escondite de Jordán</div>
+    <div class="marker-track" id="markerTrack"></div>
+    <div class="stats-pills-row" id="markerStats"></div>
+  </div>
+
+  <!-- Counters de Jordán -->
+  <div class="card">
+    <div class="card-title">⚓ Estado de Jordán</div>
+    <div class="counters-grid" id="jordanCounters"></div>
+
+    <div class="gulf-toggle-row">
+      <div>
+        <div style="font-size:13px;font-weight:600;color:var(--orange)">🌊 En el Golfo</div>
+        <div class="text-muted">Jordán está en el Golfo de México</div>
+      </div>
+      <label class="toggle">
+        <input type="checkbox" id="gulfToggle" onchange="updateGulf()">
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+  </div>
+
+  <!-- PV acumulados -->
+  <div class="vp-banner">
+    <div class="vp-banner-num" id="jordanVpBanner">0</div>
+    <div class="vp-banner-label">PV acumulados de Jordán</div>
+  </div>
+
+  <!-- Turno de Jordán -->
+  <div class="turn-panel" id="turnPanel">
+    <div class="turn-header" onclick="toggleTurnPanel()">
+      <div class="turn-header-left">🎴 Turno de Jordán</div>
+      <span class="turn-chevron">▼</span>
+    </div>
+    <div class="turn-body" id="turnBody"></div>
+  </div>
+
+  <!-- Log -->
+  <div class="card">
+    <div class="card-title">📜 Registro de acciones</div>
+    <div class="log-list" id="logList">
+      <div class="log-entry"><span class="log-icon">ℹ️</span><span class="log-msg">Partida iniciada. ¡Buena suerte!</span></div>
+    </div>
+  </div>
+
+  <div class="sep"></div>
+  <button class="btn btn-danger" onclick="resetGame()" style="margin-top:4px">🔄 Nueva partida</button>
+</div>
+
+<!-- ══════════════════════════════════════
+     TAB PUNTUACIÓN
+══════════════════════════════════════ -->
+<div id="tab-score" class="tab-panel">
+
+  <div id="winnerBanner" class="winner-banner winner-tie" style="display:none"></div>
+
+  <!-- Tu puntuación -->
+  <div class="card">
+    <div class="card-title">👤 Tu puntuación</div>
+    <div id="yourScoreInputs"></div>
+    <div class="sep"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;font-weight:700">
+      <span>Total</span>
+      <span class="text-gold" id="yourTotal">0 PV</span>
+    </div>
+  </div>
+
+  <!-- Puntuación Jordán -->
+  <div class="card">
+    <div class="card-title">🏴‍☠️ Puntuación de Jordán</div>
+    <table class="score-table" id="jordanScoreTable">
+      <thead>
+        <tr><th>Categoría</th><th>Calc.</th><th>PV</th></tr>
+      </thead>
+      <tbody id="jordanScoreBody"></tbody>
+    </table>
+    <div class="sep"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;font-weight:700">
+      <span>Total Jordán</span>
+      <span class="text-gold" id="jordanTotal">0 PV</span>
+    </div>
+  </div>
+
+  <button class="btn btn-gold" onclick="calcScore()">⚡ Calcular resultado</button>
+</div>
+
+<!-- ══════════════════════════════════════
+     TAB REGLAS
+══════════════════════════════════════ -->
+<div id="tab-rules" class="tab-panel">
+
+  <div class="notice" style="margin-bottom:16px">
+    ☠️ Reglas rápidas del solitario de Maracaibo. Jordán actúa según prioridad de acciones.
+  </div>
+
+  <div id="rulesAccordion"></div>
+</div>
+
+<script>
+// ════════════════════════════════════════
+// ESTADO
+// ════════════════════════════════════════
+let state = {
+  bCards: 0,
+  expansion: false,
+  round: 1,
+  jordanMarker: 0,
+  jordanUpgrades: 0,
+  jordanMissions: 1,
+  jordanResidences: 0,
+  jordanFigurehead: false,
+  jordanRivers: 0,
+  jordanTreasures: 0,
+  jordanVP: 0,
+  jordanInGulf: false,
+  // Tu puntuación
+  yourRivers: 0,
+  yourDoubloons: 0,
+  yourUpgradeVP: 0,
+  yourResidenceVP: 0,
+  yourTreasureVP: 0,
+  yourBuriedTreasures: 0,
+  yourMissionVP: 0,
+  yourMissionBonus: false,
+};
+
+// ════════════════════════════════════════
+// HELPERS MARCADOR
+// ════════════════════════════════════════
+function raidVP()       { return [0,2,2,3][state.jordanMarker]; }
+function raidTreasures(){ return state.jordanMarker === 3 ? 2 : 1; }
+function exploreVP()    { return [3,3,4,6][state.jordanMarker]; }
+function exploreExtra() { return [0,1,2,2][state.jordanMarker]; }
+function checkIsland()  { return state.jordanMarker >= 2; }
+function difficulty()   {
+  const b = state.bCards;
+  if (b === 0) return '☠️ Corsario';
+  if (b <= 2)  return '⚔️ Bucanero';
+  if (b <= 4)  return '🦜 Pirata';
+  return '🦑 Kraken';
+}
+
+// ════════════════════════════════════════
+// TABS
+// ════════════════════════════════════════
+function showTab(id) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  const idx = {setup:0,game:1,score:2,rules:3}[id];
+  document.querySelectorAll('.tab-btn')[idx].classList.add('active');
+  if (id === 'score') renderScoreTab();
+  if (id === 'game')  renderGame();
+}
+
+// ════════════════════════════════════════
+// SETUP
+// ════════════════════════════════════════
+function updateDifficulty() {
+  state.bCards = parseInt(document.getElementById('bCardsSlider').value);
+  document.getElementById('bCardsNum').textContent = state.bCards;
+  document.getElementById('difficultyBadge').textContent = difficulty();
+  renderPrepSteps();
+}
+
+function renderPrepSteps() {
+  const b = state.bCards;
+  const hasExp = document.getElementById('expansionToggle').checked;
+  const steps = [
+    { txt: `Prepara el tablero de Maracaibo con el mapa estándar${hasExp ? ' y módulos de expansión' : ''}.` },
+    { txt: `Separa las <strong>${b} cartas B</strong> del mazo de Jordán. Baraja las cartas normales y colócalas en el escondite. ${b>0 ? `Intercala las ${b} cartas B encima.` : ''}` },
+    { txt: 'Coloca el marcador de Jordán en la posición <strong>0</strong> (inicio del escondite).' },
+    { txt: 'Jordán comienza con <strong>1 misión</strong> obtenida y <strong>0 mejoras</strong>.' },
+    { txt: 'Tú juegas el <strong>1er turno</strong> de cada ronda. Jordán siempre es el <strong>último</strong>.' },
+    { txt: 'Al final de ronda, Jordán <strong>NO</strong> recibe ingresos.' },
+    { txt: 'El mazo de Jordán tiene 6 cartas. Cuando se acaba, se baraja de nuevo.' },
+  ];
+  if (hasExp) steps.push({ txt: 'Con expansión: prepara los módulos adicionales según el reglamento de la expansión.' });
+
+  const el = document.getElementById('prepSteps');
+  el.innerHTML = steps.map((s, i) =>
+    `<div class="prep-step">
+      <span class="prep-num">${i+1}</span>
+      <span class="prep-text">${s.txt}</span>
+    </div>`
+  ).join('');
+}
+
+function startGame() {
+  state.bCards = parseInt(document.getElementById('bCardsSlider').value);
+  state.expansion = document.getElementById('expansionToggle').checked;
+  state.round = 1;
+  state.jordanMarker = 0;
+  state.jordanUpgrades = 0;
+  state.jordanMissions = 1;
+  state.jordanResidences = 0;
+  state.jordanFigurehead = false;
+  state.jordanRivers = 0;
+  state.jordanTreasures = 0;
+  state.jordanVP = 0;
+  state.jordanInGulf = false;
+  clearLog();
+  addLog('⚓', `Partida iniciada. Dificultad: ${difficulty()}. Cartas B: ${state.bCards}.`);
+  showTab('game');
+  renderGame();
+}
+
+// ════════════════════════════════════════
+// GAME RENDER
+// ════════════════════════════════════════
+function renderGame() {
+  renderMarkerTrack();
+  renderJordanCounters();
+  document.getElementById('gulfToggle').checked = state.jordanInGulf;
+  document.getElementById('jordanVpBanner').textContent = state.jordanVP;
+  document.getElementById('roundNum').textContent = state.round;
+  renderTurnPanel();
+}
+
+function renderMarkerTrack() {
+  const icons = ['🏴','⚔️','🗺️','💀'];
+  const labels = ['Pos 0','Pos 1','Pos 2','Pos 3'];
+  const stats = [
+    `Raid: +${raidVP()} PV`,
+    `Raid: +${raidTreasures()} tes.`,
+    `Explora: +${exploreVP()} PV`,
+    exploreExtra() > 0 ? `+${exploreExtra()} extra` : '',
+    checkIsland() ? '🏝️ Isla activa' : '',
+  ].filter(Boolean).join(' · ');
+
+  document.getElementById('markerTrack').innerHTML = icons.map((ic, i) =>
+    `<div class="marker-pos ${state.jordanMarker===i?'active':''}" onclick="setMarker(${i})">
+      <div class="pos-icon">${ic}</div>
+      <div class="pos-num">${labels[i]}</div>
+    </div>`
+  ).join('');
+
+  document.getElementById('markerStats').innerHTML =
+    `<span class="stats-pill">🗡️ Raid <strong>+${raidVP()} PV</strong></span>
+     <span class="stats-pill">💎 <strong>+${raidTreasures()}</strong> tes.</span>
+     <span class="stats-pill">🧭 Explora <strong>+${exploreVP()} PV</strong></span>
+     ${exploreExtra()>0 ? `<span class="stats-pill">➕ <strong>+${exploreExtra()}</strong> extra</span>` : ''}
+     ${checkIsland() ? '<span class="stats-pill">🏝️ Isla activa</span>' : ''}`;
+}
+
+function setMarker(pos) {
+  const old = state.jordanMarker;
+  state.jordanMarker = pos;
+  addLog('🗺️', `Marcador: ${old} → ${pos}`);
+  renderGame();
+}
+
+// ─── CONTADORES ───
+const jordanCounterDefs = [
+  { key: 'jordanUpgrades',  label: '⚓ Mejoras',    min: 0 },
+  { key: 'jordanMissions',  label: '📜 Misiones',   min: 0 },
+  { key: 'jordanResidences',label: '🏠 Residencias', min: 0 },
+  { key: 'jordanRivers',    label: '🌊 Ríos',        min: 0 },
+  { key: 'jordanTreasures', label: '💎 Tesoros',     min: 0 },
+  { key: 'jordanVP',        label: '⭐ PV',          min: 0 },
+];
+
+function renderJordanCounters() {
+  const grid = document.getElementById('jordanCounters');
+  grid.innerHTML = jordanCounterDefs.map(def =>
+    `<div class="counter-item">
+      <div class="counter-label">${def.label}</div>
+      <div class="counter-controls">
+        <button class="cnt-btn cnt-btn-minus" onclick="adjustCounter('${def.key}', -1)">−</button>
+        <div class="counter-val" id="cnt-${def.key}">${state[def.key]}</div>
+        <button class="cnt-btn cnt-btn-plus" onclick="adjustCounter('${def.key}', 1)">+</button>
+      </div>
+      ${def.key === 'jordanResidences' && state.jordanResidences === 0 ? '<div style="font-size:10px;color:var(--text-muted)">Primera: +2 PV</div>' : ''}
+      ${def.key === 'jordanMissions' && state.jordanMissions >= 6 ? '<div style="font-size:10px;color:var(--gold)">★ Bonus +10 PV</div>' : ''}
+    </div>`
+  ).join('');
+
+  // también actualizar figurehead
+  renderFigureheadToggle();
+}
+
+function renderFigureheadToggle() {
+  // injected in counters area via adjustCounter
+}
+
+function adjustCounter(key, delta) {
+  const def = jordanCounterDefs.find(d => d.key === key);
+  const newVal = Math.max(def ? def.min : 0, state[key] + delta);
+  // side effects
+  if (key === 'jordanResidences' && delta > 0 && state[key] === 0) {
+    state.jordanVP = Math.max(0, state.jordanVP + 2);
+    addLog('🏠', 'Primera residencia: +2 PV para Jordán');
+  }
+  state[key] = newVal;
+  renderGame();
+}
+
+function updateGulf() {
+  state.jordanInGulf = document.getElementById('gulfToggle').checked;
+  renderTurnPanel();
+  addLog('🌊', state.jordanInGulf ? 'Jordán entra en el Golfo' : 'Jordán sale del Golfo');
+}
+
+// ─── TURNO PANEL ───
+function toggleTurnPanel() {
+  document.getElementById('turnPanel').classList.toggle('open');
+}
+
+function renderTurnPanel() {
+  const body = document.getElementById('turnBody');
+  let html = '';
+
+  if (state.jordanInGulf) {
+    html += `
+      <div class="action-block" style="border-color:var(--orange);margin-top:12px">
+        <div class="action-title">🌊 Acción especial: En el Golfo</div>
+        <div class="action-text">Jordán va a Maracaibo → <span class="val">+6 PV · +1 mejora</span>. Sale del Golfo y avanza el marcador.</div>
+        <button class="btn btn-orange mt-8" style="font-size:13px;padding:8px" onclick="doGulfAction()">Ejecutar acción del Golfo</button>
+      </div>`;
+  } else {
+    // Carta B
+    if (state.bCards > 0) {
+      html += `
+        <div class="action-block bonus-action mt-12">
+          <div class="action-title">🃏 Acción Bonus (Carta B)</div>
+          <div class="action-text">Antes de las acciones principales, elige una acción bonus:</div>
+          <div class="upgrade-options" style="margin-top:8px">
+            <div class="upgrade-opt" onclick="doBonusAction('upgrade')">⚓ Mejora de barco</div>
+            <div class="upgrade-opt" onclick="doBonusAction('raid')">🗡️ Incursión</div>
+            <div class="upgrade-opt" onclick="doBonusAction('explore')">🧭 Exploración</div>
+          </div>
+        </div>`;
+    }
+
+    // Acciones en orden de prioridad
+    html += `
+      <div style="font-size:11px;color:var(--text-muted);margin:12px 0 6px;text-transform:uppercase;letter-spacing:.5px">Acciones en orden de prioridad:</div>
+
+      <div class="action-block" style="border-color:#c0392b">
+        <div class="action-title">1. 🗡️ Incursión</div>
+        <div class="action-text">
+          <strong>+<span class="val">${raidVP()}</span> PV</strong> · <strong>+<span class="val">${raidTreasures()}</span> tesoro(s)</strong><br>
+          ${checkIsland() ? '🏝️ <em>Si Jordán supera tu tesoro en esa isla → +1 cubo. Dado tesoro: 4-6=isla más cubos · 1-3=isla menos cubos.</em>' : ''}
+        </div>
+        <button class="btn btn-outline mt-8" style="font-size:12px;padding:7px" onclick="doAction('raid')">⚔️ Ejecutar Incursión</button>
+      </div>
+
+      <div class="action-block" style="border-color:#2980b9">
+        <div class="action-title">2. 🧭 Exploración</div>
+        <div class="action-text">
+          <strong>+<span class="val">${exploreVP()}</span> PV</strong>${exploreExtra()>0 ? ` · <strong>+<span class="val">${exploreExtra()}</span> espacio(s) extra</strong>` : ''}<br>
+          Cuenta ríos cruzados. <em>Jordán elige siempre la ruta más larga en bifurcaciones.</em>
+        </div>
+        <button class="btn btn-outline mt-8" style="font-size:12px;padding:7px" onclick="doAction('explore')">🧭 Ejecutar Exploración</button>
+      </div>
+
+      <div class="action-block" style="border-color:#8e44ad">
+        <div class="action-title">3. 📜 Misión</div>
+        <div class="action-text">
+          +1 misión. <em>Toma la Misión más a la <strong>DERECHA</strong> del mercado.</em>
+        </div>
+        <button class="btn btn-outline mt-8" style="font-size:12px;padding:7px" onclick="doAction('mission')">📜 Tomar Misión</button>
+      </div>
+
+      <div class="action-block" style="border-color:var(--gold)">
+        <div class="action-title">4. ⚓ Mejora de Barco</div>
+        <div class="action-text">+1 mejora. Luego aplica el efecto de la mejora:</div>
+        <div class="upgrade-options" id="upgradeOpts"></div>
+        <button class="btn btn-gold mt-8" style="font-size:12px;padding:7px;color:#0A1628" onclick="doAction('upgrade')">⚓ Ejecutar Mejora</button>
+      </div>`;
+  }
+
+  html += `<div class="sep"></div>
+    <div style="font-size:11px;color:var(--text-muted)">Selecciona la acción correspondiente para actualizar el estado automáticamente.</div>`;
+
+  body.innerHTML = html;
+  renderUpgradeOpts();
+}
+
+function renderUpgradeOpts() {
+  const el = document.getElementById('upgradeOpts');
+  if (!el) return;
+  const opts = [
+    { id: 0, icon: '📈', label: 'Avanza marcador', disabled: state.jordanMarker >= 3 },
+    { id: 1, icon: '🪆', label: 'Mascarón de proa', disabled: state.jordanFigurehead },
+    { id: 2, icon: '📜', label: 'Carta de Misión', disabled: false },
+    { id: 3, icon: '🏠', label: 'Residencia', disabled: false },
+  ];
+  el.innerHTML = opts.map(o =>
+    `<div class="upgrade-opt ${o.disabled?'disabled':''}" onclick="${o.disabled?'':` applyUpgradeEffect(${o.id})`}">
+      ${o.icon} ${o.label}${o.disabled?' (ya aplicado)':''}
+    </div>`
+  ).join('');
+}
+
+// ─── ACCIONES ───
+function doGulfAction() {
+  state.jordanVP += 6;
+  state.jordanUpgrades += 1;
+  state.jordanInGulf = false;
+  // avanza marcador si puede
+  if (state.jordanMarker < 3) state.jordanMarker++;
+  addLog('🌊', `Acción del Golfo: +6 PV, +1 mejora, marcador → ${state.jordanMarker}`);
+  document.getElementById('gulfToggle').checked = false;
+  renderGame();
+}
+
+function doAction(type) {
+  switch(type) {
+    case 'raid':
+      state.jordanVP += raidVP();
+      state.jordanTreasures += raidTreasures();
+      addLog('🗡️', `Incursión: +${raidVP()} PV, +${raidTreasures()} tesoro(s)${checkIsland()?' [revisar isla]':''}`);
+      break;
+    case 'explore':
+      state.jordanVP += exploreVP();
+      state.jordanRivers += 1;
+      addLog('🧭', `Exploración: +${exploreVP()} PV, +1 río${exploreExtra()>0?' [+'+exploreExtra()+' espacio extra]':''}`);
+      break;
+    case 'mission':
+      state.jordanMissions += 1;
+      addLog('📜', `Misión obtenida. Total: ${state.jordanMissions}`);
+      if (state.jordanMissions >= 6) addLog('★', '¡Jordán alcanza 6 misiones! Bonus +10 PV al final.');
+      break;
+    case 'upgrade':
+      state.jordanUpgrades += 1;
+      addLog('⚓', `Mejora de barco. Total: ${state.jordanUpgrades}. Selecciona el efecto de la mejora.`);
+      break;
+  }
+  renderGame();
+  // Auto-open turn panel
+  document.getElementById('turnPanel').classList.add('open');
+}
+
+function doBonusAction(type) {
+  addLog('🃏', `Acción bonus (carta B): ${type}`);
+  doAction(type);
+}
+
+function applyUpgradeEffect(id) {
+  switch(id) {
+    case 0:
+      if (state.jordanMarker < 3) {
+        state.jordanMarker++;
+        addLog('📈', `Marcador avanza → ${state.jordanMarker}`);
+      }
+      break;
+    case 1:
+      if (!state.jordanFigurehead) {
+        state.jordanFigurehead = true;
+        addLog('🪆', 'Jordán obtiene el mascarón de proa');
+      }
+      break;
+    case 2:
+      state.jordanMissions++;
+      addLog('📜', `Misión por mejora. Total: ${state.jordanMissions}`);
+      break;
+    case 3:
+      if (state.jordanResidences === 0) {
+        state.jordanVP += 2;
+        addLog('🏠', 'Primera residencia: +2 PV');
+      }
+      state.jordanResidences++;
+      addLog('🏠', `Residencia construida. Total: ${state.jordanResidences}`);
+      break;
+  }
+  renderGame();
+}
+
+function nextRound() {
+  if (state.round >= 4) {
+    showTab('score');
+    return;
+  }
+  state.round++;
+  addLog('🌅', `─── Inicio de Ronda ${state.round} ───`);
+  renderGame();
+}
+
+// ─── LOG ───
+function clearLog() {
+  document.getElementById('logList').innerHTML = '';
+}
+function addLog(icon, msg) {
+  const list = document.getElementById('logList');
+  const entry = document.createElement('div');
+  entry.className = 'log-entry';
+  entry.innerHTML = `<span class="log-icon">${icon}</span><span class="log-msg">${msg}</span>`;
+  list.prepend(entry);
+}
+
+// ─── RESET ───
+function resetGame() {
+  if (!confirm('¿Comenzar nueva partida? Se perderá el progreso actual.')) return;
+  showTab('setup');
+}
+
+// ════════════════════════════════════════
+// PUNTUACIÓN
+// ════════════════════════════════════════
+const yourScoreDefs = [
+  { key: 'yourRivers',        label: '🌊 Ríos',          sub: '× 4 PV c/u',      mult: 4 },
+  { key: 'yourDoubloons',     label: '🪙 Doblones',       sub: '÷ 5 PV',          div: 5 },
+  { key: 'yourUpgradeVP',     label: '⚓ PV Mejoras',     sub: 'suma directa',     direct: true },
+  { key: 'yourResidenceVP',   label: '🏠 PV Residencias', sub: 'suma directa',     direct: true },
+  { key: 'yourTreasureVP',    label: '💎 PV Tesoros',     sub: '2-5 PV c/u',       direct: true },
+  { key: 'yourBuriedTreasures',label:'⚰️ Tesoros enterrados', sub: '× 2 PV c/u',  mult: 2 },
+  { key: 'yourMissionVP',     label: '📜 PV Misiones',    sub: 'condición más alta', direct: true },
+];
+
+function calcYourScore(key) {
+  const def = yourScoreDefs.find(d => d.key === key);
+  if (!def) return 0;
+  const v = state[key] || 0;
+  if (def.mult)   return v * def.mult;
+  if (def.div)    return Math.floor(v / def.div);
+  return v;
+}
+
+function calcYourTotal() {
+  let total = yourScoreDefs.reduce((sum, d) => sum + calcYourScore(d.key), 0);
+  if (state.yourMissionBonus) total += 10;
+  return total;
+}
+
+function calcJordanTotal() {
+  const vp   = state.jordanVP;
+  const riv  = state.jordanRivers * 4;
+  const upg  = state.jordanUpgrades * 6;
+  const mis  = state.jordanMissions * 5;
+  const misB = state.jordanMissions >= 6 ? 10 : 0;
+  const res  = state.jordanResidences * 15;
+  const tre  = state.jordanTreasures * 2;
+  return { vp, riv, upg, mis, misB, res, tre, total: vp+riv+upg+mis+misB+res+tre };
+}
+
+function renderScoreTab() {
+  // Your inputs
+  const yourEl = document.getElementById('yourScoreInputs');
+  yourEl.innerHTML = yourScoreDefs.map(def => {
+    const calc = calcYourScore(def.key);
+    return `<div class="score-input-group">
+      <div class="score-input-label">
+        ${def.label}
+        <div class="score-input-sub">${def.sub}</div>
+      </div>
+      <div class="score-input-right">
+        <button class="cnt-btn cnt-btn-minus" onclick="adjustScore('${def.key}', -1)">−</button>
+        <div class="score-input-val" id="sc-${def.key}">${state[def.key]}</div>
+        <button class="cnt-btn cnt-btn-plus" onclick="adjustScore('${def.key}', 1)">+</button>
+      </div>
+    </div>`;
+  }).join('') +
+  `<div class="score-input-group">
+    <div class="score-input-label">
+      ★ Bonus misiones
+      <div class="score-input-sub">+10 si ≥ 6 misiones</div>
+    </div>
+    <label class="toggle">
+      <input type="checkbox" id="missionBonusToggle" ${state.yourMissionBonus?'checked':''} onchange="state.yourMissionBonus=this.checked;updateScoreTotals()">
+      <span class="toggle-slider"></span>
+    </label>
+  </div>`;
+
+  updateScoreTotals();
+}
+
+function adjustScore(key, delta) {
+  state[key] = Math.max(0, (state[key] || 0) + delta);
+  const el = document.getElementById('sc-' + key);
+  if (el) el.textContent = state[key];
+  updateScoreTotals();
+}
+
+function updateScoreTotals() {
+  const yourT = calcYourTotal();
+  const jd = calcJordanTotal();
+
+  document.getElementById('yourTotal').textContent = yourT + ' PV';
+  document.getElementById('jordanTotal').textContent = jd.total + ' PV';
+
+  // Jordan table
+  const rows = [
+    ['⭐ PV acumulados', '', jd.vp],
+    ['🌊 Ríos', `${state.jordanRivers} × 4`, jd.riv],
+    ['⚓ Mejoras', `${state.jordanUpgrades} × 6`, jd.upg],
+    ['📜 Misiones', `${state.jordanMissions} × 5`, jd.mis],
+    ['★ Bonus misiones', state.jordanMissions >= 6 ? 'Sí' : 'No', jd.misB],
+    ['🏠 Residencias', `${state.jordanResidences} × 15`, jd.res],
+    ['💎 Tesoros', `${state.jordanTreasures} × 2 (mín.)`, jd.tre],
+  ];
+  document.getElementById('jordanScoreBody').innerHTML = rows.map(r =>
+    `<tr><td>${r[0]}</td><td style="color:var(--text-muted)">${r[1]}</td><td style="color:var(--gold)">${r[2]}</td></tr>`
+  ).join('');
+
+  // Winner
+  const banner = document.getElementById('winnerBanner');
+  banner.style.display = 'block';
+  if (yourT > jd.total) {
+    banner.className = 'winner-banner winner-you';
+    banner.innerHTML = `🏆 ¡Ganaste! ${yourT} vs ${jd.total} PV`;
+  } else if (jd.total > yourT) {
+    banner.className = 'winner-banner winner-jordan';
+    banner.innerHTML = `💀 Jordán gana. ${jd.total} vs ${yourT} PV`;
+  } else {
+    banner.className = 'winner-banner winner-tie';
+    banner.innerHTML = `⚖️ Empate. ${yourT} PV`;
+  }
+}
+
+function calcScore() {
+  updateScoreTotals();
+}
+
+// ════════════════════════════════════════
+// REGLAS
+// ════════════════════════════════════════
+const rulesData = [
+  {
+    title: '⚔️ Principios generales',
+    items: [
+      'Jordán nunca gana ni paga doblones.',
+      'Tú juegas el 1er turno de cada ronda · Jordán siempre el último.',
+      'Al final de ronda: Jordán NO recibe ingresos.',
+      'El mazo de Jordán tiene 6 cartas. Cuando se acaba, se baraja de nuevo.',
+    ]
+  },
+  {
+    title: '🗡️ Incursión',
+    items: [
+      `Jordán gana raidVP PV y raidTreasures tesoros.`,
+      'Con marcador ≥ 2: si Jordán supera tu tesoro en esa isla → +1 cubo en esa isla.',
+      'Dado tesoro: 4-6 = isla con más cubos; 1-3 = isla con menos cubos.',
+      'Empate en dados: Oro > Esmeralda > Perla.',
+    ]
+  },
+  {
+    title: '🧭 Exploración',
+    items: [
+      'Jordán gana exploreVP PV y cuenta los ríos cruzados.',
+      'Con marcador ≥ 1: gana espacios extra en el recorrido.',
+      'En bifurcaciones, Jordán elige siempre la ruta más larga.',
+    ]
+  },
+  {
+    title: '📜 Misiones',
+    items: [
+      'Jordán siempre toma la Misión más a la DERECHA del mercado.',
+      'Las misiones valen 5 PV cada una al final de partida.',
+      'Con 6+ misiones: +10 PV bonus.',
+    ]
+  },
+  {
+    title: '⚓ Mejoras de barco',
+    items: [
+      '0. Avanza marcador del escondite (si < 3).',
+      '1. Mascarón de proa (si no tiene).',
+      '2. Carta de Misión (+1 misión).',
+      '3. Residencia (+1 residencia; la primera da +2 PV inmediatos).',
+      'Las mejoras valen 6 PV cada una al final.',
+    ]
+  },
+  {
+    title: '🌊 En el Golfo',
+    items: [
+      'Si Jordán entra al Golfo, marca el toggle correspondiente.',
+      'Su turno especial: va a Maracaibo → +6 PV, +1 mejora, avanza el marcador y sale del Golfo.',
+    ]
+  },
+  {
+    title: '🃏 Cartas B',
+    items: [
+      'Si hay cartas B, Jordán realiza una Acción Bonus ANTES de sus acciones normales.',
+      'La acción bonus puede ser: Mejora de barco, Incursión, o Exploración.',
+      'Difficulty: 0 cartas = Corsario; 1-2 = Bucanero; 3-4 = Pirata; 5-6 = Kraken.',
+    ]
+  },
+  {
+    title: '🪙 Interacción con doblones',
+    items: [
+      'Si Jordán llega a la carta de alguien → toma 1 doblón del suministro.',
+      'Si alguien llega a la carta de Jordán → le paga 1 doblón al suministro (si puede).',
+    ]
+  },
+  {
+    title: '⚖️ Desempate en movimiento',
+    items: [
+      '1. La columna más cercana a Maracaibo.',
+      '2. La posición más alta (número mayor) dentro de esa columna.',
+    ]
+  },
+];
+
+function renderRules() {
+  const el = document.getElementById('rulesAccordion');
+  el.innerHTML = rulesData.map((section, i) =>
+    `<div class="rule-accordion">
+      <div class="rule-header" id="rh-${i}" onclick="toggleRule(${i})">${section.title} <span>▼</span></div>
+      <div class="rule-body" id="rb-${i}">
+        <ul>${section.items.map(it => `<li>${it}</li>`).join('')}</ul>
+      </div>
+    </div>`
+  ).join('');
+}
+
+function toggleRule(i) {
+  const h = document.getElementById('rh-' + i);
+  const b = document.getElementById('rb-' + i);
+  h.classList.toggle('open');
+  b.classList.toggle('open');
+}
+
+// ════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  updateDifficulty();
+  renderPrepSteps();
+  renderRules();
+  renderGame();
+});
+
+// ════════════════════════════════════════
+// SERVICE WORKER
+// ════════════════════════════════════════
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
+</script>
+</body>
+</html>

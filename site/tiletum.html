@@ -1,0 +1,1477 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tiletum Solitario – Titus el Cardenal</title>
+<meta name="theme-color" content="#1A1208">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.json">
+<style>
+  :root {
+    --bg: #1A1208;
+    --bg2: #221810;
+    --card: #2C2010;
+    --border: #5C4820;
+    --gold: #D4A017;
+    --gold-dim: #A07810;
+    --red: #AA2222;
+    --blue-accent: #4488BB;
+    --text: #EEE0C0;
+    --text-dim: #998860;
+    --dark-die: #444444;
+    --blue-die: #4488BB;
+    --yellow-die: #CCAA00;
+    --pink-die: #CC4488;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Georgia', serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  header {
+    background: linear-gradient(180deg, #2C1C04 0%, #1A1208 100%);
+    border-bottom: 2px solid var(--gold);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  header a {
+    color: var(--gold-dim);
+    text-decoration: none;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+  header a:hover { color: var(--gold); }
+  header h1 {
+    font-size: 20px;
+    color: var(--gold);
+    text-shadow: 0 0 8px #D4A01780;
+    flex: 1;
+    text-align: center;
+  }
+  header .spacer { width: 60px; }
+
+  /* TABS */
+  .tabs {
+    display: flex;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+  }
+  .tab-btn {
+    flex: 1;
+    padding: 10px 4px;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: var(--text-dim);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+    transition: all .2s;
+  }
+  .tab-btn.active {
+    color: var(--gold);
+    border-bottom-color: var(--gold);
+  }
+  .tab-btn:hover { color: var(--text); }
+
+  .tab-pane { display: none; flex: 1; overflow-y: auto; padding: 16px; }
+  .tab-pane.active { display: block; }
+
+  /* CARDS */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    margin-bottom: 12px;
+  }
+  .card.challenge {
+    border-color: var(--blue-accent);
+    background: #0C1C2C;
+  }
+  .card-title {
+    font-size: 16px;
+    color: var(--gold);
+    margin-bottom: 6px;
+    font-style: italic;
+  }
+  .card-formula {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+    font-family: monospace;
+  }
+  .priorities { list-style: none; padding: 0; }
+  .priorities li {
+    font-size: 13px;
+    color: var(--text);
+    padding: 3px 0 3px 14px;
+    position: relative;
+    line-height: 1.4;
+  }
+  .priorities li::before {
+    content: '▸';
+    color: var(--gold-dim);
+    position: absolute;
+    left: 0;
+  }
+
+  /* DICE COLOR SQUARES */
+  .dice-order {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+    align-items: center;
+  }
+  .dice-order-label {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-right: 2px;
+  }
+  .die-sq {
+    width: 26px;
+    height: 26px;
+    border-radius: 5px;
+    border: 1px solid #00000080;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: bold;
+    color: #fff;
+    position: relative;
+  }
+  .die-sq .die-rank {
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 9px;
+    color: var(--text-dim);
+  }
+  .die-DARK { background: var(--dark-die); }
+  .die-BLUE { background: var(--blue-die); }
+  .die-YELLOW { background: var(--yellow-die); color: #1A1208; }
+  .die-PINK { background: var(--pink-die); }
+
+  /* SETUP TAB */
+  .setup-group { margin-bottom: 16px; }
+  .setup-label {
+    font-size: 13px;
+    color: var(--gold-dim);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .diff-btns { display: flex; gap: 8px; }
+  .diff-btn {
+    flex: 1;
+    padding: 10px;
+    border: 2px solid var(--border);
+    background: var(--card);
+    color: var(--text-dim);
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+    transition: all .2s;
+    text-align: center;
+  }
+  .diff-btn.selected {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: #3C2C10;
+  }
+
+  .btn-primary {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(180deg, #E8B020 0%, #A07010 100%);
+    border: none;
+    border-radius: 8px;
+    color: #1A1208;
+    font-family: 'Georgia', serif;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 8px;
+    letter-spacing: 0.5px;
+    transition: opacity .2s;
+  }
+  .btn-primary:hover { opacity: 0.9; }
+  .btn-primary:disabled { opacity: 0.4; cursor: default; }
+  .btn-secondary {
+    padding: 10px 18px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 14px;
+    cursor: pointer;
+    transition: border-color .2s;
+  }
+  .btn-secondary:hover { border-color: var(--gold); }
+  .btn-red {
+    background: var(--red);
+    border-color: #cc3333;
+    color: #fff;
+  }
+
+  /* GAME TAB */
+  .phase-bar {
+    background: #3C2010;
+    border: 1px solid var(--gold-dim);
+    border-radius: 6px;
+    padding: 8px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    font-size: 14px;
+  }
+  .phase-bar .phase-label { color: var(--gold); font-weight: bold; }
+  .phase-bar .score-titus { color: var(--text-dim); }
+
+  /* CURRENT CARD */
+  .current-card {
+    background: var(--card);
+    border: 2px solid var(--gold);
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 14px;
+    position: relative;
+  }
+  .current-card.is-challenge {
+    border-color: var(--blue-accent);
+    background: #0C1C2C;
+  }
+  .challenge-badge {
+    display: inline-block;
+    background: var(--blue-accent);
+    color: #fff;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin-bottom: 6px;
+    font-family: sans-serif;
+  }
+
+  /* DICE SELECTOR */
+  .dice-selector { margin-bottom: 14px; }
+  .dice-selector-label {
+    font-size: 13px;
+    color: var(--gold-dim);
+    margin-bottom: 8px;
+  }
+  .color-selector { display: flex; gap: 10px; margin-bottom: 12px; }
+  .color-opt {
+    flex: 1;
+    height: 44px;
+    border-radius: 7px;
+    border: 3px solid transparent;
+    cursor: pointer;
+    transition: border-color .15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: bold;
+    color: #fff;
+  }
+  .color-opt.selected { border-color: #fff; }
+  .color-opt[data-c="DARK"] { background: var(--dark-die); }
+  .color-opt[data-c="BLUE"] { background: var(--blue-die); }
+  .color-opt[data-c="YELLOW"] { background: var(--yellow-die); color: #1A1208; }
+  .color-opt[data-c="PINK"] { background: var(--pink-die); }
+
+  .value-selector { display: flex; gap: 6px; }
+  .val-opt {
+    flex: 1;
+    height: 40px;
+    border-radius: 6px;
+    border: 2px solid var(--border);
+    background: var(--card);
+    color: var(--text);
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all .15s;
+    font-family: inherit;
+  }
+  .val-opt.selected {
+    border-color: var(--gold);
+    background: #3C2C10;
+    color: var(--gold);
+  }
+
+  .pts-preview {
+    text-align: center;
+    font-size: 15px;
+    color: var(--text-dim);
+    margin: 10px 0;
+    height: 22px;
+  }
+  .pts-preview span { color: var(--gold); font-weight: bold; }
+
+  /* PHASE SCREENS */
+  .phase-screen {
+    background: var(--card);
+    border: 2px solid var(--gold-dim);
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 14px;
+  }
+  .phase-screen h2 {
+    color: var(--gold);
+    font-size: 20px;
+    margin-bottom: 12px;
+  }
+  .phase-screen p { color: var(--text); margin-bottom: 14px; line-height: 1.5; }
+  .phase-screen .big-q {
+    font-size: 15px;
+    margin-bottom: 16px;
+    color: var(--text);
+  }
+  .yes-no { display: flex; gap: 10px; justify-content: center; }
+  .yes-no button {
+    padding: 12px 30px;
+    border-radius: 8px;
+    border: 2px solid var(--border);
+    background: var(--card);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 15px;
+    cursor: pointer;
+  }
+  .yes-no button.yes { border-color: var(--red); color: var(--red); }
+  .yes-no button.no { border-color: #446644; color: #88BB88; }
+
+  /* COUNTERS */
+  .counter-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .counter-label { font-size: 14px; color: var(--text); flex: 1; }
+  .counter-controls { display: flex; align-items: center; gap: 8px; }
+  .counter-controls button {
+    width: 34px;
+    height: 34px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--gold);
+    font-size: 18px;
+    cursor: pointer;
+    font-family: inherit;
+    line-height: 1;
+  }
+  .counter-controls button:hover { border-color: var(--gold); }
+  .counter-val {
+    min-width: 36px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--gold);
+  }
+
+  /* SCORING TAB */
+  .score-section { margin-bottom: 20px; }
+  .score-section h3 {
+    color: var(--gold);
+    font-size: 16px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 6px;
+  }
+  .score-result {
+    background: #3C2C10;
+    border: 2px solid var(--gold);
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+    margin-top: 16px;
+  }
+  .score-result .winner {
+    font-size: 22px;
+    font-weight: bold;
+    color: var(--gold);
+    margin-bottom: 6px;
+  }
+  .score-result .scores {
+    font-size: 15px;
+    color: var(--text);
+  }
+  .building-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-top: 8px;
+  }
+  .building-table td, .building-table th {
+    padding: 6px 8px;
+    border: 1px solid var(--border);
+    text-align: center;
+  }
+  .building-table th { background: #3C2C10; color: var(--gold-dim); }
+  .building-table td:first-child { color: var(--text-dim); }
+
+  /* RULES TAB */
+  .rules-section { margin-bottom: 20px; }
+  .rules-section h3 {
+    color: var(--gold);
+    font-size: 15px;
+    margin-bottom: 8px;
+  }
+  .rules-section p {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.6;
+    margin-bottom: 6px;
+  }
+  .rules-section ul {
+    padding-left: 16px;
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.7;
+  }
+
+  /* DECK DISPLAY */
+  .deck-info {
+    background: #221408;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* KING EXTRA PV */
+  .king-extra {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    justify-content: center;
+  }
+  .king-extra label { font-size: 13px; color: var(--text-dim); }
+  .king-extra input {
+    width: 64px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--gold);
+    font-size: 16px;
+    text-align: center;
+    border-radius: 5px;
+    padding: 4px;
+    font-family: inherit;
+  }
+
+  /* FAIR PHASE */
+  .fair-mult-info {
+    font-size: 13px;
+    color: var(--text-dim);
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 16px 0;
+  }
+
+  .info-box {
+    background: #221408;
+    border-left: 3px solid var(--gold-dim);
+    padding: 10px 12px;
+    border-radius: 0 6px 6px 0;
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 11px; }
+  .tag-gold { background: var(--gold-dim); color: #1A1208; }
+  .tag-blue { background: var(--blue-accent); color: #fff; }
+  .tag-red { background: var(--red); color: #fff; }
+
+  .final-screen {
+    text-align: center;
+    padding: 10px 0;
+  }
+  .final-screen h2 {
+    color: var(--gold);
+    font-size: 24px;
+    margin-bottom: 6px;
+    text-shadow: 0 0 12px #D4A01760;
+  }
+  .final-screen .subtitle {
+    font-size: 14px;
+    color: var(--text-dim);
+    margin-bottom: 20px;
+  }
+
+  /* Notification */
+  #toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: #3C2C10;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: transform .3s;
+    z-index: 999;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  #toast.show { transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html">← Volver</a>
+  <h1>⚜ Tiletum Solitario</h1>
+  <div class="spacer"></div>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="showTab('setup')">⚙️ Setup</button>
+  <button class="tab-btn" onclick="showTab('game')">🎲 Solitario</button>
+  <button class="tab-btn" onclick="showTab('score')">🏆 Puntuación</button>
+  <button class="tab-btn" onclick="showTab('rules')">📜 Reglas</button>
+</div>
+
+<!-- SETUP TAB -->
+<div id="tab-setup" class="tab-pane active">
+  <div class="setup-group">
+    <div class="setup-label">Dificultad</div>
+    <div class="diff-btns">
+      <div class="diff-btn selected" data-d="easy" onclick="selectDiff(this)">
+        <div style="font-size:18px">🕊️</div>
+        <div>Fácil</div>
+        <div style="font-size:11px;margin-top:3px;color:#998860">0 desafío</div>
+      </div>
+      <div class="diff-btn" data-d="normal" onclick="selectDiff(this)">
+        <div style="font-size:18px">⚔️</div>
+        <div>Normal</div>
+        <div style="font-size:11px;margin-top:3px;color:#998860">2 desafío</div>
+      </div>
+      <div class="diff-btn" data-d="hard" onclick="selectDiff(this)">
+        <div style="font-size:18px">🔥</div>
+        <div>Difícil</div>
+        <div style="font-size:11px;margin-top:3px;color:#998860">5 desafío</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-box" id="diff-info">
+    Mazo de 13 cartas. Sin cartas de desafío. El multiplicador de feria es el número de ronda.
+  </div>
+
+  <div class="setup-group">
+    <div class="setup-label">Mazo resultante</div>
+    <div id="deck-preview" class="card" style="padding:10px 12px;">
+      <div style="font-size:13px;color:var(--text-dim);margin-bottom:6px;">13 cartas base + 0 desafío = 13 cartas totales</div>
+      <div id="challenge-list"></div>
+    </div>
+  </div>
+
+  <button class="btn-primary" onclick="startGame()">⚔️ Iniciar partida</button>
+
+  <div style="height:16px"></div>
+  <div class="card" style="font-size:13px;color:var(--text-dim);line-height:1.6;">
+    <div style="color:var(--gold);margin-bottom:6px;">📖 Recordatorio</div>
+    4 rondas × 3 turnos. Cada turno robas 1 carta, actúas según prioridades y confirmas el dado que usa Titus el Cardenal.
+  </div>
+</div>
+
+<!-- GAME TAB -->
+<div id="tab-game" class="tab-pane">
+  <div id="game-not-started" class="info-box" style="text-align:center;padding:20px;">
+    Configura la partida en el tab <strong style="color:var(--gold)">Setup</strong> y pulsa «Iniciar partida».
+  </div>
+
+  <div id="game-content" style="display:none;">
+    <div class="phase-bar">
+      <div class="phase-label" id="phase-label">Ronda 1 · Turno 1/3</div>
+      <div class="score-titus">Titus: <strong id="titus-running" style="color:var(--gold)">0</strong> PV</div>
+    </div>
+
+    <div class="deck-info">
+      <span>Cartas restantes: <strong id="deck-count" style="color:var(--text)">—</strong></span>
+      <span id="deck-progress"></span>
+    </div>
+
+    <!-- NORMAL TURN -->
+    <div id="turn-ui">
+      <div id="current-card-area"></div>
+
+      <div class="dice-selector">
+        <div class="dice-selector-label">Dado que usa Titus:</div>
+        <div class="color-selector" id="color-selector">
+          <div class="color-opt die-DARK" data-c="DARK" onclick="selectColor('DARK')"><span>Gris</span></div>
+          <div class="color-opt die-BLUE" data-c="BLUE" onclick="selectColor('BLUE')"><span>Azul</span></div>
+          <div class="color-opt die-YELLOW" data-c="YELLOW" onclick="selectColor('YELLOW')"><span>Amar.</span></div>
+          <div class="color-opt die-PINK" data-c="PINK" onclick="selectColor('PINK')"><span>Rosa</span></div>
+        </div>
+        <div class="value-selector" id="value-selector">
+          <button class="val-opt" onclick="selectVal(1)">1</button>
+          <button class="val-opt" onclick="selectVal(2)">2</button>
+          <button class="val-opt" onclick="selectVal(3)">3</button>
+          <button class="val-opt" onclick="selectVal(4)">4</button>
+          <button class="val-opt" onclick="selectVal(5)">5</button>
+          <button class="val-opt" onclick="selectVal(6)">6</button>
+        </div>
+        <div class="pts-preview" id="pts-preview">Selecciona color y valor</div>
+      </div>
+
+      <button class="btn-primary" id="confirm-btn" onclick="confirmTurn()" disabled>Confirmar turno ✓</button>
+    </div>
+
+    <!-- KING PHASE -->
+    <div id="king-ui" style="display:none;">
+      <div class="phase-screen">
+        <h2>👑 Fase del Rey</h2>
+        <div class="big-q">¿Titus está por delante de ti en la pista del Rey?</div>
+        <div class="yes-no">
+          <button class="yes" onclick="kingResult(true)">Sí (+4 PV)</button>
+          <button class="no" onclick="kingResult(false)">No (0 PV)</button>
+        </div>
+        <div class="king-extra" id="king-extra-wrap" style="display:none;margin-top:14px;">
+          <label>PV extra ajuste:</label>
+          <input type="number" id="king-extra-input" value="0" min="-10" max="20">
+          <button class="btn-secondary" onclick="confirmKing()">Confirmar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAIR PHASE -->
+    <div id="fair-ui" style="display:none;">
+      <div class="phase-screen">
+        <h2>🎪 Fase de Feria</h2>
+        <div class="fair-mult-info" id="fair-mult-info"></div>
+        <div class="counter-row">
+          <div class="counter-label">A – Zonas de feria</div>
+          <div class="counter-controls">
+            <button onclick="adjustFair('a',-1)">−</button>
+            <div class="counter-val" id="fair-a">0</div>
+            <button onclick="adjustFair('a',1)">+</button>
+          </div>
+        </div>
+        <div class="counter-row">
+          <div class="counter-label">B – Bonus adicional</div>
+          <div class="counter-controls">
+            <button onclick="adjustFair('b',-1)">−</button>
+            <div class="counter-val" id="fair-b">0</div>
+            <button onclick="adjustFair('b',1)">+</button>
+          </div>
+        </div>
+        <div id="fair-calc" style="margin:10px 0;font-size:15px;color:var(--text-dim);">
+          Pts Titus: <strong id="fair-pts" style="color:var(--gold)">0</strong>
+        </div>
+        <button class="btn-primary" onclick="confirmFair()">Continuar ▶</button>
+      </div>
+    </div>
+
+    <!-- FINAL SCREEN -->
+    <div id="final-ui" style="display:none;">
+      <div class="final-screen">
+        <h2>⚜ Fin de partida</h2>
+        <div class="subtitle">Calcula tu puntuación en el tab <strong style="color:var(--gold)">Puntuación</strong></div>
+        <div class="card" style="text-align:left;margin-bottom:12px;">
+          <div style="color:var(--gold);margin-bottom:8px;">Puntuación acumulada de Titus</div>
+          <div style="font-size:22px;color:var(--gold);text-align:center;margin-bottom:8px;" id="titus-total-display">0 PV base</div>
+          <div style="font-size:13px;color:var(--text-dim);text-align:center;">+ Contratos × Catedrales (añade en el tab Puntuación)</div>
+        </div>
+        <button class="btn-primary" onclick="showTab('score');updateScoreTab()">Ver puntuación final 🏆</button>
+        <div style="height:10px"></div>
+        <button class="btn-secondary" style="width:100%" onclick="showTab('setup')">Nueva partida</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SCORE TAB -->
+<div id="tab-score" class="tab-pane">
+  <div class="score-section">
+    <h3>Tu puntuación</h3>
+    <div class="counter-row">
+      <div class="counter-label">PV en partida</div>
+      <div class="counter-controls">
+        <button onclick="adj('player-pv',-1)">−</button>
+        <div class="counter-val" id="player-pv">10</div>
+        <button onclick="adj('player-pv',1)">+</button>
+      </div>
+    </div>
+    <div class="counter-row">
+      <div class="counter-label">🏠 Casas</div>
+      <div class="counter-controls">
+        <button onclick="adj('p-casas',-1)">−</button>
+        <div class="counter-val" id="p-casas">0</div>
+        <button onclick="adj('p-casas',1)">+</button>
+      </div>
+    </div>
+    <div class="counter-row">
+      <div class="counter-label">🏛️ Pilares</div>
+      <div class="counter-controls">
+        <button onclick="adj('p-pilares',-1)">−</button>
+        <div class="counter-val" id="p-pilares">0</div>
+        <button onclick="adj('p-pilares',1)">+</button>
+      </div>
+    </div>
+    <div style="text-align:center;font-size:13px;color:var(--text-dim);margin-bottom:8px;">
+      Puntuación edificios: <strong id="building-pts-display" style="color:var(--gold)">0 PV</strong>
+      <span id="building-note" style="font-size:11px;display:block;margin-top:2px;"></span>
+    </div>
+    <div style="background:#3C2C10;border-radius:6px;padding:8px 12px;text-align:center;font-size:16px;margin-bottom:4px;">
+      Total tuyo: <strong id="player-total" style="color:var(--gold)">10</strong> PV
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="score-section">
+    <h3>Titus el Cardenal</h3>
+    <div class="counter-row">
+      <div class="counter-label">PV base (acumulado)</div>
+      <div class="counter-controls">
+        <button onclick="adj('t-base',-5)">−</button>
+        <div class="counter-val" id="t-base" style="min-width:50px">0</div>
+        <button onclick="adj('t-base',5)">+</button>
+      </div>
+    </div>
+    <div class="counter-row">
+      <div class="counter-label">📜 Contratos</div>
+      <div class="counter-controls">
+        <button onclick="adj('t-contratos',-1)">−</button>
+        <div class="counter-val" id="t-contratos">0</div>
+        <button onclick="adj('t-contratos',1)">+</button>
+      </div>
+    </div>
+    <div class="counter-row">
+      <div class="counter-label">⛪ Catedrales</div>
+      <div class="counter-controls">
+        <button onclick="adj('t-catedrales',-1)">−</button>
+        <div class="counter-val" id="t-catedrales">0</div>
+        <button onclick="adj('t-catedrales',1)">+</button>
+      </div>
+    </div>
+    <div style="text-align:center;font-size:13px;color:var(--text-dim);margin-bottom:8px;">
+      Bonus final: Contratos × Catedrales = <strong id="t-bonus" style="color:var(--gold)">0</strong> PV
+    </div>
+    <div style="background:#1C0C0C;border:1px solid var(--red);border-radius:6px;padding:8px 12px;text-align:center;font-size:16px;margin-bottom:4px;">
+      Total Titus: <strong id="titus-total" style="color:#FF6666">0</strong> PV
+    </div>
+  </div>
+
+  <div id="score-result-box" class="score-result" style="display:none;"></div>
+  <button class="btn-primary" onclick="calcScore()">Calcular resultado 🏆</button>
+
+  <hr class="divider">
+  <div class="score-section">
+    <h3>Tabla de edificios (referencia)</h3>
+    <table class="building-table">
+      <tr><th>Nº edificios</th><th>0-2</th><th>3</th><th>4</th><th>5</th><th>6</th></tr>
+      <tr><td>PV</td><td>0</td><td>5</td><td>10</td><td>20</td><td>30</td></tr>
+    </table>
+    <div style="font-size:11px;color:var(--text-dim);margin-top:6px;">* En Tiletum los edificios puntúan según la tabla si se activa esa vía. En solitario: Casas × Pilares para el jugador.</div>
+  </div>
+</div>
+
+<!-- RULES TAB -->
+<div id="tab-rules" class="tab-pane">
+  <div class="rules-section">
+    <h3>Estructura de la partida</h3>
+    <ul>
+      <li>4 rondas, 3 turnos por ronda</li>
+      <li>Cada turno: se roba 1 carta del mazo de Titus</li>
+      <li>Titus actúa según las prioridades de la carta</li>
+      <li>El jugador indica qué dado usa Titus (color + valor 1-6)</li>
+    </ul>
+  </div>
+
+  <div class="rules-section">
+    <h3>Puntuación del dado</h3>
+    <ul>
+      <li><span class="tag" style="background:var(--yellow-die);color:#1A1208">Amarillo</span> → valor del dado × 1</li>
+      <li><span class="tag" style="background:var(--dark-die);color:#fff">Gris</span>, <span class="tag" style="background:var(--blue-die);color:#fff">Azul</span>, <span class="tag" style="background:var(--pink-die);color:#fff">Rosa</span> → valor × 2</li>
+    </ul>
+  </div>
+
+  <div class="rules-section">
+    <h3>Fase del Rey</h3>
+    <p>Tras los 3 turnos de cada ronda. Si Titus está por delante en la pista del Rey: +4 PV a su marcador (más ajuste manual si hay bonus extra).</p>
+  </div>
+
+  <div class="rules-section">
+    <h3>Fase de Feria</h3>
+    <p>Después del Rey. Titus obtiene (A + B) × multiplicador puntos.</p>
+    <ul>
+      <li><strong>Fácil/Normal</strong>: multiplicador = nº de ronda</li>
+      <li><strong>Difícil</strong> (≥5 cartas desafío): multiplicador = ronda + 1</li>
+    </ul>
+  </div>
+
+  <div class="rules-section">
+    <h3>Puntuación final</h3>
+    <ul>
+      <li><strong>Jugador</strong>: PV en partida + Casas × Pilares</li>
+      <li><strong>Titus</strong>: PV acumulados + Contratos × Catedrales</li>
+    </ul>
+  </div>
+
+  <div class="rules-section">
+    <h3>Prioridades de las cartas</h3>
+    <p style="margin-bottom:8px;">Titus sigue las prioridades en orden descendente. El jugador elige el dado según el orden de colores preferidos de la carta activa, seleccionando el valor más alto disponible.</p>
+  </div>
+
+  <div id="rules-card-list"></div>
+</div>
+
+<div id="toast">✓ Turno confirmado</div>
+
+<script>
+// ─── DATA ───────────────────────────────────────────────────────────────────
+
+const BASE_CARDS = [
+  {
+    name: "Los edificios son para siempre",
+    formula: "6 × Pilares × Casas",
+    priorities: [
+      "Si Pilares > Casas → Acción de Comerciante 🏠",
+      "Acción de Arquitecto 🏛️",
+      "Si Pilares > Catedrales → selecciona dado Gris oscuro más alto"
+    ],
+    diceOrder: ["DARK","YELLOW","BLUE","PINK"]
+  },
+  {
+    name: "Rey y país",
+    formula: "3 escudos + X coronas",
+    priorities: ["Acción de Rey 👑"],
+    diceOrder: ["YELLOW","PINK","BLUE","DARK"]
+  },
+  {
+    name: "Imperio mercantil",
+    formula: "2 × Casas",
+    priorities: ["Acción de Comerciante 🏠"],
+    diceOrder: ["BLUE","PINK","YELLOW","DARK"]
+  },
+  {
+    name: "Alianzas familiares",
+    formula: "6 × Contratos",
+    priorities: [
+      "Si hay ≥1 Contrato sin cumplir → dado con mayor demanda (gris/amarillo, más dados del mismo color)",
+      "Nuevo Escudo al alcance → Acción de Comerciante 🏠",
+      "Nuevo Escudo al alcance → Acción de Arquitecto 🏛️",
+      "Acción de Contrato 📜"
+    ],
+    diceOrder: ["BLUE","YELLOW","PINK","DARK"]
+  },
+  {
+    name: "Los negocios son los negocios",
+    formula: "3 × Contratos",
+    priorities: [
+      "Si hay ≥1 Contrato sin cumplir → dado con mayor demanda (gris/amarillo)",
+      "Acción de Contrato 📜",
+      "Dado Azul o Gris claro más alto"
+    ],
+    diceOrder: ["YELLOW","BLUE","DARK","PINK"]
+  },
+  {
+    name: "Comunidades religiosas",
+    formula: "5 × Catedrales",
+    priorities: [
+      "Si Pilares > Catedrales → dado Gris oscuro más alto",
+      "Si hay ≥1 Contrato sin cumplir → dado con mayor demanda",
+      "Acción de Arquitecto 🏛️",
+      "Acción de Contrato 📜"
+    ],
+    diceOrder: ["DARK","BLUE","YELLOW","PINK"]
+  },
+  {
+    name: "Nobleza obliga",
+    formula: "3 × Escudos",
+    priorities: [
+      "Nuevo Escudo al alcance → Acción de Arquitecto 🏛️",
+      "Nuevo Escudo al alcance → Acción de Comerciante 🏠",
+      "Nuevo Escudo en oferta Contratos → Acción de Contrato 📜"
+    ],
+    diceOrder: ["PINK","DARK","BLUE","YELLOW"]
+  },
+  {
+    name: "Pilares orgullosos",
+    formula: "2 × Pilares",
+    priorities: [
+      "Acción de Arquitecto 🏛️",
+      "Si Pilares > Casas → Acción de Comerciante 🏠"
+    ],
+    diceOrder: ["DARK","PINK","BLUE","YELLOW"]
+  },
+  {
+    name: "Caras conocidas",
+    formula: "3 × Personajes (máx. 3/2)",
+    priorities: [
+      "Acción de Personaje 👤",
+      "Dado Rosa más alto"
+    ],
+    diceOrder: ["PINK","YELLOW","BLUE","DARK"]
+  },
+  {
+    name: "Manos ocupadas",
+    formula: "5 × Contratos completados",
+    priorities: [
+      "Acción de Personaje 👤",
+      "Dado Rosa más alto"
+    ],
+    diceOrder: ["PINK","BLUE","YELLOW","DARK"]
+  },
+  {
+    name: "Chapiteles gloriosos",
+    formula: "4 × Catedrales",
+    priorities: [
+      "Si Pilares > Catedrales → dado Gris oscuro más alto",
+      "Acción de Arquitecto 🏛️"
+    ],
+    diceOrder: ["DARK","YELLOW","PINK","BLUE"]
+  },
+  {
+    name: "Fama imperecedera",
+    formula: "Casas × Pilares (si Casas ≥ Pilares)",
+    priorities: [
+      "Si Casas ≥ Pilares → Acción de Arquitecto 🏛️",
+      "Acción de Comerciante 🏠"
+    ],
+    diceOrder: ["DARK","BLUE","PINK","YELLOW"]
+  },
+  {
+    name: "Riquezas mundanas",
+    formula: "Puntos por recurso más demandado",
+    priorities: [
+      "Dado de cualquier color más alto (elige el más demandado)"
+    ],
+    diceOrder: ["DARK","BLUE","YELLOW","PINK"]
+  }
+];
+
+const CHALLENGE_CARDS = [
+  {
+    name: "Arcas profundas",
+    formula: "Carta de desafío",
+    effect: "Al sacar un dado, Titus obtiene +1 bolsa de recursos adicional",
+    priorities: ["Efecto pasivo: +1 bolsa de recursos al sacar dado"],
+    diceOrder: ["DARK","BLUE","YELLOW","PINK"],
+    isChallenge: true
+  },
+  {
+    name: "Favor a la Corte",
+    formula: "Carta de desafío",
+    effect: "En Preparación: si marcador < escudo 5, avanza hasta escudo 5",
+    priorities: ["Efecto en preparación: avanza marcador hasta escudo 5 si es menor"],
+    diceOrder: ["YELLOW","PINK","BLUE","DARK"],
+    isChallenge: true
+  },
+  {
+    name: "Listos para la acción",
+    formula: "Carta de desafío",
+    effect: "En Preparación: Titus obtiene losetas bonus (+3/+2/+2/+1/+1 según posición)",
+    priorities: ["Efecto en preparación: +3/+2/+2/+1/+1 losetas bonus según posición"],
+    diceOrder: ["BLUE","PINK","YELLOW","DARK"],
+    isChallenge: true
+  },
+  {
+    name: "Amigos muy especiales",
+    formula: "Carta de desafío",
+    effect: "Si Acción Personaje y dado > 5 → 5 monedas. Si obtiene Contrato → obtiene otro adicional",
+    priorities: ["Si Personaje y dado > 5 → 5 monedas", "Si obtiene Contrato → +1 Contrato adicional"],
+    diceOrder: ["PINK","YELLOW","BLUE","DARK"],
+    isChallenge: true
+  },
+  {
+    name: "Clero ingenioso",
+    formula: "Carta de desafío",
+    effect: "Cuando Titus obtiene bolsa de recursos, también obtiene escudo (y viceversa)",
+    priorities: ["Efecto pasivo: bolsa ↔ escudo se obtienen mutuamente"],
+    diceOrder: ["DARK","BLUE","YELLOW","PINK"],
+    isChallenge: true
+  },
+  {
+    name: "Ganancias eclesiásticas",
+    formula: "Carta de desafío",
+    effect: "Acción Personaje → 1 escudo. Si 6 losetas distintas → escudo adicional",
+    priorities: ["Personaje → +1 escudo", "Si ≥6 losetas distintas → +1 escudo adicional"],
+    diceOrder: ["DARK","YELLOW","PINK","BLUE"],
+    isChallenge: true
+  },
+  {
+    name: "Visitantes a la Curia",
+    formula: "Carta de desafío",
+    effect: "Personaje con bolsa → bolsa O escudo. Personaje con rueda → X escudos según posición",
+    priorities: ["Personaje + bolsa → bolsa O escudo (elige)", "Personaje + rueda → X escudos según posición"],
+    diceOrder: ["PINK","BLUE","DARK","YELLOW"],
+    isChallenge: true
+  },
+  {
+    name: "Susurros al oído del rey",
+    formula: "Carta de desafío",
+    effect: "Si Titus ejecuta Arquitecto, Comerciante, Rey o Contrato en misma ronda → +1 corona",
+    priorities: ["Si ejecuta Arquitecto/Comerciante/Rey/Contrato en la misma ronda → +1 corona"],
+    diceOrder: ["YELLOW","DARK","BLUE","PINK"],
+    isChallenge: true
+  }
+];
+
+const DIFF_CONFIG = { easy: 0, normal: 2, hard: 5 };
+const DIFF_CHALLENGE_LIST = {
+  easy: [],
+  normal: ["Arcas profundas", "Favor a la Corte"],
+  hard: ["Arcas profundas", "Favor a la Corte", "Listos para la acción", "Amigos muy especiales", "Clero ingenioso"]
+};
+
+const DIE_COLOR_LABELS = { DARK:"Gris", BLUE:"Azul", YELLOW:"Amarillo", PINK:"Rosa" };
+
+// ─── STATE ──────────────────────────────────────────────────────────────────
+let state = {
+  started: false,
+  difficulty: "easy",
+  deck: [],
+  deckIndex: 0,
+  round: 1,
+  turn: 1,
+  phase: "turn", // "turn" | "king" | "fair" | "final"
+  titusScore: 0,
+  kingAnswered: false,
+  kingYes: false,
+  kingExtra: 0,
+  fairA: 0,
+  fairB: 0,
+  selectedColor: null,
+  selectedVal: null
+};
+
+// ─── TABS ────────────────────────────────────────────────────────────────────
+function showTab(id) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  const btns = document.querySelectorAll('.tab-btn');
+  const tabs = ['setup','game','score','rules'];
+  btns[tabs.indexOf(id)].classList.add('active');
+}
+
+// ─── SETUP ───────────────────────────────────────────────────────────────────
+let selectedDiff = "easy";
+
+function selectDiff(el) {
+  document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedDiff = el.dataset.d;
+  updateSetupPreview();
+}
+
+function updateSetupPreview() {
+  const n = DIFF_CONFIG[selectedDiff];
+  const challengeNames = DIFF_CHALLENGE_LIST[selectedDiff];
+  const total = 13 + n;
+  const infoEl = document.getElementById('diff-info');
+  const previewEl = document.getElementById('deck-preview');
+  const listEl = document.getElementById('challenge-list');
+
+  const multNote = selectedDiff === 'hard'
+    ? "El multiplicador de feria es <strong>ronda + 1</strong> (dificultad difícil)."
+    : "El multiplicador de feria es el número de ronda.";
+
+  infoEl.innerHTML = `Mazo de ${total} cartas (${13} base + ${n} desafío). ${multNote}`;
+
+  previewEl.querySelector('div').innerHTML = `${13} cartas base + ${n} desafío = <strong style="color:var(--gold)">${total} cartas totales</strong>`;
+
+  if (challengeNames.length === 0) {
+    listEl.innerHTML = '<div style="font-size:12px;color:var(--text-dim)">Sin cartas de desafío.</div>';
+  } else {
+    listEl.innerHTML = challengeNames.map(name =>
+      `<div style="display:flex;align-items:center;gap:6px;margin-top:4px;">
+        <span class="tag tag-blue">DESAFÍO</span>
+        <span style="font-size:13px">${name}</span>
+      </div>`
+    ).join('');
+  }
+}
+
+// ─── GAME START ──────────────────────────────────────────────────────────────
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function startGame() {
+  const diff = selectedDiff;
+  const n = DIFF_CONFIG[diff];
+  const challengeNames = DIFF_CHALLENGE_LIST[diff];
+  const challengeCards = CHALLENGE_CARDS.filter(c => challengeNames.includes(c.name));
+  const deck = shuffle([...BASE_CARDS, ...challengeCards]);
+
+  state = {
+    started: true,
+    difficulty: diff,
+    deck,
+    deckIndex: 0,
+    round: 1,
+    turn: 1,
+    phase: "turn",
+    titusScore: 0,
+    selectedColor: null,
+    selectedVal: null
+  };
+
+  document.getElementById('game-not-started').style.display = 'none';
+  document.getElementById('game-content').style.display = 'block';
+  document.getElementById('t-base').textContent = '0';
+
+  renderGameUI();
+  showTab('game');
+  toast('¡Partida iniciada! ' + deck.length + ' cartas.');
+}
+
+// ─── RENDER GAME ─────────────────────────────────────────────────────────────
+function renderGameUI() {
+  if (!state.started) return;
+
+  // Phase label
+  document.getElementById('phase-label').textContent =
+    `Ronda ${state.round} · Turno ${state.turn}/3`;
+  document.getElementById('titus-running').textContent = state.titusScore;
+
+  // Deck info
+  const remaining = state.deck.length - state.deckIndex;
+  document.getElementById('deck-count').textContent = remaining;
+  const used = state.deckIndex;
+  const total = state.deck.length;
+  document.getElementById('deck-progress').textContent = `Carta ${used + 1}/${total}`;
+
+  // Show/hide sections
+  document.getElementById('turn-ui').style.display = state.phase === 'turn' ? 'block' : 'none';
+  document.getElementById('king-ui').style.display = state.phase === 'king' ? 'block' : 'none';
+  document.getElementById('fair-ui').style.display = state.phase === 'fair' ? 'block' : 'none';
+  document.getElementById('final-ui').style.display = state.phase === 'final' ? 'block' : 'none';
+
+  if (state.phase === 'turn') {
+    renderCurrentCard();
+  }
+  if (state.phase === 'fair') {
+    const mult = (state.difficulty === 'hard') ? state.round + 1 : state.round;
+    document.getElementById('fair-mult-info').textContent =
+      `Multiplicador: Ronda ${state.round}${state.difficulty === 'hard' ? ' + 1 (Difícil)' : ''} = ×${mult}`;
+    updateFairCalc();
+  }
+  if (state.phase === 'final') {
+    document.getElementById('titus-total-display').textContent = `${state.titusScore} PV base`;
+    // auto-fill base score in score tab
+    document.getElementById('t-base').textContent = state.titusScore;
+    updateScoreTab();
+  }
+}
+
+function diceColorHTML(diceOrder) {
+  return `<div class="dice-order">
+    <span class="dice-order-label">Dados preferidos:</span>
+    ${diceOrder.map((c, i) => `
+      <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+        <span style="font-size:9px;color:var(--text-dim)">${i+1}</span>
+        <div class="die-sq die-${c}" title="${DIE_COLOR_LABELS[c]}"></div>
+      </div>`).join('')}
+  </div>`;
+}
+
+function renderCurrentCard() {
+  const card = state.deck[state.deckIndex];
+  if (!card) return;
+
+  const isChallenge = !!card.isChallenge;
+  const area = document.getElementById('current-card-area');
+  area.innerHTML = `
+    <div class="current-card ${isChallenge ? 'is-challenge' : ''}">
+      ${isChallenge ? '<div class="challenge-badge">⚔ CARTA DESAFÍO</div>' : ''}
+      <div class="card-title">${card.name}</div>
+      <div class="card-formula">📊 ${card.formula}</div>
+      ${isChallenge && card.effect ? `<div class="info-box" style="margin:6px 0 8px 0;">${card.effect}</div>` : ''}
+      <ul class="priorities">
+        ${card.priorities.map(p => `<li>${p}</li>`).join('')}
+      </ul>
+      ${diceColorHTML(card.diceOrder)}
+    </div>`;
+
+  // Reset selectors
+  state.selectedColor = null;
+  state.selectedVal = null;
+  document.querySelectorAll('.color-opt').forEach(e => e.classList.remove('selected'));
+  document.querySelectorAll('.val-opt').forEach(e => e.classList.remove('selected'));
+  document.getElementById('pts-preview').innerHTML = 'Selecciona color y valor';
+  document.getElementById('confirm-btn').disabled = true;
+}
+
+// ─── DICE SELECTION ───────────────────────────────────────────────────────────
+function selectColor(c) {
+  state.selectedColor = c;
+  document.querySelectorAll('.color-opt').forEach(e => {
+    e.classList.toggle('selected', e.dataset.c === c);
+  });
+  updatePtsPreview();
+}
+
+function selectVal(v) {
+  state.selectedVal = v;
+  document.querySelectorAll('.val-opt').forEach(e => {
+    e.classList.toggle('selected', parseInt(e.textContent) === v);
+  });
+  updatePtsPreview();
+}
+
+function calcDiePts(color, val) {
+  if (!color || !val) return null;
+  return color === 'YELLOW' ? val : val * 2;
+}
+
+function updatePtsPreview() {
+  const pts = calcDiePts(state.selectedColor, state.selectedVal);
+  const prev = document.getElementById('pts-preview');
+  if (pts === null) {
+    prev.innerHTML = 'Selecciona color y valor';
+    document.getElementById('confirm-btn').disabled = true;
+  } else {
+    const cLabel = DIE_COLOR_LABELS[state.selectedColor];
+    const mult = state.selectedColor === 'YELLOW' ? '×1' : '×2';
+    prev.innerHTML = `${cLabel} ${state.selectedVal} (${mult}) → <span>${pts} PV</span>`;
+    document.getElementById('confirm-btn').disabled = false;
+  }
+}
+
+// ─── TURN CONFIRM ─────────────────────────────────────────────────────────────
+function confirmTurn() {
+  const pts = calcDiePts(state.selectedColor, state.selectedVal);
+  if (pts === null) return;
+
+  state.titusScore += pts;
+  state.deckIndex++;
+  document.getElementById('titus-running').textContent = state.titusScore;
+
+  toast(`+${pts} PV a Titus (total: ${state.titusScore})`);
+
+  if (state.turn < 3) {
+    state.turn++;
+    renderGameUI();
+  } else {
+    // Go to King phase
+    state.phase = 'king';
+    document.getElementById('king-extra-wrap').style.display = 'none';
+    document.getElementById('phase-label').textContent = `Ronda ${state.round} · Fase del Rey`;
+    renderGameUI();
+  }
+}
+
+// ─── KING PHASE ───────────────────────────────────────────────────────────────
+function kingResult(yes) {
+  if (yes) {
+    state.titusScore += 4;
+    document.getElementById('titus-running').textContent = state.titusScore;
+    document.getElementById('king-extra-wrap').style.display = 'flex';
+    document.getElementById('king-extra-input').value = 0;
+  } else {
+    goToFair();
+  }
+}
+
+function confirmKing() {
+  const extra = parseInt(document.getElementById('king-extra-input').value) || 0;
+  state.titusScore += extra;
+  document.getElementById('titus-running').textContent = state.titusScore;
+  goToFair();
+}
+
+function goToFair() {
+  state.phase = 'fair';
+  state.fairA = 0;
+  state.fairB = 0;
+  document.getElementById('fair-a').textContent = '0';
+  document.getElementById('fair-b').textContent = '0';
+  document.getElementById('phase-label').textContent = `Ronda ${state.round} · Fase de Feria`;
+  renderGameUI();
+}
+
+// ─── FAIR PHASE ───────────────────────────────────────────────────────────────
+function adjustFair(which, delta) {
+  if (which === 'a') {
+    state.fairA = Math.max(0, state.fairA + delta);
+    document.getElementById('fair-a').textContent = state.fairA;
+  } else {
+    state.fairB = Math.max(0, state.fairB + delta);
+    document.getElementById('fair-b').textContent = state.fairB;
+  }
+  updateFairCalc();
+}
+
+function updateFairCalc() {
+  const mult = (state.difficulty === 'hard') ? state.round + 1 : state.round;
+  const pts = (state.fairA + state.fairB) * mult;
+  document.getElementById('fair-pts').textContent = pts;
+}
+
+function confirmFair() {
+  const mult = (state.difficulty === 'hard') ? state.round + 1 : state.round;
+  const pts = (state.fairA + state.fairB) * mult;
+  state.titusScore += pts;
+  document.getElementById('titus-running').textContent = state.titusScore;
+  toast(`Feria: +${pts} PV (total Titus: ${state.titusScore})`);
+
+  if (state.round < 4) {
+    state.round++;
+    state.turn = 1;
+    state.phase = 'turn';
+    renderGameUI();
+  } else {
+    state.phase = 'final';
+    renderGameUI();
+  }
+}
+
+// ─── SCORE TAB ───────────────────────────────────────────────────────────────
+function adj(id, delta) {
+  const el = document.getElementById(id);
+  const v = parseInt(el.textContent) + delta;
+  el.textContent = v;
+  updateScoreTab();
+}
+
+function buildingPts(casas, pilares) {
+  return casas * pilares;
+}
+
+function updateScoreTab() {
+  const pv = parseInt(document.getElementById('player-pv').textContent) || 0;
+  const casas = parseInt(document.getElementById('p-casas').textContent) || 0;
+  const pilares = parseInt(document.getElementById('p-pilares').textContent) || 0;
+  const bpts = buildingPts(casas, pilares);
+  document.getElementById('building-pts-display').textContent = bpts + ' PV';
+  document.getElementById('building-note').textContent = casas + ' Casas × ' + pilares + ' Pilares';
+  const playerTotal = pv + bpts;
+  document.getElementById('player-total').textContent = playerTotal;
+
+  const tBase = parseInt(document.getElementById('t-base').textContent) || 0;
+  const tContratos = parseInt(document.getElementById('t-contratos').textContent) || 0;
+  const tCatedrales = parseInt(document.getElementById('t-catedrales').textContent) || 0;
+  const tBonus = tContratos * tCatedrales;
+  document.getElementById('t-bonus').textContent = tBonus;
+  const tTotal = tBase + tBonus;
+  document.getElementById('titus-total').textContent = tTotal;
+}
+
+function calcScore() {
+  updateScoreTab();
+  const pv = parseInt(document.getElementById('player-pv').textContent) || 0;
+  const casas = parseInt(document.getElementById('p-casas').textContent) || 0;
+  const pilares = parseInt(document.getElementById('p-pilares').textContent) || 0;
+  const playerTotal = pv + casas * pilares;
+
+  const tBase = parseInt(document.getElementById('t-base').textContent) || 0;
+  const tContratos = parseInt(document.getElementById('t-contratos').textContent) || 0;
+  const tCatedrales = parseInt(document.getElementById('t-catedrales').textContent) || 0;
+  const tTotal = tBase + tContratos * tCatedrales;
+
+  const box = document.getElementById('score-result-box');
+  box.style.display = 'block';
+
+  let winnerText, winnerColor;
+  if (playerTotal > tTotal) {
+    winnerText = '🏆 ¡VICTORIA! Ganaste a Titus';
+    winnerColor = '#88EE88';
+  } else if (playerTotal === tTotal) {
+    winnerText = '⚖️ ¡EMPATE! El Cardenal sonríe';
+    winnerColor = 'var(--gold)';
+  } else {
+    winnerText = '💀 Titus el Cardenal gana';
+    winnerColor = '#FF6666';
+  }
+
+  box.innerHTML = `
+    <div class="winner" style="color:${winnerColor}">${winnerText}</div>
+    <div class="scores">
+      Tú: <strong>${playerTotal}</strong> PV
+      &nbsp;·&nbsp;
+      Titus: <strong style="color:#FF9999">${tTotal}</strong> PV
+    </div>
+    <div style="font-size:12px;color:var(--text-dim);margin-top:6px;">
+      Diferencia: ${Math.abs(playerTotal - tTotal)} puntos
+    </div>`;
+
+  box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// ─── TOAST ───────────────────────────────────────────────────────────────────
+let toastTimer;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
+}
+
+// ─── RULES CARD LIST ─────────────────────────────────────────────────────────
+function buildRulesCardList() {
+  const el = document.getElementById('rules-card-list');
+  const allCards = [...BASE_CARDS, ...CHALLENGE_CARDS];
+  el.innerHTML = allCards.map(card => `
+    <div class="card ${card.isChallenge ? 'challenge' : ''}" style="margin-bottom:10px;">
+      ${card.isChallenge ? '<div class="challenge-badge" style="margin-bottom:4px;">⚔ DESAFÍO</div>' : ''}
+      <div class="card-title">${card.name}</div>
+      <div class="card-formula">📊 ${card.formula}</div>
+      <ul class="priorities">
+        ${card.priorities.map(p => `<li>${p}</li>`).join('')}
+      </ul>
+      ${diceColorHTML(card.diceOrder)}
+    </div>`).join('');
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  updateSetupPreview();
+  buildRulesCardList();
+
+  // Score tab live update
+  document.querySelectorAll('#tab-score .counter-controls button').forEach(btn => {
+    btn.addEventListener('click', updateScoreTab);
+  });
+  updateScoreTab();
+});
+
+// ─── SERVICE WORKER ──────────────────────────────────────────────────────────
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
+</script>
+</body>
+</html>

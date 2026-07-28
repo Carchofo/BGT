@@ -1,0 +1,1483 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Coimbra — Bot de Interferencia</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="assets/logo-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Coimbra Bot">
+<meta name="theme-color" content="#0E0E1F">
+<style>
+/* ── Tokens ── */
+:root {
+  --bg:        #0E0E1F;
+  --surface:   #13132A;
+  --surface2:  #1A1A35;
+  --border:    #252548;
+  --border2:   #2E2E58;
+  --text:      #C0C0DC;
+  --text-hi:   #E8E8F8;
+  --muted:     #6060A0;
+  --amber:     #D4900A;
+  --amber-dim: rgba(212,144,10,0.15);
+  --amber-glow:rgba(212,144,10,0.08);
+  --gold:      #F5B800;
+  --gold-dim:  rgba(245,184,0,0.12);
+  /* bot colors */
+  --c-purple:  #7C3AED;
+  --c-green:   #16A34A;
+  --c-orange:  #F97316;
+  --c-grey:    #9CA3AF;
+  /* semantic */
+  --ok:    #22C55E;
+  --warn:  #F59E0B;
+  --bad:   #EF4444;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  overflow: hidden;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+/* ── Shell ── */
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* ── Topbar ── */
+.topbar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.topbar-back {
+  color: var(--amber);
+  text-decoration: none;
+  font-size: 18px;
+  line-height: 1;
+  padding: 4px;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+.topbar-back:hover { background: var(--amber-dim); }
+.topbar-title {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 17px;
+  font-weight: bold;
+  color: var(--text-hi);
+  letter-spacing: 0.01em;
+  flex: 1;
+}
+.topbar-sub {
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.round-badge {
+  background: var(--amber-dim);
+  border: 1px solid var(--amber);
+  color: var(--amber);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.03em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* ── Scroll area ── */
+.content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 16px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ── Card ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+}
+.card-title {
+  font-family: Georgia, serif;
+  font-size: 13px;
+  font-weight: bold;
+  color: var(--amber);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.card-title::before {
+  content: '';
+  display: inline-block;
+  width: 3px;
+  height: 12px;
+  background: var(--amber);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+/* ── Dado ── */
+.dice-zone {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px 14px 16px;
+  text-align: center;
+  position: relative;
+}
+.dice-zone-label {
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+}
+
+/* Azulejo border decorativo */
+.dice-face-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 18px;
+}
+.dice-face-wrap::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border: 2px solid transparent;
+  border-radius: 22px;
+  background:
+    linear-gradient(var(--surface), var(--surface)) padding-box,
+    repeating-linear-gradient(45deg,
+      var(--amber) 0px, var(--amber) 3px,
+      transparent 3px, transparent 9px,
+      var(--amber) 9px, var(--amber) 12px,
+      transparent 12px, transparent 18px
+    ) border-box;
+  opacity: 0.5;
+  pointer-events: none;
+}
+.dice-face {
+  width: 96px;
+  height: 96px;
+  border-radius: 18px;
+  background: var(--surface2);
+  border: 2px solid var(--border2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 52px;
+  font-family: 'Courier New', monospace;
+  font-weight: 900;
+  color: var(--text-hi);
+  font-variant-numeric: tabular-nums;
+  transition: border-color 0.3s, background 0.3s, color 0.3s, transform 0.1s;
+  user-select: none;
+  position: relative;
+}
+.dice-face.rolling {
+  animation: shake 0.08s linear infinite;
+  border-color: var(--amber) !important;
+}
+.dice-face.result {
+  transform: scale(1.04);
+}
+@keyframes shake {
+  0%   { transform: translate(-2px, 0) rotate(-2deg); }
+  25%  { transform: translate(2px, -1px) rotate(1deg); }
+  50%  { transform: translate(-1px, 2px) rotate(-1deg); }
+  75%  { transform: translate(1px, 1px) rotate(2deg); }
+  100% { transform: translate(-2px, 0) rotate(-2deg); }
+}
+
+.roll-btn {
+  background: linear-gradient(135deg, var(--amber) 0%, var(--gold) 100%);
+  color: #0E0E1F;
+  border: none;
+  border-radius: 12px;
+  padding: 14px 40px;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  width: 100%;
+  transition: opacity 0.15s, transform 0.1s;
+  text-transform: uppercase;
+  font-family: system-ui, sans-serif;
+}
+.roll-btn:active { transform: scale(0.97); opacity: 0.9; }
+.roll-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+/* ── Resultado ── */
+.result-panel {
+  margin-top: 14px;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+  padding: 12px;
+  display: none;
+  gap: 10px;
+  flex-direction: column;
+}
+.result-panel.visible { display: flex; }
+
+.result-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+}
+.result-label {
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  min-width: 68px;
+  flex-shrink: 0;
+}
+.result-value {
+  font-weight: 700;
+  color: var(--text-hi);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.color-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+  box-shadow: 0 0 6px currentColor;
+}
+.city-pill {
+  background: var(--amber-dim);
+  border: 1px solid var(--amber);
+  color: var(--amber);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 2px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.02em;
+}
+.city-pill.discarded {
+  background: rgba(239,68,68,0.12);
+  border-color: #EF4444;
+  color: #EF4444;
+}
+.reroll-note {
+  font-size: 12px;
+  color: var(--warn);
+  padding: 6px 10px;
+  background: rgba(245,158,11,0.1);
+  border-radius: 6px;
+  border-left: 2px solid var(--warn);
+}
+.confirm-btn {
+  background: var(--amber-dim);
+  border: 1px solid var(--amber);
+  color: var(--amber);
+  border-radius: 8px;
+  padding: 9px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  width: 100%;
+  transition: background 0.15s;
+}
+.confirm-btn:hover { background: rgba(212,144,10,0.25); }
+
+/* ── Historial ronda ── */
+.round-history {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.history-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  padding: 7px 10px;
+  background: var(--surface2);
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+.history-num {
+  font-family: 'Courier New', monospace;
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--muted);
+  width: 22px;
+  text-align: center;
+}
+.history-info { flex: 1; }
+.history-color { font-weight: 700; }
+.history-city { color: var(--muted); font-size: 12px; }
+.empty-history { color: var(--muted); font-size: 13px; text-align: center; padding: 8px 0; }
+
+/* ── Round controls ── */
+.round-ctrl {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.round-btn {
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 7px 14px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+  flex: 1;
+}
+.round-btn:hover { background: var(--border); }
+.round-btn.primary {
+  background: var(--amber-dim);
+  border-color: var(--amber);
+  color: var(--amber);
+}
+.round-btn.primary:hover { background: rgba(212,144,10,0.25); }
+.round-display {
+  font-family: 'Courier New', monospace;
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--gold);
+  font-variant-numeric: tabular-nums;
+  min-width: 44px;
+  text-align: center;
+}
+.round-of {
+  font-size: 12px;
+  color: var(--muted);
+  text-align: center;
+  letter-spacing: 0.04em;
+}
+
+/* ── Tables ── */
+.ref-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.ref-table th {
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0 0 8px;
+  text-align: left;
+  font-weight: 600;
+}
+.ref-table td {
+  padding: 5px 0;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--border);
+}
+.ref-table tr:last-child td { border-bottom: none; }
+.die-num {
+  font-family: 'Courier New', monospace;
+  font-size: 17px;
+  font-weight: 900;
+  color: var(--text-hi);
+  font-variant-numeric: tabular-nums;
+  width: 32px;
+}
+.color-name { font-weight: 600; }
+.level-tag {
+  font-size: 11px;
+  padding: 1px 7px;
+  border-radius: 10px;
+  margin-left: 6px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+.level-bajo { background: rgba(107,114,128,0.2); color: var(--c-grey); }
+.level-alto { background: rgba(245,115,22,0.15); color: var(--c-orange); }
+
+/* ── Castillo ── */
+.castle-rule {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.castle-rule:last-child { border-bottom: none; padding-bottom: 0; }
+.castle-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+.castle-text { color: var(--text); line-height: 1.45; }
+.castle-text strong { color: var(--text-hi); }
+
+/* ── Puntuación ── */
+.score-row {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  gap: 10px;
+  border-bottom: 1px solid var(--border);
+}
+.score-row:last-child { border-bottom: none; }
+.score-label {
+  flex: 1;
+  font-size: 14px;
+  color: var(--text);
+}
+.score-sub {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 1px;
+}
+.score-ctrl {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.score-ctrl button {
+  background: none;
+  border: none;
+  color: var(--amber);
+  font-size: 18px;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  font-weight: 900;
+  transition: background 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.score-ctrl button:hover { background: var(--amber-dim); }
+.score-val {
+  min-width: 42px;
+  text-align: center;
+  font-family: 'Courier New', monospace;
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--text-hi);
+  font-variant-numeric: tabular-nums;
+}
+
+.total-card {
+  background: var(--surface2);
+  border: 2px solid var(--amber);
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+}
+.total-num {
+  font-family: Georgia, serif;
+  font-size: 52px;
+  font-weight: bold;
+  color: var(--gold);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.total-label {
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+.score-rank {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 4px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+.rank-malo    { background: rgba(239,68,68,0.15);  color: #EF4444;  border: 1px solid #EF4444; }
+.rank-regular { background: rgba(245,158,11,0.15); color: #F59E0B;  border: 1px solid #F59E0B; }
+.rank-bien    { background: rgba(34,197,94,0.15);  color: #22C55E;  border: 1px solid #22C55E; }
+.rank-muybien { background: rgba(99,102,241,0.15); color: #818CF8;  border: 1px solid #818CF8; }
+.rank-excelente { background: var(--gold-dim);     color: var(--gold); border: 1px solid var(--gold); }
+
+.score-reset-btn {
+  background: transparent;
+  border: 1px solid var(--border2);
+  color: var(--muted);
+  border-radius: 8px;
+  padding: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  width: 100%;
+  transition: border-color 0.15s, color 0.15s;
+}
+.score-reset-btn:hover { border-color: var(--bad); color: var(--bad); }
+
+/* ── Reglas ── */
+.rule-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.rule-block {
+  padding: 11px 12px;
+  background: var(--surface2);
+  border-radius: 9px;
+  border-left: 3px solid var(--amber);
+}
+.rule-block-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--amber);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.rule-block p, .rule-block li {
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.55;
+}
+.rule-block ul { padding-left: 16px; display: flex; flex-direction: column; gap: 3px; }
+.rule-block li { list-style: disc; }
+.rule-block strong { color: var(--text-hi); }
+.rule-block .note {
+  margin-top: 7px;
+  font-size: 12px;
+  color: var(--muted);
+  font-style: italic;
+}
+
+/* ── Setup ── */
+.setup-step {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 12px;
+  background: var(--surface2);
+  border-radius: 10px;
+  font-size: 13px;
+  border: 1px solid var(--border);
+}
+.setup-num {
+  font-family: Georgia, serif;
+  font-size: 22px;
+  font-weight: bold;
+  color: var(--amber);
+  line-height: 1;
+  min-width: 26px;
+  flex-shrink: 0;
+}
+.setup-body { color: var(--text); line-height: 1.55; }
+.setup-body strong { color: var(--text-hi); }
+
+/* ── Tab bar ── */
+.tabbar {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-shrink: 0;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.tab-btn {
+  flex: 1;
+  background: none;
+  border: none;
+  color: var(--muted);
+  padding: 10px 4px 12px;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.15s;
+  font-family: system-ui, sans-serif;
+}
+.tab-btn .tab-icon { font-size: 20px; line-height: 1; }
+.tab-btn.active { color: var(--amber); }
+.tab-btn.active .tab-icon { filter: drop-shadow(0 0 4px var(--amber-dim)); }
+
+/* ── Panels ── */
+.panel { display: none; height: 100%; overflow: hidden; flex-direction: column; }
+.panel.active { display: flex; }
+
+/* ── City status dots ── */
+.cities-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+}
+.city-slot {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 6px;
+  text-align: center;
+  transition: border-color 0.2s, background 0.2s;
+}
+.city-slot.used {
+  background: rgba(212,144,10,0.08);
+  border-color: var(--amber);
+}
+.city-slot-name { font-size: 11px; color: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; }
+.city-slot-icon { font-size: 20px; margin: 4px 0; }
+.city-slot-status {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.city-slot.used .city-slot-status { color: var(--amber); }
+
+/* ── Divider ── */
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 2px 0;
+}
+
+/* Focus ring */
+button:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 2px;
+}
+
+/* Reducción de movimiento */
+@media (prefers-reduced-motion: reduce) {
+  .dice-face.rolling { animation: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ── Topbar ── -->
+  <div class="topbar">
+    <a class="topbar-back" href="index.html" aria-label="Volver">←</a>
+    <div>
+      <div class="topbar-title">Coimbra</div>
+      <div class="topbar-sub">Bot de Interferencia</div>
+    </div>
+    <div id="roundBadge" class="round-badge">Ronda 1 / 4</div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       PANEL: SOLITARIO
+  ══════════════════════════════════════ -->
+  <div id="panel-solo" class="panel active">
+    <div class="content">
+
+      <!-- Dado interactivo -->
+      <div class="dice-zone">
+        <div class="dice-zone-label">Tirada del Bot</div>
+        <div class="dice-face-wrap">
+          <div class="dice-face" id="diceFace">?</div>
+        </div>
+        <button class="roll-btn" id="rollBtn" onclick="doRoll()">🎲 Tirar Dado</button>
+
+        <!-- Resultado -->
+        <div class="result-panel" id="resultPanel">
+          <div id="rerollNote" class="reroll-note" style="display:none"></div>
+
+          <div class="result-row">
+            <span class="result-label">Color</span>
+            <span class="result-value" id="resColor">—</span>
+          </div>
+          <div class="result-row">
+            <span class="result-label">Nivel</span>
+            <span class="result-value" id="resLevel">—</span>
+          </div>
+          <div class="result-row">
+            <span class="result-label">Ciudad</span>
+            <span class="result-value" id="resCity">—</span>
+          </div>
+          <div class="result-row">
+            <span class="result-label">Corona</span>
+            <span class="result-value" id="resCrown">—</span>
+          </div>
+
+          <div class="divider"></div>
+
+          <button class="confirm-btn" id="confirmBtn" onclick="confirmPlacement()">✓ Confirmar colocación</button>
+        </div>
+      </div>
+
+      <!-- Estado ciudades -->
+      <div class="card">
+        <div class="card-title">Ciudades — Ronda actual</div>
+        <div class="cities-row">
+          <div class="city-slot" id="slotAlta">
+            <div class="city-slot-name">Alta</div>
+            <div class="city-slot-icon">🏰</div>
+            <div class="city-slot-status" id="slotAltaStatus">Libre</div>
+          </div>
+          <div class="city-slot" id="slotCentral">
+            <div class="city-slot-name">Central</div>
+            <div class="city-slot-icon">🏛️</div>
+            <div class="city-slot-status" id="slotCentralStatus">Libre</div>
+          </div>
+          <div class="city-slot" id="slotBaja">
+            <div class="city-slot-name">Baja</div>
+            <div class="city-slot-icon">🏠</div>
+            <div class="city-slot-status" id="slotBajaStatus">Libre</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Historial de la ronda -->
+      <div class="card">
+        <div class="card-title">Colocaciones esta ronda</div>
+        <div class="round-history" id="roundHistory">
+          <div class="empty-history">Sin tiradas confirmadas</div>
+        </div>
+      </div>
+
+      <!-- Control de ronda -->
+      <div class="card">
+        <div class="card-title">Control de ronda</div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+          <div style="flex:1">
+            <div class="round-display" id="roundDisplay">1</div>
+            <div class="round-of">de 4</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;flex:2">
+            <button class="round-btn primary" onclick="nextRound()">Nueva Ronda →</button>
+            <button class="round-btn" onclick="resetGame()">↺ Reiniciar partida</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabla de referencia dados -->
+      <div class="card">
+        <div class="card-title">Referencia — Dado → Color</div>
+        <table class="ref-table">
+          <thead>
+            <tr>
+              <th>Dado</th>
+              <th>Color</th>
+              <th>Ciudad</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="die-num">1</span></td>
+              <td><span class="color-name" style="color:var(--c-purple)">🟣 Morado</span></td>
+              <td>🏰 Alta</td>
+            </tr>
+            <tr>
+              <td><span class="die-num">2</span></td>
+              <td><span class="color-name" style="color:var(--c-green)">🟢 Verde</span></td>
+              <td>🏰 Alta</td>
+            </tr>
+            <tr>
+              <td><span class="die-num">3</span></td>
+              <td><span class="color-name" style="color:var(--c-orange)">🟠 Naranja <span class="level-tag level-bajo">bajo</span></span></td>
+              <td>🏛️ Central</td>
+            </tr>
+            <tr>
+              <td><span class="die-num">4</span></td>
+              <td><span class="color-name" style="color:var(--c-grey)">⬜ Gris <span class="level-tag level-bajo">bajo</span></span></td>
+              <td>🏛️ Central</td>
+            </tr>
+            <tr>
+              <td><span class="die-num">5</span></td>
+              <td><span class="color-name" style="color:var(--c-orange)">🟠 Naranja <span class="level-tag level-alto">alto</span></span></td>
+              <td>🏠 Baja</td>
+            </tr>
+            <tr>
+              <td><span class="die-num">6</span></td>
+              <td><span class="color-name" style="color:var(--c-grey)">⬜ Gris <span class="level-tag level-alto">alto</span></span></td>
+              <td>🏠 Baja</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Castillo -->
+      <div class="card">
+        <div class="card-title">🏯 Reglas del Castillo</div>
+        <div class="castle-rule">
+          <div class="castle-icon">📯</div>
+          <div class="castle-text">Si el dado del bot es <strong>≥ dado del jugador</strong> en esa ciudad → <strong style="color:var(--bad)">el Bot gana influencia</strong>.</div>
+        </div>
+        <div class="castle-rule">
+          <div class="castle-icon">⚔️</div>
+          <div class="castle-text">Si el dado del bot es <strong>&lt; dado del jugador</strong> → <strong style="color:var(--ok)">el Jugador gana influencia</strong> (el bot puede robar influencia al jugador).</div>
+        </div>
+        <div class="castle-rule">
+          <div class="castle-icon">👑</div>
+          <div class="castle-text">El bot gana una <strong>corona</strong> si coloca su dado en la <strong>Ciudad Alta</strong>.</div>
+        </div>
+        <div class="castle-rule">
+          <div class="castle-icon">🃏</div>
+          <div class="castle-text">Al colocar un dado, el bot toma la <strong>carta de mayor nivel disponible</strong> del color del dado.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       PANEL: PUNTUACIÓN
+  ══════════════════════════════════════ -->
+  <div id="panel-score" class="panel">
+    <div class="content">
+
+      <!-- Total -->
+      <div class="total-card">
+        <div class="total-label">Puntuación Total</div>
+        <div class="total-num" id="totalScore">0</div>
+        <div id="rankLabel" class="score-rank rank-malo">Malo</div>
+      </div>
+
+      <!-- Contadores -->
+      <div class="card">
+        <div class="card-title">Categorías</div>
+
+        <div class="score-row">
+          <div class="score-label">
+            <div>🃏 Cartas</div>
+            <div class="score-sub">Puntos de victoria</div>
+          </div>
+          <div class="score-ctrl">
+            <button onclick="adjustScore('cards',-1)">−</button>
+            <div class="score-val" id="val-cards">0</div>
+            <button onclick="adjustScore('cards',1)">+</button>
+          </div>
+        </div>
+
+        <div class="score-row">
+          <div class="score-label">
+            <div>⛪ Peregrinaciones</div>
+            <div class="score-sub">PV de peregrinaciones</div>
+          </div>
+          <div class="score-ctrl">
+            <button onclick="adjustScore('pilgrimages',-1)">−</button>
+            <div class="score-val" id="val-pilgrimages">0</div>
+            <button onclick="adjustScore('pilgrimages',1)">+</button>
+          </div>
+        </div>
+
+        <div class="score-row">
+          <div class="score-label">
+            <div>⚖️ Influencia</div>
+            <div class="score-sub">PV de influencia</div>
+          </div>
+          <div class="score-ctrl">
+            <button onclick="adjustScore('influence',-1)">−</button>
+            <div class="score-val" id="val-influence">0</div>
+            <button onclick="adjustScore('influence',1)">+</button>
+          </div>
+        </div>
+
+        <div class="score-row">
+          <div class="score-label">
+            <div>🪙 Monedas</div>
+            <div class="score-sub">3 monedas = 1 PV</div>
+          </div>
+          <div class="score-ctrl">
+            <button onclick="adjustScore('coins',-1)">−</button>
+            <div class="score-val" id="val-coins">0</div>
+            <button onclick="adjustScore('coins',1)">+</button>
+          </div>
+        </div>
+
+        <div class="score-row">
+          <div class="score-label">
+            <div>🙏 Favores</div>
+            <div class="score-sub">PV de favores del rey</div>
+          </div>
+          <div class="score-ctrl">
+            <button onclick="adjustScore('favors',-1)">−</button>
+            <div class="score-val" id="val-favors">0</div>
+            <button onclick="adjustScore('favors',1)">+</button>
+          </div>
+        </div>
+
+        <div class="score-row">
+          <div class="score-label">
+            <div>✨ Otros</div>
+            <div class="score-sub">Bonus varios</div>
+          </div>
+          <div class="score-ctrl">
+            <button onclick="adjustScore('other',-1)">−</button>
+            <div class="score-val" id="val-other">0</div>
+            <button onclick="adjustScore('other',1)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabla de rangos -->
+      <div class="card">
+        <div class="card-title">Tabla de rangos</div>
+        <table class="ref-table">
+          <tbody>
+            <tr><td style="color:var(--bad);font-weight:700">Malo</td><td style="color:var(--muted)">&lt; 130 PV</td></tr>
+            <tr><td style="color:var(--warn);font-weight:700">Regular</td><td style="color:var(--muted)">130 – 159 PV</td></tr>
+            <tr><td style="color:var(--ok);font-weight:700">Bien</td><td style="color:var(--muted)">160 – 189 PV</td></tr>
+            <tr><td style="color:#818CF8;font-weight:700">Muy bien</td><td style="color:var(--muted)">190 – 220 PV</td></tr>
+            <tr><td style="color:var(--gold);font-weight:700">Excelente</td><td style="color:var(--muted)">&gt; 220 PV</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <button class="score-reset-btn" onclick="resetScore()">↺ Reiniciar puntuación</button>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       PANEL: REGLAS
+  ══════════════════════════════════════ -->
+  <div id="panel-rules" class="panel">
+    <div class="content">
+
+      <div class="rule-section">
+        <div class="rule-block" style="border-left-color:var(--gold)">
+          <div class="rule-block-title">🎲 El Dado del Bot</div>
+          <p>Cada turno del bot se resuelve tirando un dado de 6 caras. El resultado determina qué color coloca y en qué ciudad.</p>
+        </div>
+
+        <div class="rule-block">
+          <div class="rule-block-title">🎨 Colores y niveles</div>
+          <ul>
+            <li><strong style="color:var(--c-purple)">1 → Morado</strong> (único)</li>
+            <li><strong style="color:var(--c-green)">2 → Verde</strong> (único)</li>
+            <li><strong style="color:var(--c-orange)">3 → Naranja bajo</strong> — si ya está colocado, pasa a Naranja alto</li>
+            <li><strong style="color:var(--c-grey)">4 → Gris bajo</strong> — si ya está, pasa a Gris alto</li>
+            <li><strong style="color:var(--c-orange)">5 → Naranja alto</strong> — si ya está, pasa a Naranja bajo</li>
+            <li><strong style="color:var(--c-grey)">6 → Gris alto</strong> — si ya está, pasa a Gris bajo</li>
+          </ul>
+          <p class="note">Si ambos niveles de un color están colocados (o el color único ya lo está), se vuelve a tirar.</p>
+        </div>
+
+        <div class="rule-block">
+          <div class="rule-block-title">🏙️ Ciudades</div>
+          <ul>
+            <li><strong>1–2</strong> → Ciudad Alta 🏰</li>
+            <li><strong>3–4</strong> → Ciudad Central 🏛️</li>
+            <li><strong>5–6</strong> → Ciudad Baja 🏠</li>
+          </ul>
+          <p class="note">Solo 1 dado del bot por ciudad por ronda. Si la ciudad está ocupada, se mueve a la siguiente ciudad disponible. Si ninguna está libre, el dado se descarta.</p>
+        </div>
+
+        <div class="rule-block">
+          <div class="rule-block-title">🏯 Resolución del Castillo</div>
+          <ul>
+            <li>Dado bot <strong>≥</strong> dado jugador → <strong style="color:var(--bad)">Bot gana influencia</strong></li>
+            <li>Dado bot <strong>&lt;</strong> dado jugador → <strong style="color:var(--ok)">Jugador gana influencia</strong></li>
+            <li>El bot puede "robar" influencia al jugador en esta fase</li>
+          </ul>
+        </div>
+
+        <div class="rule-block">
+          <div class="rule-block-title">🃏 Cartas y Coronas</div>
+          <ul>
+            <li>Al colocar un dado, el bot toma la <strong>carta de mayor nivel disponible</strong> del color del dado</li>
+            <li>El bot gana una <strong>corona</strong> si su dado acaba en la Ciudad Alta</li>
+          </ul>
+        </div>
+
+        <div class="rule-block" style="border-left-color:var(--muted)">
+          <div class="rule-block-title">🔄 Estructura de ronda</div>
+          <p>La partida dura <strong>4 rondas</strong>. En cada ronda, se resuelve la colocación del bot una vez por fase de colocación. Al inicio de cada nueva ronda se resetean las ciudades disponibles.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       PANEL: SETUP
+  ══════════════════════════════════════ -->
+  <div id="panel-setup" class="panel">
+    <div class="content">
+      <div class="card">
+        <div class="card-title">Preparación inicial</div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+
+          <div class="setup-step">
+            <div class="setup-num">1</div>
+            <div class="setup-body">Prepara el tablero de Coimbra de forma estándar según las reglas del juego base.</div>
+          </div>
+
+          <div class="setup-step">
+            <div class="setup-num">2</div>
+            <div class="setup-body">El bot <strong>no tiene tablero propio</strong>. Usa el espacio de una ciudad vacía o un área a un lado para representar sus recursos: cartas tomadas, coronas ganadas e influencia.</div>
+          </div>
+
+          <div class="setup-step">
+            <div class="setup-num">3</div>
+            <div class="setup-body">Prepara un dado de 6 caras para el bot. Este dado se usa en cada turno de colocación del bot.</div>
+          </div>
+
+          <div class="setup-step">
+            <div class="setup-num">4</div>
+            <div class="setup-body">El jugador actúa <strong>primero</strong>. Después de que el jugador coloque todos sus dados, se resuelve el dado del bot con esta app.</div>
+          </div>
+
+          <div class="setup-step">
+            <div class="setup-num">5</div>
+            <div class="setup-body">La <strong>resolución del Castillo</strong> se hace al final de la fase de colocación. Compara el dado del bot con el dado del jugador en cada ciudad donde ambos hayan colocado.</div>
+          </div>
+
+          <div class="setup-step">
+            <div class="setup-num">6</div>
+            <div class="setup-body">Al inicio de la app, el <strong>contador de rondas</strong> empieza en 1. Pulsa "Nueva Ronda" tras completar la resolución del Castillo de cada ronda.</div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Niveles de dificultad</div>
+        <div style="display:flex;flex-direction:column;gap:8px;font-size:13px">
+          <div style="padding:9px 12px;background:var(--surface2);border-radius:8px;border-left:3px solid var(--ok)">
+            <strong style="color:var(--ok)">Fácil</strong> — El bot solo actúa una vez por ronda.
+          </div>
+          <div style="padding:9px 12px;background:var(--surface2);border-radius:8px;border-left:3px solid var(--warn)">
+            <strong style="color:var(--warn)">Normal</strong> — El bot actúa dos veces por ronda (tira el dado dos veces).
+          </div>
+          <div style="padding:9px 12px;background:var(--surface2);border-radius:8px;border-left:3px solid var(--bad)">
+            <strong style="color:var(--bad)">Difícil</strong> — El bot actúa tres veces por ronda y siempre resuelve el Castillo con su dado más alto disponible.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Tab Bar ── -->
+  <nav class="tabbar">
+    <button class="tab-btn active" onclick="showTab('solo', this)">
+      <span class="tab-icon">🎲</span>
+      Solitario
+    </button>
+    <button class="tab-btn" onclick="showTab('score', this)">
+      <span class="tab-icon">🏆</span>
+      Puntuación
+    </button>
+    <button class="tab-btn" onclick="showTab('rules', this)">
+      <span class="tab-icon">📜</span>
+      Reglas
+    </button>
+    <button class="tab-btn" onclick="showTab('setup', this)">
+      <span class="tab-icon">⚙️</span>
+      Setup
+    </button>
+  </nav>
+
+</div><!-- /app -->
+
+<script>
+'use strict';
+
+// ── Estado ──────────────────────────────────────────────────────
+const STATE = {
+  round: 1,
+  cities: { alta: false, central: false, baja: false },
+  colors: {
+    purple: false,
+    green: false,
+    orange_bajo: false,
+    orange_alto: false,
+    grey_bajo: false,
+    grey_alto: false,
+  },
+  history: [],       // array de placements esta ronda
+  pendingResult: null,
+};
+
+const SCORES = {
+  cards: 0,
+  pilgrimages: 0,
+  influence: 0,
+  coins: 0,
+  favors: 0,
+  other: 0,
+};
+
+// ── Color definitions ────────────────────────────────────────────
+const COLOR_DEF = {
+  purple:     { name: 'Morado',  emoji: '🟣', hex: '#7C3AED', key: 'purple',     level: null },
+  green:      { name: 'Verde',   emoji: '🟢', hex: '#16A34A', key: 'green',      level: null },
+  orange_bajo:{ name: 'Naranja', emoji: '🟠', hex: '#F97316', key: 'orange_bajo',level: 'bajo' },
+  orange_alto:{ name: 'Naranja', emoji: '🟠', hex: '#F97316', key: 'orange_alto',level: 'alto' },
+  grey_bajo:  { name: 'Gris',    emoji: '⬜', hex: '#9CA3AF', key: 'grey_bajo',  level: 'bajo' },
+  grey_alto:  { name: 'Gris',    emoji: '⬜', hex: '#9CA3AF', key: 'grey_alto',  level: 'alto' },
+};
+
+// Dado → color key primario
+const DIE_COLOR = {
+  1: 'purple',
+  2: 'green',
+  3: 'orange_bajo',
+  4: 'grey_bajo',
+  5: 'orange_alto',
+  6: 'grey_alto',
+};
+
+// Dado → ciudad primaria
+const DIE_CITY = {
+  1: 'alta',  2: 'alta',
+  3: 'central', 4: 'central',
+  5: 'baja',  6: 'baja',
+};
+
+// Swap de nivel para naranja/gris
+const LEVEL_SWAP = {
+  orange_bajo: 'orange_alto',
+  orange_alto: 'orange_bajo',
+  grey_bajo:   'grey_alto',
+  grey_alto:   'grey_bajo',
+};
+
+// ── Lógica de resolución ─────────────────────────────────────────
+function resolveRoll(originalRoll) {
+  const notes = [];
+  let dieVal   = originalRoll;
+  let colorKey = DIE_COLOR[dieVal];
+  let attempts = 0;
+
+  // Resolver color (con posible swap bajo/alto y re-tirada si agotado)
+  while (attempts < 10) {
+    if (!STATE.colors[colorKey]) break; // color libre ✓
+
+    // Intentar swap bajo↔alto
+    const swapped = LEVEL_SWAP[colorKey];
+    if (swapped && !STATE.colors[swapped]) {
+      notes.push(`${COLOR_DEF[colorKey].name} ${COLOR_DEF[colorKey].level} agotado → usa nivel ${COLOR_DEF[swapped].level}`);
+      colorKey = swapped;
+      break;
+    }
+
+    // Color completamente agotado → nueva tirada
+    dieVal = Math.floor(Math.random() * 6) + 1;
+    colorKey = DIE_COLOR[dieVal];
+    notes.push(`Color agotado — nueva tirada: ${dieVal}`);
+    attempts++;
+  }
+
+  const colorDef = COLOR_DEF[colorKey];
+
+  // Resolver ciudad
+  const cityOrder = ['alta', 'central', 'baja'];
+  const cityLabels = { alta: 'Ciudad Alta 🏰', central: 'Ciudad Central 🏛️', baja: 'Ciudad Baja 🏠' };
+  let primaryCity = DIE_CITY[dieVal];
+  let assignedCity = null;
+
+  // Primero la ciudad del dado actual, luego las demás en orden
+  const tryOrder = [primaryCity, ...cityOrder.filter(c => c !== primaryCity)];
+  for (const c of tryOrder) {
+    if (!STATE.cities[c]) { assignedCity = c; break; }
+  }
+
+  const discarded = !assignedCity;
+  if (discarded) notes.push('Sin ciudades disponibles — dado descartado');
+
+  const crown = assignedCity === 'alta';
+
+  return {
+    dieVal,
+    originalRoll,
+    colorDef,
+    assignedCity,
+    cityLabel: assignedCity ? cityLabels[assignedCity] : 'Descartado',
+    crown,
+    discarded,
+    notes,
+  };
+}
+
+// ── Animación del dado ───────────────────────────────────────────
+let rolling = false;
+
+function doRoll() {
+  if (rolling) return;
+  rolling = true;
+
+  const face    = document.getElementById('diceFace');
+  const btn     = document.getElementById('rollBtn');
+  const panel   = document.getElementById('resultPanel');
+
+  btn.disabled = true;
+  panel.classList.remove('visible');
+  face.className = 'dice-face rolling';
+  face.style.color = '';
+  face.style.background = '';
+
+  let ticks = 0;
+  const maxTicks = 18;
+  const interval = setInterval(() => {
+    face.textContent = Math.floor(Math.random() * 6) + 1;
+    ticks++;
+    if (ticks >= maxTicks) {
+      clearInterval(interval);
+      const finalRoll = Math.floor(Math.random() * 6) + 1;
+      face.className = 'dice-face result';
+      face.textContent = finalRoll;
+      showResult(finalRoll);
+      rolling = false;
+      btn.disabled = false;
+    }
+  }, 60);
+}
+
+function showResult(roll) {
+  const res   = resolveRoll(roll);
+  STATE.pendingResult = res;
+
+  const face = document.getElementById('diceFace');
+  face.style.color      = res.colorDef.hex;
+  face.style.borderColor = res.colorDef.hex;
+  face.style.background = hexToAlpha(res.colorDef.hex, 0.08);
+
+  // Notas de re-tiradas
+  const noteEl = document.getElementById('rerollNote');
+  if (res.notes.length) {
+    noteEl.textContent = res.notes.join(' → ');
+    noteEl.style.display = 'block';
+  } else {
+    noteEl.style.display = 'none';
+  }
+
+  // Color
+  const dot = `<span class="color-dot" style="background:${res.colorDef.hex};color:${res.colorDef.hex}"></span>`;
+  const lvlTag = res.colorDef.level
+    ? `<span class="level-tag level-${res.colorDef.level}">${res.colorDef.level}</span>`
+    : '';
+  document.getElementById('resColor').innerHTML =
+    `${dot} ${res.colorDef.emoji} ${res.colorDef.name}`;
+
+  document.getElementById('resLevel').innerHTML =
+    res.colorDef.level ? lvlTag : '<span style="color:var(--muted)">—</span>';
+
+  // Ciudad
+  const cityEl = document.getElementById('resCity');
+  if (res.discarded) {
+    cityEl.innerHTML = `<span class="city-pill discarded">Descartado</span>`;
+  } else {
+    cityEl.innerHTML = `<span class="city-pill">${res.cityLabel}</span>`;
+  }
+
+  // Corona
+  document.getElementById('resCrown').textContent = res.crown ? '👑 Sí' : '—';
+
+  // Confirm button
+  const confirmBtn = document.getElementById('confirmBtn');
+  confirmBtn.textContent = res.discarded
+    ? '✗ Registrar descarte'
+    : '✓ Confirmar colocación';
+
+  document.getElementById('resultPanel').classList.add('visible');
+}
+
+function confirmPlacement() {
+  const res = STATE.pendingResult;
+  if (!res) return;
+
+  // Actualizar estado colores
+  STATE.colors[res.colorDef.key] = true;
+
+  // Actualizar estado ciudades
+  if (!res.discarded && res.assignedCity) {
+    STATE.cities[res.assignedCity] = true;
+  }
+
+  // Añadir al historial
+  STATE.history.push(res);
+  STATE.pendingResult = null;
+
+  // Ocultar panel resultado
+  document.getElementById('resultPanel').classList.remove('visible');
+  const face = document.getElementById('diceFace');
+  face.className = 'dice-face';
+  face.textContent = '?';
+  face.style.color = '';
+  face.style.background = '';
+  face.style.borderColor = '';
+
+  renderHistory();
+  renderCities();
+}
+
+// ── UI renderers ─────────────────────────────────────────────────
+function renderCities() {
+  const slots = {
+    alta: { slot: document.getElementById('slotAlta'), st: document.getElementById('slotAltaStatus') },
+    central: { slot: document.getElementById('slotCentral'), st: document.getElementById('slotCentralStatus') },
+    baja: { slot: document.getElementById('slotBaja'), st: document.getElementById('slotBajaStatus') },
+  };
+  for (const [city, els] of Object.entries(slots)) {
+    const used = STATE.cities[city];
+    els.slot.classList.toggle('used', used);
+    els.st.textContent = used ? 'Ocupada' : 'Libre';
+  }
+}
+
+function renderHistory() {
+  const el = document.getElementById('roundHistory');
+  if (!STATE.history.length) {
+    el.innerHTML = '<div class="empty-history">Sin tiradas confirmadas</div>';
+    return;
+  }
+  el.innerHTML = STATE.history.map((r, i) => {
+    const cityTxt = r.discarded ? '<span style="color:var(--bad)">Descartado</span>' : r.cityLabel;
+    const lvl = r.colorDef.level ? ` ${r.colorDef.level}` : '';
+    return `
+      <div class="history-item">
+        <span class="history-num" style="color:${r.colorDef.hex}">${r.dieVal}</span>
+        <span class="history-info">
+          <span class="history-color" style="color:${r.colorDef.hex}">${r.colorDef.emoji} ${r.colorDef.name}${lvl}</span>
+          <br><span class="history-city">${cityTxt}${r.crown ? ' 👑' : ''}</span>
+        </span>
+        ${r.notes.length ? `<span style="font-size:10px;color:var(--warn)">↺</span>` : ''}
+      </div>`;
+  }).join('');
+}
+
+function renderRound() {
+  const r = STATE.round;
+  document.getElementById('roundDisplay').textContent = r;
+  document.getElementById('roundBadge').textContent = `Ronda ${r} / 4`;
+}
+
+// ── Round controls ───────────────────────────────────────────────
+function nextRound() {
+  if (STATE.round >= 4) {
+    if (!confirm('Ya estás en la última ronda. ¿Reiniciar la partida completa?')) return;
+    resetGame();
+    return;
+  }
+  STATE.round++;
+  STATE.cities   = { alta: false, central: false, baja: false };
+  STATE.colors   = { purple: false, green: false, orange_bajo: false, orange_alto: false, grey_bajo: false, grey_alto: false };
+  STATE.history  = [];
+  STATE.pendingResult = null;
+  document.getElementById('resultPanel').classList.remove('visible');
+  const face = document.getElementById('diceFace');
+  face.className = 'dice-face';
+  face.textContent = '?';
+  face.style.color = '';
+  face.style.background = '';
+  face.style.borderColor = '';
+  renderRound();
+  renderCities();
+  renderHistory();
+}
+
+function resetGame() {
+  STATE.round  = 1;
+  STATE.cities = { alta: false, central: false, baja: false };
+  STATE.colors = { purple: false, green: false, orange_bajo: false, orange_alto: false, grey_bajo: false, grey_alto: false };
+  STATE.history = [];
+  STATE.pendingResult = null;
+  document.getElementById('resultPanel').classList.remove('visible');
+  const face = document.getElementById('diceFace');
+  face.className = 'dice-face';
+  face.textContent = '?';
+  face.style.color = '';
+  face.style.background = '';
+  face.style.borderColor = '';
+  renderRound();
+  renderCities();
+  renderHistory();
+}
+
+// ── Score ────────────────────────────────────────────────────────
+function adjustScore(key, delta) {
+  SCORES[key] = Math.max(0, SCORES[key] + delta);
+  document.getElementById(`val-${key}`).textContent = SCORES[key];
+  updateTotal();
+}
+
+function updateTotal() {
+  const total = Object.values(SCORES).reduce((a, b) => a + b, 0);
+  document.getElementById('totalScore').textContent = total;
+  const rankEl = document.getElementById('rankLabel');
+  let cls, txt;
+  if      (total < 130)  { cls = 'rank-malo';     txt = 'Malo'; }
+  else if (total < 160)  { cls = 'rank-regular';  txt = 'Regular'; }
+  else if (total < 190)  { cls = 'rank-bien';     txt = 'Bien'; }
+  else if (total <= 220) { cls = 'rank-muybien';  txt = 'Muy bien'; }
+  else                   { cls = 'rank-excelente';txt = 'Excelente'; }
+  rankEl.className = `score-rank ${cls}`;
+  rankEl.textContent = txt;
+}
+
+function resetScore() {
+  if (!confirm('¿Reiniciar todos los contadores de puntuación?')) return;
+  for (const k of Object.keys(SCORES)) {
+    SCORES[k] = 0;
+    document.getElementById(`val-${k}`).textContent = 0;
+  }
+  updateTotal();
+}
+
+// ── Tabs ─────────────────────────────────────────────────────────
+function showTab(name, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(`panel-${name}`).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ── Utility ──────────────────────────────────────────────────────
+function hexToAlpha(hex, alpha) {
+  const r = parseInt(hex.slice(1,3),16);
+  const g = parseInt(hex.slice(3,5),16);
+  const b = parseInt(hex.slice(5,7),16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
+// ── Init ─────────────────────────────────────────────────────────
+renderRound();
+renderCities();
+renderHistory();
+updateTotal();
+
+// ── Service Worker ───────────────────────────────────────────────
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {/* offline ok */});
+  });
+}
+</script>
+</body>
+</html>

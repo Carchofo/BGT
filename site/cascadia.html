@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Cascadia · Puntuación</title>
+<meta name="description" content="Calculadora de puntuación para Cascadia">
+<meta name="theme-color" content="#0D1F12">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Cascadia">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0D1F12;
+  --card:#0D1A0F;
+  --surf:#152318;
+  --surf2:#1A2E1D;
+  --acc:#43A047;
+  --acc-dim:#2B5E2E;
+  --acc-text:#0D1F12;
+  --text:#DCF0DE;
+  --mid:#9DBE9F;
+  --dim:#5A7A5C;
+  --brd:#1E3A22;
+  --brd2:#264D2A;
+}
+html,body{
+  height:100%;
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  overscroll-behavior:none;
+  -webkit-text-size-adjust:100%;
+}
+.app{
+  display:flex;
+  flex-direction:column;
+  height:100%;
+  max-width:500px;
+  margin:0 auto;
+}
+
+/* ── TOP BAR ── */
+.top-bar{
+  position:sticky;top:0;z-index:100;
+  background:var(--card);
+  border-bottom:1px solid var(--brd);
+  padding:10px 16px env(safe-area-inset-top);
+  display:flex;align-items:center;gap:12px;
+}
+.back-btn{
+  color:var(--mid);text-decoration:none;
+  font-size:13px;letter-spacing:.03em;
+  flex-shrink:0;padding:4px;
+}
+.total-wrap{flex:1;text-align:center}
+.total-label{
+  font-size:9px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--dim);line-height:1;margin-bottom:2px;
+}
+.total-value{
+  font-size:40px;font-weight:700;color:var(--acc);
+  line-height:1;font-variant-numeric:tabular-nums;
+  transition:color .15s;
+}
+.reset-btn{
+  color:var(--dim);font-size:11px;letter-spacing:.08em;
+  text-transform:uppercase;cursor:pointer;
+  border:none;background:none;padding:4px;flex-shrink:0;
+}
+
+/* ── TABS ── */
+.tab-bar{
+  background:var(--card);
+  border-bottom:1px solid var(--brd);
+  display:flex;
+}
+.tab-btn{
+  flex:1;padding:11px 4px;
+  font-size:11px;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--dim);border:none;background:none;
+  border-bottom:2px solid transparent;
+  cursor:pointer;transition:color .12s,border-color .12s;
+  -webkit-tap-highlight-color:transparent;
+}
+.tab-btn.on{color:var(--acc);border-bottom-color:var(--acc)}
+
+/* ── CONTENT ── */
+.content{
+  flex:1;overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+}
+.panel{display:none;padding:14px 14px 40px}
+.panel.on{display:block}
+
+/* ── ANIMAL CARD ── */
+.a-card{
+  background:var(--card);border-radius:12px;
+  margin-bottom:10px;overflow:hidden;
+  border:1px solid var(--brd);
+}
+.a-head{
+  display:flex;align-items:center;
+  justify-content:space-between;
+  padding:12px 16px;
+}
+.a-title{
+  display:flex;align-items:center;gap:8px;
+  font-size:15px;font-weight:600;
+}
+.a-emoji{font-size:20px;line-height:1}
+.a-pts{
+  font-size:24px;font-weight:700;color:var(--acc);
+  font-variant-numeric:tabular-nums;
+}
+.a-body{
+  padding:0 14px 14px;
+  border-top:1px solid var(--brd);
+}
+
+/* ── VARIANT CHIPS ── */
+.chips{display:flex;gap:6px;padding:12px 0 13px}
+.chip{
+  flex:1;padding:7px 4px;border-radius:7px;
+  background:var(--surf);border:1px solid var(--brd2);
+  color:var(--mid);font-size:13px;font-weight:700;
+  letter-spacing:.04em;cursor:pointer;text-align:center;
+  transition:background .12s,color .12s,border-color .12s;
+  -webkit-tap-highlight-color:transparent;
+}
+.chip.on{background:var(--acc);color:var(--acc-text);border-color:var(--acc)}
+
+/* ── COUNTERS ── */
+.counters{display:flex;flex-direction:column;gap:7px}
+.c-row{display:flex;align-items:center;gap:10px}
+.c-lbl{
+  flex:1;font-size:13px;color:var(--mid);line-height:1.35;
+}
+.c-lbl small{
+  display:block;font-size:11px;color:var(--dim);margin-top:1px;
+}
+.c-ctrl{
+  display:flex;align-items:center;
+  background:var(--surf);border-radius:9px;
+  border:1px solid var(--brd);overflow:hidden;flex-shrink:0;
+}
+.c-btn{
+  width:38px;height:38px;border:none;background:transparent;
+  color:var(--mid);font-size:22px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .1s;-webkit-tap-highlight-color:transparent;
+}
+.c-btn:active{background:var(--surf2)}
+.c-val{
+  min-width:38px;text-align:center;
+  font-size:16px;font-weight:600;color:var(--text);
+  font-variant-numeric:tabular-nums;
+}
+.bonus-note{
+  font-size:12px;color:var(--acc);text-align:right;
+  margin-top:6px;
+}
+.sub-row{
+  display:flex;justify-content:flex-end;align-items:center;gap:6px;
+  margin-top:12px;padding-top:10px;
+  border-top:1px solid var(--brd);
+  font-size:11px;color:var(--dim);
+  letter-spacing:.07em;text-transform:uppercase;
+}
+.sub-row span{
+  font-size:17px;font-weight:700;color:var(--acc);
+  letter-spacing:0;text-transform:none;
+  font-variant-numeric:tabular-nums;
+}
+
+/* ── HABITATS ── */
+.hab-grid{display:flex;flex-direction:column;gap:7px}
+.hab-row{
+  background:var(--surf);border-radius:9px;
+  padding:10px 12px;border:1px solid var(--brd);
+}
+.hab-top{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.tog{
+  width:38px;height:22px;border-radius:11px;
+  background:var(--brd);position:relative;
+  cursor:pointer;border:none;flex-shrink:0;
+  transition:background .15s;-webkit-tap-highlight-color:transparent;
+}
+.tog.on{background:var(--acc)}
+.tog::after{
+  content:'';position:absolute;
+  width:16px;height:16px;border-radius:50%;
+  background:white;top:3px;left:3px;
+  transition:transform .15s;
+}
+.tog.on::after{transform:translateX(16px)}
+.hab-name{font-size:14px;font-weight:600;flex:1}
+.hab-pts{
+  font-size:16px;font-weight:700;color:var(--acc);
+  font-variant-numeric:tabular-nums;min-width:28px;text-align:right;
+}
+.hab-ctrs{display:flex;gap:8px}
+.hab-cg{flex:1}
+.hab-clbl{
+  font-size:10px;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--dim);margin-bottom:4px;
+}
+
+/* ── NATURE ── */
+.nat-row{
+  background:var(--card);border-radius:12px;
+  border:1px solid var(--brd);
+  padding:14px 16px;margin-bottom:10px;
+  display:flex;align-items:center;gap:16px;
+}
+.nat-lbl{flex:1}
+.nat-lbl h3{font-size:15px;font-weight:600;margin-bottom:2px}
+.nat-lbl p{font-size:12px;color:var(--dim)}
+
+/* ── PROSE (setup / rules tabs) ── */
+.prose{padding:0}
+.prose h2{
+  font-size:11px;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--acc);margin:18px 0 10px;
+  padding-bottom:6px;border-bottom:1px solid var(--brd);
+}
+.prose h2:first-child{margin-top:0}
+.prose p,.prose li{
+  font-size:14px;line-height:1.65;color:var(--mid);
+  margin-bottom:7px;
+}
+.prose ul,.prose ol{padding-left:18px}
+.prose li{margin-bottom:6px}
+.prose strong{color:var(--text);font-weight:600}
+.rule-card{
+  background:var(--card);border:1px solid var(--brd);
+  border-radius:10px;padding:12px;margin-bottom:9px;
+}
+.rule-card h3{
+  font-size:14px;font-weight:600;margin-bottom:8px;
+  display:flex;align-items:center;gap:7px;
+}
+.rv{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:20px;height:20px;border-radius:4px;
+  background:var(--acc);color:var(--acc-text);
+  font-size:11px;font-weight:700;flex-shrink:0;
+}
+.rule-card p{font-size:13px;line-height:1.55;color:var(--mid);margin-bottom:5px}
+.pts-row{
+  display:flex;gap:4px;flex-wrap:wrap;margin-top:7px;
+}
+.pts-pill{
+  background:var(--surf);border-radius:4px;
+  padding:2px 7px;font-size:11px;color:var(--mid);
+  font-variant-numeric:tabular-nums;
+}
+.pts-pill b{color:var(--acc);font-weight:600}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- TOP BAR -->
+  <div class="top-bar">
+    <a href="index.html" class="back-btn">← Volver</a>
+    <div class="total-wrap">
+      <div class="total-label">Total</div>
+      <div class="total-value" id="grand-total">0</div>
+    </div>
+    <button class="reset-btn" id="reset-btn" onclick="resetAll()">Reset</button>
+  </div>
+
+  <!-- TAB BAR -->
+  <div class="tab-bar">
+    <button class="tab-btn on" onclick="switchTab('score',this)">Puntuación</button>
+    <button class="tab-btn" onclick="switchTab('setup',this)">Cómo puntuar</button>
+    <button class="tab-btn" onclick="switchTab('rules',this)">Variantes</button>
+  </div>
+
+  <!-- SCROLLABLE CONTENT -->
+  <div class="content">
+
+    <!-- ══ SCORE PANEL ══ -->
+    <div class="panel on" id="panel-score">
+
+      <!-- 🐻 OSOS -->
+      <div class="a-card">
+        <div class="a-head">
+          <div class="a-title"><span class="a-emoji">🐻</span> Osos</div>
+          <div class="a-pts" id="s-bear">0</div>
+        </div>
+        <div class="a-body">
+          <div class="chips" id="chips-bear">
+            <button class="chip on" onclick="setVariant('bear','A',this)">A</button>
+            <button class="chip" onclick="setVariant('bear','B',this)">B</button>
+            <button class="chip" onclick="setVariant('bear','C',this)">C</button>
+            <button class="chip" onclick="setVariant('bear','D',this)">D</button>
+          </div>
+          <div class="counters" id="ctrs-bear"></div>
+          <div class="sub-row">Subtotal <span id="sub-bear">0</span> pts</div>
+        </div>
+      </div>
+
+      <!-- 🐟 SALMONES -->
+      <div class="a-card">
+        <div class="a-head">
+          <div class="a-title"><span class="a-emoji">🐟</span> Salmones</div>
+          <div class="a-pts" id="s-salmon">0</div>
+        </div>
+        <div class="a-body">
+          <div class="chips" id="chips-salmon">
+            <button class="chip on" onclick="setVariant('salmon','A',this)">A</button>
+            <button class="chip" onclick="setVariant('salmon','B',this)">B</button>
+            <button class="chip" onclick="setVariant('salmon','C',this)">C</button>
+            <button class="chip" onclick="setVariant('salmon','D',this)">D</button>
+          </div>
+          <div class="counters" id="ctrs-salmon"></div>
+          <div class="sub-row">Subtotal <span id="sub-salmon">0</span> pts</div>
+        </div>
+      </div>
+
+      <!-- 🦌 ALCES -->
+      <div class="a-card">
+        <div class="a-head">
+          <div class="a-title"><span class="a-emoji">🦌</span> Alces</div>
+          <div class="a-pts" id="s-elk">0</div>
+        </div>
+        <div class="a-body">
+          <div class="chips" id="chips-elk">
+            <button class="chip on" onclick="setVariant('elk','A',this)">A</button>
+            <button class="chip" onclick="setVariant('elk','B',this)">B</button>
+            <button class="chip" onclick="setVariant('elk','C',this)">C</button>
+            <button class="chip" onclick="setVariant('elk','D',this)">D</button>
+          </div>
+          <div class="counters" id="ctrs-elk"></div>
+          <div class="sub-row">Subtotal <span id="sub-elk">0</span> pts</div>
+        </div>
+      </div>
+
+      <!-- 🦅 HALCONES -->
+      <div class="a-card">
+        <div class="a-head">
+          <div class="a-title"><span class="a-emoji">🦅</span> Halcones</div>
+          <div class="a-pts" id="s-hawk">0</div>
+        </div>
+        <div class="a-body">
+          <div class="chips" id="chips-hawk">
+            <button class="chip on" onclick="setVariant('hawk','A',this)">A</button>
+            <button class="chip" onclick="setVariant('hawk','B',this)">B</button>
+            <button class="chip" onclick="setVariant('hawk','C',this)">C</button>
+            <button class="chip" onclick="setVariant('hawk','D',this)">D</button>
+          </div>
+          <div class="counters" id="ctrs-hawk"></div>
+          <div class="sub-row">Subtotal <span id="sub-hawk">0</span> pts</div>
+        </div>
+      </div>
+
+      <!-- 🦊 ZORROS -->
+      <div class="a-card">
+        <div class="a-head">
+          <div class="a-title"><span class="a-emoji">🦊</span> Zorros</div>
+          <div class="a-pts" id="s-fox">0</div>
+        </div>
+        <div class="a-body">
+          <div class="chips" id="chips-fox">
+            <button class="chip on" onclick="setVariant('fox','A',this)">A</button>
+            <button class="chip" onclick="setVariant('fox','B',this)">B</button>
+            <button class="chip" onclick="setVariant('fox','C',this)">C</button>
+            <button class="chip" onclick="setVariant('fox','D',this)">D</button>
+          </div>
+          <div class="counters" id="ctrs-fox"></div>
+          <div class="sub-row">Subtotal <span id="sub-fox">0</span> pts</div>
+        </div>
+      </div>
+
+      <!-- 🌿 HÁBITATS -->
+      <div class="a-card">
+        <div class="a-head">
+          <div class="a-title"><span class="a-emoji">🌿</span> Hábitats</div>
+          <div class="a-pts" id="s-hab">0</div>
+        </div>
+        <div class="a-body" style="padding-top:12px">
+          <div class="hab-grid" id="hab-grid"></div>
+          <div class="sub-row">Subtotal <span id="sub-hab">0</span> pts</div>
+        </div>
+      </div>
+
+      <!-- 🍄 NATURALEZA -->
+      <div class="nat-row">
+        <div class="nat-lbl">
+          <h3>🍄 Naturaleza</h3>
+          <p>1 punto por ficha sobrante</p>
+        </div>
+        <div class="c-ctrl">
+          <button class="c-btn" onclick="adj('nature',-1)">−</button>
+          <div class="c-val" id="v-nature">0</div>
+          <button class="c-btn" onclick="adj('nature',1)">+</button>
+        </div>
+      </div>
+
+    </div><!-- /panel-score -->
+
+    <!-- ══ SETUP PANEL ══ -->
+    <div class="panel" id="panel-setup">
+      <div class="prose">
+        <h2>Cómo puntuar Cascadia</h2>
+        <p>Al final de la partida calcula puntos de tres fuentes y suma el total.</p>
+
+        <h2>1 · Fauna</h2>
+        <p>Cada tipo de animal usa <strong>una carta de puntuación</strong> (variante A, B, C o D). La carta se elige antes de empezar la partida y es igual para todos.</p>
+        <p>Identifica tus grupos, cadenas, filas o conteos según la variante, introdúcelos en la calculadora y el subtotal aparece automáticamente.</p>
+
+        <h2>2 · Hábitats</h2>
+        <p>Hay cinco tipos de hábitat: Montana, Bosque, Pradera, Humedal y Río. Para cada tipo:</p>
+        <ul>
+          <li>El jugador con <strong>más losetas</strong> de ese hábitat recibe <strong>1 punto por loseta</strong>.</li>
+          <li>Además gana <strong>2 puntos por cada ficha de bonus</strong> de ese hábitat que tenga.</li>
+          <li>Si no tienes la mayoría, no recibes puntos por ese hábitat (aunque sí conservas tus fichas de bonus para otros efectos).</li>
+        </ul>
+        <p>Activa el interruptor "Mayoría" solo si eres el jugador con más losetas de ese tipo.</p>
+
+        <h2>3 · Fichas de naturaleza</h2>
+        <p>Cada ficha de naturaleza sobrante al final vale <strong>1 punto</strong>.</p>
+
+        <h2>Empates en mayoría</h2>
+        <p>En caso de empate, <strong>ambos jugadores</strong> reciben los puntos. Cada uno calcula su puntuación de hábitat por separado.</p>
+      </div>
+    </div>
+
+    <!-- ══ RULES PANEL ══ -->
+    <div class="panel" id="panel-rules">
+      <div class="prose">
+
+        <h2>🐻 Osos</h2>
+        <div class="rule-card">
+          <h3><span class="rv">A</span> Parejas</h3>
+          <p>Cuenta el número de <strong>pares de osos adyacentes</strong> en tu territorio. Un oso puede pertenecer a más de un par.</p>
+          <div class="pts-row">
+            <div class="pts-pill">0p → <b>0</b></div>
+            <div class="pts-pill">1p → <b>2</b></div>
+            <div class="pts-pill">2p → <b>4</b></div>
+            <div class="pts-pill">3p → <b>9</b></div>
+            <div class="pts-pill">4p → <b>16</b></div>
+            <div class="pts-pill">5p → <b>25</b></div>
+            <div class="pts-pill">6p → <b>36</b></div>
+          </div>
+        </div>
+        <div class="rule-card">
+          <h3><span class="rv">B</span> Grandes manadas</h3>
+          <p>Cuenta el número de <strong>grupos de 3 o más osos</strong> conectados. Cada grupo vale <strong>10 puntos</strong>.</p>
+        </div>
+        <div class="rule-card">
+          <h3><span class="rv">C</span> Grupos mixtos</h3>
+          <p>Grupos de 1 oso: <b>2 pts c/u</b>. Grupos de 2: <b>5 pts c/u</b>. Grupos de 3: <b>8 pts c/u</b>.</p>
+          <p>Si tienes al menos 1 grupo de cada tamaño, ganas <strong>+3 pts de bonus</strong>.</p>
+        </div>
+        <div class="rule-card">
+          <h3><span class="rv">D</span> Grupos escalados</h3>
+          <p>Grupos de 2 osos: <b>5 pts c/u</b>. Grupos de 3: <b>8 pts c/u</b>. Grupos de 4 o más: <b>13 pts c/u</b>.</p>
+        </div>
+
+        <h2>🐟 Salmones</h2>
+        <div class="rule-card">
+          <h3><span class="rv">A</span> Cadenas largas</h3>
+          <p>Cadenas de salmones conectados en línea (sin ramificaciones). Cada cadena puntúa según su longitud.</p>
+          <div class="pts-row">
+            <div class="pts-pill">1 → <b>2</b></div>
+            <div class="pts-pill">2 → <b>4</b></div>
+            <div class="pts-pill">3 → <b>6</b></div>
+            <div class="pts-pill">4 → <b>9</b></div>
+            <div class="pts-pill">5 → <b>11</b></div>
+            <div class="pts-pill">6 → <b>13</b></div>
+            <div class="pts-pill">7 → <b>15</b></div>
+          </div>
+        </div>
+        <div class="rule-card">
+          <h3><span class="rv">B</span> Cadenas medianas</h3>
+          <p>Igual que A pero máximo tamaño 5.</p>
+          <div class="pts-row">
+            <div class="pts-pill">1 → <b>2</b></div>
+            <div class="pts-pill">2 → <b>4</b></div>
+            <div class="pts-pill">3 → <b>6</b></div>
+            <div class="pts-pill">4 → <b>9</b></div>
+            <div class="pts-pill">5 → <b>11</b></div>
+          </div>
+        </div>
+        <div class="rule-card">
+          <h3><span class="rv">C</span> Cadenas de 3-5</h3>
+          <p>Solo puntúan cadenas de longitud 3, 4 o 5. Cadenas de 1-2 valen 0.</p>
+          <div class="pts-row">
+            <div class="pts-pill">3 → <b>3</b></div>
+            <div class="pts-pill">4 → <b>5</b></div>
+            <div class="pts-pill">5 → <b>7</b></div>
+          </div>
+        </div>
+        <div class="rule-card">
+          <h3><span class="rv">D</span> Puntuación directa</h3>
+          <p>Calcula los puntos manualmente según la carta y escribe el total.</p>
+        </div>
+
+        <h2>🦌 Alces</h2>
+        <div class="rule-card">
+          <h3><span class="rv">A</span> Filas de alces</h3>
+          <p>Alces dispuestos en filas rectas. Filas de 2: <b>5 pts c/u</b>. Filas de 3: <b>9 pts c/u</b>. Filas de 4+: <b>13 pts c/u</b>.</p>
+        </div>
+        <div class="rule-card">
+          <h3><span class="rv">B</span> Puntuación directa</h3>
+          <p>Calcula los puntos manualmente según la carta y escribe el total.</p>
+        </div>
+        <div class="rule-card">
+          <h3><span class="rv">C</span> Grupos de alces</h3>
+          <p>Grupos de alces conectados. Puntúan por tamaño de grupo.</p>
+          <div class="pts-row">
+            <div class="pts-pill">1 → <b>1</b></div>
+            <div class="pts-pill">2 → <b>3</b></div>
+            <div class="pts-pill">3 → <b>5</b></div>
+            <div class="pts-pill">4 → <b>7</b></div>
+            <div class="pts-pill">5 → <b>9</b></div>
+            <div class="pts-pill">6 → <b>11</b></div>
+            <div class="pts-pill">7 → <b>13</b></div>
+          </div>
+        </div>
+        <div class="rule-card">
+          <h3><span class="rv">D</span> Anillos completos</h3>
+          <p>Cada <strong>anillo completo de losetas</strong> que rodea un hexágono central vale <strong>23 puntos</strong>.</p>
+        </div>
+
+        <h2>🦅 Halcones</h2>
+        <div class="rule-card">
+          <h3><span class="rv">A</span> Halcones aislados</h3>
+          <p>Cuenta el total de halcones que no tienen otro halcón adyacente.</p>
+          <div class="pts-row">
+            <div class="pts-pill">0 → <b>0</b></div>
+            <div class="pts-pill">1 → <b>2</b></div>
+            <div class="pts-pill">2 → <b>5</b></div>
+            <div class="pts-pill">3 → <b>8</b></div>
+            <div class="pts-pill">4 → <b>11</b></div>
+            <div class="pts-pill">5 → <b>14</b></div>
+            <div class="pts-pill">6 → <b>17</b></div>
+            <div class="pts-pill">7 → <b>20</b></div>
+          </div>
+        </div>
+        <div class="rule-card">
+          <h3><span class="rv">B</span> Grupos de 1 halcón</h3>
+          <p>Cuenta los grupos de losetas de fauna que contienen <strong>exactamente 1 halcón</strong>.</p>
+          <div class="pts-row">
+            <div class="pts-pill">0g → <b>0</b></div>
+            <div class="pts-pill">1g → <b>3</b></div>
+            <div class="pts-pill">2g → <b>7</b></div>
+            <div class="pts-pill">3g → <b>12</b></div>
+            <div class="pts-pill">4g → <b>16</b></div>
+          </div>
+        </div>
+        <div class="rule-card">
+          <h3><span class="rv">C</span> Línea de visión</h3>
+          <p>Cada halcón con <strong>línea de visión libre</strong> (sin otro halcón en su fila de visión) vale <strong>3 puntos</strong>.</p>
+        </div>
+        <div class="rule-card">
+          <h3><span class="rv">D</span> Puntuación directa</h3>
+          <p>Calcula los puntos manualmente según la carta y escribe el total.</p>
+        </div>
+
+        <h2>🦊 Zorros</h2>
+        <div class="rule-card">
+          <h3><span class="rv">A</span> Tipos distintos adyacentes</h3>
+          <p>Para cada zorro, cuenta cuántos <strong>tipos de animal distintos</strong> tiene adyacentes. Introduce cuántos zorros tienes con 0, 1, 2… tipos adyacentes.</p>
+          <div class="pts-row">
+            <div class="pts-pill">0t → <b>0</b></div>
+            <div class="pts-pill">1t → <b>1</b></div>
+            <div class="pts-pill">2t → <b>2</b></div>
+            <div class="pts-pill">3t → <b>3</b></div>
+            <div class="pts-pill">4t → <b>4</b></div>
+            <div class="pts-pill">5t → <b>5</b></div>
+          </div>
+        </div>
+        <div class="rule-card">
+          <h3><span class="rv">B</span> Parejas adyacentes</h3>
+          <p>Para cada zorro, cuenta <strong>pares de animales iguales</strong> adyacentes. Introduce cuántos zorros tienes con 0, 1, 2 o 3 parejas.</p>
+          <div class="pts-row">
+            <div class="pts-pill">0p → <b>0</b></div>
+            <div class="pts-pill">1p → <b>1</b></div>
+            <div class="pts-pill">2p → <b>2</b></div>
+            <div class="pts-pill">3p → <b>3</b></div>
+          </div>
+        </div>
+        <div class="rule-card">
+          <h3><span class="rv">C</span> Máximo iguales adyacentes</h3>
+          <p>Para cada zorro, cuenta cuál es el <strong>máximo de animales del mismo tipo</strong> que tiene adyacentes. Introduce cuántos zorros tienen ese máximo en 0, 1, 2, 3 o 4.</p>
+          <div class="pts-row">
+            <div class="pts-pill">0 → <b>0</b></div>
+            <div class="pts-pill">1 → <b>1</b></div>
+            <div class="pts-pill">2 → <b>2</b></div>
+            <div class="pts-pill">3 → <b>3</b></div>
+            <div class="pts-pill">4 → <b>4</b></div>
+          </div>
+        </div>
+        <div class="rule-card">
+          <h3><span class="rv">D</span> Pares únicos adyacentes</h3>
+          <p>Para cada <strong>par de zorros</strong> adyacentes, cuenta cuántos <strong>pares únicos</strong> de animales tienen en común. Introduce cuántas parejas de zorros tienen 0, 1, 2, 3 o 4 pares únicos.</p>
+          <div class="pts-row">
+            <div class="pts-pill">0 → <b>0</b></div>
+            <div class="pts-pill">1 → <b>1</b></div>
+            <div class="pts-pill">2 → <b>2</b></div>
+            <div class="pts-pill">3 → <b>3</b></div>
+            <div class="pts-pill">4 → <b>4</b></div>
+          </div>
+        </div>
+
+      </div>
+    </div><!-- /panel-rules -->
+
+  </div><!-- /content -->
+</div><!-- /app -->
+
+<script>
+// ── TABLES ──────────────────────────────────────────────────────
+const BEAR_A = [0,2,4,9,16,25,36]
+const SALM_A = [0,2,4,6,9,11,13,15]
+const SALM_B = [0,2,4,6,9,11]
+const SALM_C = [0,0,0,3,5,7]
+const ELK_C  = [0,1,3,5,7,9,11,13]
+const HAWK_A = [0,2,5,8,11,14,17,20]
+const HAWK_B = [0,3,7,12,16]
+const FOX_A  = [0,1,2,3,4,5]
+const FOX_B  = [0,1,2,3]
+const FOX_C  = [0,1,2,3,4]
+const FOX_D  = [0,1,2,3,4]
+
+function cap(arr, i){ return arr[Math.min(i, arr.length-1)] }
+
+// ── STATE ────────────────────────────────────────────────────────
+const S = {
+  bear:{v:'A', pairs:0, g3:0, cg1:0,cg2:0,cg3:0, dg2:0,dg3:0,dg4:0},
+  salmon:{v:'A', ac:[0,0,0,0,0,0,0], bc:[0,0,0,0,0], cc:[0,0,0], direct:0},
+  elk:{v:'A', r2:0,r3:0,r4:0, direct:0, cg:[0,0,0,0,0,0,0], rings:0},
+  hawk:{v:'A', iso:0, g1:0, cs:0, direct:0},
+  fox:{v:'A', adj:[0,0,0,0,0,0], pairs:[0,0,0,0], ms:[0,0,0,0,0], up:[0,0,0,0,0]},
+  hab:[
+    {n:'Montana', maj:false, tiles:0, bonus:0},
+    {n:'Bosque',  maj:false, tiles:0, bonus:0},
+    {n:'Pradera', maj:false, tiles:0, bonus:0},
+    {n:'Humedal', maj:false, tiles:0, bonus:0},
+    {n:'Río',     maj:false, tiles:0, bonus:0},
+  ],
+  nature:0
+}
+
+// ── SCORING ─────────────────────────────────────────────────────
+function scoreBear(){
+  const b=S.bear
+  if(b.v==='A') return cap(BEAR_A,b.pairs)
+  if(b.v==='B') return b.g3*10
+  if(b.v==='C'){
+    let p=b.cg1*2+b.cg2*5+b.cg3*8
+    if(b.cg1>0&&b.cg2>0&&b.cg3>0) p+=3
+    return p
+  }
+  return b.dg2*5+b.dg3*8+b.dg4*13
+}
+function scoreSalmon(){
+  const s=S.salmon
+  if(s.v==='A') return s.ac.reduce((t,n,i)=>t+n*cap(SALM_A,i+1),0)
+  if(s.v==='B') return s.bc.reduce((t,n,i)=>t+n*cap(SALM_B,i+1),0)
+  if(s.v==='C') return s.cc.reduce((t,n,i)=>t+n*SALM_C[i+3],0)
+  return s.direct
+}
+function scoreElk(){
+  const e=S.elk
+  if(e.v==='A') return e.r2*5+e.r3*9+e.r4*13
+  if(e.v==='B') return e.direct
+  if(e.v==='C') return e.cg.reduce((t,n,i)=>t+n*cap(ELK_C,i+1),0)
+  return e.rings*23
+}
+function scoreHawk(){
+  const h=S.hawk
+  if(h.v==='A') return cap(HAWK_A,h.iso)
+  if(h.v==='B') return cap(HAWK_B,h.g1)
+  if(h.v==='C') return h.cs*3
+  return h.direct
+}
+function scoreFox(){
+  const f=S.fox
+  if(f.v==='A') return f.adj.reduce((t,n,i)=>t+n*FOX_A[i],0)
+  if(f.v==='B') return f.pairs.reduce((t,n,i)=>t+n*FOX_B[i],0)
+  if(f.v==='C') return f.ms.reduce((t,n,i)=>t+n*FOX_C[i],0)
+  return f.up.reduce((t,n,i)=>t+n*FOX_D[i],0)
+}
+function scoreHab(){
+  return S.hab.reduce((t,h)=>t+(h.maj?h.tiles+h.bonus*2:0),0)
+}
+function grand(){
+  return scoreBear()+scoreSalmon()+scoreElk()+scoreHawk()+scoreFox()+scoreHab()+S.nature
+}
+
+// ── COUNTER BUILDER ─────────────────────────────────────────────
+function cRow(label, key, val, sub=''){
+  return `<div class="c-row">
+    <div class="c-lbl">${label}${sub?`<small>${sub}</small>`:''}</div>
+    <div class="c-ctrl">
+      <button class="c-btn" onclick="adj('${key}',-1)">−</button>
+      <div class="c-val" id="v-${key}">${val}</div>
+      <button class="c-btn" onclick="adj('${key}',1)">+</button>
+    </div>
+  </div>`
+}
+
+// ── RENDER COUNTERS ─────────────────────────────────────────────
+function renderBear(){
+  const b=S.bear; let h=''
+  if(b.v==='A'){
+    h=cRow('Parejas de osos','bear.pairs',b.pairs,`→ ${cap(BEAR_A,b.pairs)} pts`)
+  } else if(b.v==='B'){
+    h=cRow('Grupos de ≥3 osos','bear.g3',b.g3,`→ ${b.g3*10} pts`)
+  } else if(b.v==='C'){
+    h=cRow('Grupos de 1','bear.cg1',b.cg1,`→ ${b.cg1*2} pts`)
+     +cRow('Grupos de 2','bear.cg2',b.cg2,`→ ${b.cg2*5} pts`)
+     +cRow('Grupos de 3','bear.cg3',b.cg3,`→ ${b.cg3*8} pts`)
+    if(b.cg1>0&&b.cg2>0&&b.cg3>0)
+      h+=`<div class="bonus-note">+3 pts bonus (tienes 1 de cada)</div>`
+  } else {
+    h=cRow('Grupos de 2','bear.dg2',b.dg2,`→ ${b.dg2*5} pts`)
+     +cRow('Grupos de 3','bear.dg3',b.dg3,`→ ${b.dg3*8} pts`)
+     +cRow('Grupos de 4+','bear.dg4',b.dg4,`→ ${b.dg4*13} pts`)
+  }
+  document.getElementById('ctrs-bear').innerHTML=h
+}
+
+function renderSalmon(){
+  const s=S.salmon; let h=''
+  if(s.v==='A'){
+    for(let i=0;i<7;i++)
+      h+=cRow(`Cadenas de ${i+1}`,'salmon.ac'+i,s.ac[i],`→ ${s.ac[i]*cap(SALM_A,i+1)} pts (${cap(SALM_A,i+1)} c/u)`)
+  } else if(s.v==='B'){
+    for(let i=0;i<5;i++)
+      h+=cRow(`Cadenas de ${i+1}`,'salmon.bc'+i,s.bc[i],`→ ${s.bc[i]*cap(SALM_B,i+1)} pts (${cap(SALM_B,i+1)} c/u)`)
+  } else if(s.v==='C'){
+    const sizes=[3,4,5]
+    for(let i=0;i<3;i++)
+      h+=cRow(`Cadenas de ${sizes[i]}`,'salmon.cc'+i,s.cc[i],`→ ${s.cc[i]*SALM_C[i+3]} pts (${SALM_C[i+3]} c/u)`)
+  } else {
+    h=cRow('Puntuación total','salmon.direct',s.direct)
+  }
+  document.getElementById('ctrs-salmon').innerHTML=h
+}
+
+function renderElk(){
+  const e=S.elk; let h=''
+  if(e.v==='A'){
+    h=cRow('Filas de 2','elk.r2',e.r2,`→ ${e.r2*5} pts`)
+     +cRow('Filas de 3','elk.r3',e.r3,`→ ${e.r3*9} pts`)
+     +cRow('Filas de 4+','elk.r4',e.r4,`→ ${e.r4*13} pts`)
+  } else if(e.v==='B'){
+    h=cRow('Puntuación total','elk.direct',e.direct)
+  } else if(e.v==='C'){
+    for(let i=0;i<7;i++)
+      h+=cRow(`Grupos de ${i+1}`,'elk.cg'+i,e.cg[i],`→ ${e.cg[i]*cap(ELK_C,i+1)} pts (${cap(ELK_C,i+1)} c/u)`)
+  } else {
+    h=cRow('Anillos completos','elk.rings',e.rings,`→ ${e.rings*23} pts`)
+  }
+  document.getElementById('ctrs-elk').innerHTML=h
+}
+
+function renderHawk(){
+  const h=S.hawk; let html=''
+  if(h.v==='A'){
+    html=cRow('Halcones aislados','hawk.iso',h.iso,`→ ${cap(HAWK_A,h.iso)} pts`)
+  } else if(h.v==='B'){
+    html=cRow('Grupos con 1 halcón','hawk.g1',h.g1,`→ ${cap(HAWK_B,h.g1)} pts`)
+  } else if(h.v==='C'){
+    html=cRow('Halcones con vista libre','hawk.cs',h.cs,`→ ${h.cs*3} pts`)
+  } else {
+    html=cRow('Puntuación total','hawk.direct',h.direct)
+  }
+  document.getElementById('ctrs-hawk').innerHTML=html
+}
+
+function renderFox(){
+  const f=S.fox; let h=''
+  if(f.v==='A'){
+    for(let i=0;i<6;i++)
+      h+=cRow(`Zorros con ${i} tipo${i!==1?'s':''} adyacentes`,'fox.adj'+i,f.adj[i],`→ ${f.adj[i]*FOX_A[i]} pts`)
+  } else if(f.v==='B'){
+    for(let i=0;i<4;i++)
+      h+=cRow(`Zorros con ${i} pareja${i!==1?'s':''} adyacentes`,'fox.pairs'+i,f.pairs[i],`→ ${f.pairs[i]*FOX_B[i]} pts`)
+  } else if(f.v==='C'){
+    for(let i=0;i<5;i++)
+      h+=cRow(`Zorros con máx ${i} iguales adj`,'fox.ms'+i,f.ms[i],`→ ${f.ms[i]*FOX_C[i]} pts`)
+  } else {
+    for(let i=0;i<5;i++)
+      h+=cRow(`Parejas con ${i} par${i!==1?'es':''} únicos`,'fox.up'+i,f.up[i],`→ ${f.up[i]*FOX_D[i]} pts`)
+  }
+  document.getElementById('ctrs-fox').innerHTML=h
+}
+
+function renderHabs(){
+  const names=['Montana','Bosque','Pradera','Humedal','Río']
+  let h=''
+  S.hab.forEach((hab,i)=>{
+    const pts=hab.maj?hab.tiles+hab.bonus*2:0
+    h+=`<div class="hab-row">
+      <div class="hab-top">
+        <button class="tog${hab.maj?' on':''}" onclick="togHab(${i})" title="Mayoría"></button>
+        <div class="hab-name">${hab.n}</div>
+        <div class="hab-pts">${pts}</div>
+      </div>
+      <div class="hab-ctrs${hab.maj?'':'" style="opacity:.35'}" id="hab-ctrs-${i}">
+        <div class="hab-cg">
+          <div class="hab-clbl">Losetas</div>
+          <div class="c-ctrl">
+            <button class="c-btn" onclick="adjHab(${i},'tiles',-1)">−</button>
+            <div class="c-val" id="htiles-${i}">${hab.tiles}</div>
+            <button class="c-btn" onclick="adjHab(${i},'tiles',1)">+</button>
+          </div>
+        </div>
+        <div class="hab-cg">
+          <div class="hab-clbl">Bonus</div>
+          <div class="c-ctrl">
+            <button class="c-btn" onclick="adjHab(${i},'bonus',-1)">−</button>
+            <div class="c-val" id="hbonus-${i}">${hab.bonus}</div>
+            <button class="c-btn" onclick="adjHab(${i},'bonus',1)">+</button>
+          </div>
+        </div>
+      </div>
+    </div>`
+  })
+  document.getElementById('hab-grid').innerHTML=h
+}
+
+// ── ADJ HELPERS ─────────────────────────────────────────────────
+// key formats: "bear.pairs", "salmon.ac0", "elk.cg3", etc.
+function adj(key, d){
+  if(key==='nature'){
+    S.nature=Math.max(0,S.nature+d)
+    document.getElementById('v-nature').textContent=S.nature
+    updateTotals(); return
+  }
+  const [animal, field]=key.split('.')
+  // array fields: ac0..ac6, bc0..bc4, cc0..cc2, cg0..cg6, adj0..adj5, pairs0..pairs3, ms0..ms4, up0..up4
+  const arrMatch=field.match(/^([a-z]+)(\d+)$/)
+  if(arrMatch){
+    const af=arrMatch[1], idx=+arrMatch[2]
+    S[animal][af][idx]=Math.max(0,S[animal][af][idx]+d)
+    document.getElementById('v-'+key).textContent=S[animal][af][idx]
+  } else {
+    S[animal][field]=Math.max(0,S[animal][field]+d)
+    document.getElementById('v-'+key).textContent=S[animal][field]
+  }
+  // re-render current animal (may need bonus note)
+  if(animal==='bear') renderBear()
+  updateTotals()
+}
+
+function adjHab(i, field, d){
+  S.hab[i][field]=Math.max(0,S.hab[i][field]+d)
+  renderHabs()
+  updateTotals()
+}
+
+function togHab(i){
+  S.hab[i].maj=!S.hab[i].maj
+  renderHabs()
+  updateTotals()
+}
+
+// ── TOTALS ──────────────────────────────────────────────────────
+function updateTotals(){
+  const bs=scoreBear(),ss=scoreSalmon(),es=scoreElk(),hs=scoreHawk(),fs=scoreFox(),habs=scoreHab()
+  const total=bs+ss+es+hs+fs+habs+S.nature
+  setText('s-bear',bs); setText('sub-bear',bs)
+  setText('s-salmon',ss); setText('sub-salmon',ss)
+  setText('s-elk',es); setText('sub-elk',es)
+  setText('s-hawk',hs); setText('sub-hawk',hs)
+  setText('s-fox',fs); setText('sub-fox',fs)
+  setText('s-hab',habs); setText('sub-hab',habs)
+  setText('grand-total',total)
+}
+function setText(id,v){ const el=document.getElementById(id); if(el) el.textContent=v }
+
+// ── VARIANT SELECT ───────────────────────────────────────────────
+function setVariant(animal, v, btn){
+  S[animal].v=v
+  btn.closest('.chips').querySelectorAll('.chip').forEach(c=>c.classList.remove('on'))
+  btn.classList.add('on')
+  const renders={bear:renderBear,salmon:renderSalmon,elk:renderElk,hawk:renderHawk,fox:renderFox}
+  renders[animal]()
+  updateTotals()
+}
+
+// ── TABS ─────────────────────────────────────────────────────────
+function switchTab(name, btn){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('on'))
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'))
+  btn.classList.add('on')
+  document.getElementById('panel-'+name).classList.add('on')
+}
+
+// ── RESET ────────────────────────────────────────────────────────
+function resetAll(){
+  if(!confirm('¿Reiniciar toda la puntuación?')) return
+  S.bear={v:S.bear.v, pairs:0,g3:0,cg1:0,cg2:0,cg3:0,dg2:0,dg3:0,dg4:0}
+  S.salmon={v:S.salmon.v, ac:[0,0,0,0,0,0,0],bc:[0,0,0,0,0],cc:[0,0,0],direct:0}
+  S.elk={v:S.elk.v, r2:0,r3:0,r4:0,direct:0,cg:[0,0,0,0,0,0,0],rings:0}
+  S.hawk={v:S.hawk.v, iso:0,g1:0,cs:0,direct:0}
+  S.fox={v:S.fox.v, adj:[0,0,0,0,0,0],pairs:[0,0,0,0],ms:[0,0,0,0,0],up:[0,0,0,0,0]}
+  S.hab.forEach(h=>{h.maj=false;h.tiles=0;h.bonus=0})
+  S.nature=0
+  renderBear(); renderSalmon(); renderElk(); renderHawk(); renderFox(); renderHabs()
+  updateTotals()
+}
+
+// ── INIT ─────────────────────────────────────────────────────────
+renderBear(); renderSalmon(); renderElk(); renderHawk(); renderFox(); renderHabs()
+updateTotals()
+
+// ── SERVICE WORKER ───────────────────────────────────────────────
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js').catch(()=>{})
+}
+
+// ── MANIFEST (inline) ────────────────────────────────────────────
+const manifest={
+  name:'Cascadia · Puntuación',
+  short_name:'Cascadia',
+  start_url:'cascadia.html',
+  display:'standalone',
+  background_color:'#0D1F12',
+  theme_color:'#0D1F12',
+  icons:[{src:'assets/icons/icon-192.png',sizes:'192x192',type:'image/png'},
+         {src:'assets/icons/icon-512.png',sizes:'512x512',type:'image/png'}]
+}
+const blob=new Blob([JSON.stringify(manifest)],{type:'application/json'})
+document.querySelector('link[rel="manifest"]')?.remove()
+const ml=document.createElement('link')
+ml.rel='manifest'; ml.href=URL.createObjectURL(blob)
+document.head.appendChild(ml)
+</script>
+</body>
+</html>

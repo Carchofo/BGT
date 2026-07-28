@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Viernes</title>
+
+  <!-- PWA meta -->
+  <meta name="theme-color" content="#4E342E">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Viernes">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%234E342E'/%3E%3Ctext y='.9em' font-size='85' x='7'%3E🌴%3C/text%3E%3C/svg%3E">
+  <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Viernes%22%2C%22short_name%22%3A%22Viernes%22%2C%22start_url%22%3A%22viernes.html%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%234E342E%22%2C%22theme_color%22%3A%22%234E342E%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%2520xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%2520viewBox%3D'0%25200%2520100%2520100'%253E%253Crect%2520width%3D'100'%2520height%3D'100'%2520fill%3D'%25234E342E'%2F%253E%253Ctext%2520y%3D'.9em'%2520font-size%3D'85'%2520x%3D'7'%253E%F0%9F%8C%B4%253C%2Ftext%253E%253C%2Fsvg%253E%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #4E342E;
+      --surface:   #5D4037;
+      --surface2:  #6D4C41;
+      --border:    #795548;
+      --text:      #EFEBE9;
+      --muted:     #BCAAA4;
+      --accent:    #A5D6A7;
+      --accent-dk: #66BB6A;
+      --danger:    #EF9A9A;
+
+      --phase-green:   #388E3C;
+      --phase-yellow:  #F9A825;
+      --phase-red:     #D32F2F;
+      --phase-pirate:  #4A148C;
+
+      --nav-h: 60px;
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --r: 12px;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+      overscroll-behavior: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* ── Layout ── */
+    #app {
+      display: flex;
+      flex-direction: column;
+      height: 100dvh;
+    }
+
+    .top-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px 10px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .top-bar a {
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: .02em;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      opacity: .85;
+    }
+    .top-bar a:hover { opacity: 1; }
+
+    .top-bar h1 {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 20px;
+      font-weight: normal;
+      color: var(--accent);
+      letter-spacing: .04em;
+    }
+
+    .content {
+      flex: 1;
+      overflow-y: auto;
+      overscroll-behavior-y: contain;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* ── Bottom nav ── */
+    .nav {
+      display: flex;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      flex-shrink: 0;
+      padding-bottom: var(--safe-bottom);
+    }
+
+    .nav-btn {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      padding: 8px 4px;
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 11px;
+      font-family: inherit;
+      letter-spacing: .03em;
+      cursor: pointer;
+      transition: color .15s;
+      min-height: var(--nav-h);
+    }
+    .nav-btn .icon { font-size: 20px; line-height: 1; }
+    .nav-btn.active { color: var(--accent); }
+    .nav-btn:hover { color: var(--text); }
+
+    /* ── Tabs ── */
+    .tab { display: none; padding: 16px 16px 24px; }
+    .tab.active { display: block; }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .card-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    /* ── Phase display ── */
+    .phase-block {
+      border-radius: var(--r);
+      padding: 14px 16px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background .3s;
+    }
+
+    .phase-name {
+      font-family: Georgia, serif;
+      font-size: 22px;
+      color: #fff;
+      letter-spacing: .02em;
+    }
+
+    .phase-emoji { font-size: 28px; }
+
+    .phase-nav {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .phase-nav button {
+      flex: 1;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 13px;
+      font-family: inherit;
+      padding: 9px 10px;
+      cursor: pointer;
+      transition: background .15s, border-color .15s;
+      letter-spacing: .02em;
+    }
+    .phase-nav button:hover { background: var(--border); }
+    .phase-nav button:disabled { opacity: .35; cursor: default; }
+
+    /* ── Life counter ── */
+    .life-display {
+      text-align: center;
+      padding: 20px 0 16px;
+    }
+
+    .life-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .life-number {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 88px;
+      line-height: 1;
+      font-weight: normal;
+      color: var(--accent);
+      transition: color .25s;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .life-number.danger { color: var(--danger); }
+
+    .life-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 12px;
+    }
+
+    .life-btn {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      background: var(--surface2);
+      color: var(--text);
+      font-size: 26px;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background .15s, border-color .15s, transform .1s;
+      font-family: inherit;
+    }
+    .life-btn:hover { background: var(--border); }
+    .life-btn:active { transform: scale(.92); }
+    .life-btn.minus { color: var(--danger); border-color: #B71C1C44; }
+    .life-btn.plus  { color: var(--accent); border-color: #1B5E2044; }
+
+    /* ── Combat helper ── */
+    .combat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .combat-field {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+    }
+
+    .combat-field-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .combat-field-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .combat-value {
+      font-family: Georgia, serif;
+      font-size: 28px;
+      font-variant-numeric: tabular-nums;
+      flex: 1;
+      color: var(--text);
+    }
+
+    .combat-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 2px;
+      font-family: inherit;
+      transition: background .12s;
+    }
+    .combat-btn:hover { background: var(--border); }
+
+    .combat-diff {
+      border-radius: 8px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      transition: background .3s;
+    }
+
+    .combat-diff-label {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+    }
+
+    .combat-diff-value {
+      font-family: Georgia, serif;
+      font-size: 32px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .combat-winning  { background: #1B5E2055; border: 1px solid #388E3C66; }
+    .combat-losing   { background: #B71C1C44; border: 1px solid #D32F2F66; }
+    .combat-neutral  { background: var(--surface2); border: 1px solid var(--border); }
+
+    .combat-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 11px 12px;
+      border-radius: 8px;
+      border: none;
+      font-size: 13px;
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: .03em;
+      transition: opacity .15s, transform .1s;
+    }
+    .btn:hover { opacity: .88; }
+    .btn:active { transform: scale(.97); }
+
+    .btn-primary   { background: var(--accent); color: #1B3A1E; }
+    .btn-danger    { background: #D32F2F; color: #fff; }
+    .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+    .btn-ghost     { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+
+    .btn-full { width: 100%; margin-top: 8px; }
+
+    .btn-reset {
+      display: block;
+      width: 100%;
+      padding: 11px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      font-family: inherit;
+      cursor: pointer;
+      margin-top: 12px;
+      letter-spacing: .03em;
+      transition: border-color .15s, color .15s;
+    }
+    .btn-reset:hover { border-color: var(--danger); color: var(--danger); }
+
+    /* ── Score tab ── */
+    .score-life {
+      text-align: center;
+      padding: 24px 0 8px;
+    }
+
+    .score-number {
+      font-family: Georgia, serif;
+      font-size: 72px;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .score-rank {
+      border-radius: var(--r);
+      padding: 20px;
+      text-align: center;
+      margin: 12px 0;
+    }
+
+    .score-rank-title {
+      font-family: Georgia, serif;
+      font-size: 26px;
+      margin-bottom: 6px;
+    }
+
+    .score-rank-desc {
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .score-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    .score-table th {
+      text-align: left;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 6px 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .score-table td {
+      padding: 9px 10px;
+      border-bottom: 1px solid #5D403755;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .score-table tr.current-row td {
+      color: var(--accent);
+      font-weight: 700;
+      background: #A5D6A712;
+    }
+
+    /* ── Rules tab ── */
+    .rules-section {
+      margin-bottom: 16px;
+    }
+
+    .rules-section h3 {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .rules-section p {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .rules-section ul {
+      padding-left: 18px;
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .rules-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 16px 0;
+    }
+
+    /* ── Setup tab ── */
+    .diff-options {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .diff-btn {
+      border-radius: 8px;
+      border: 2px solid var(--border);
+      background: var(--surface2);
+      color: var(--text);
+      padding: 14px 8px 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color .15s, background .15s;
+      font-family: inherit;
+    }
+
+    .diff-btn .diff-icon { font-size: 24px; margin-bottom: 4px; }
+    .diff-btn .diff-name { font-size: 13px; font-weight: 700; display: block; }
+    .diff-btn .diff-pv   { font-size: 11px; color: var(--muted); display: block; margin-top: 2px; font-variant-numeric: tabular-nums; }
+
+    .diff-btn.selected {
+      border-color: var(--accent);
+      background: #A5D6A718;
+    }
+
+    .deck-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .deck-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid #5D403755;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .deck-item:last-child { border-bottom: none; }
+
+    .deck-item .card-name { color: var(--text); }
+
+    .deck-count {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2px 8px;
+      font-size: 13px;
+      font-variant-numeric: tabular-nums;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    /* ── Utility ── */
+    .flex-row { display: flex; align-items: center; gap: 8px; }
+    .spacer   { flex: 1; }
+
+    .pill {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .04em;
+    }
+
+    .pill-green  { background: #388E3C33; color: #81C784; }
+    .pill-yellow { background: #F9A82533; color: #FFD54F; }
+    .pill-red    { background: #D32F2F33; color: #EF9A9A; }
+    .pill-purple { background: #4A148C55; color: #CE93D8; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition: none !important; animation: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="app">
+
+  <!-- Top bar -->
+  <header class="top-bar">
+    <a href="index.html">&#8592; Volver</a>
+    <span class="spacer"></span>
+    <h1>🌴 Viernes</h1>
+  </header>
+
+  <!-- Content area -->
+  <main class="content" id="content">
+
+    <!-- ══ TAB: JUEGO ══ -->
+    <section class="tab active" id="tab-game">
+
+      <!-- Phase block -->
+      <div class="phase-block" id="phaseBlock">
+        <span class="phase-name" id="phaseName">Fase Verde</span>
+        <span class="phase-emoji" id="phaseEmoji">🟢</span>
+      </div>
+
+      <!-- Phase navigation -->
+      <div class="phase-nav">
+        <button id="btnPrevPhase" onclick="changePhase(-1)">← Fase anterior</button>
+        <button id="btnNextPhase" onclick="changePhase(1)">Fase siguiente →</button>
+      </div>
+
+      <!-- Life counter -->
+      <div class="card">
+        <div class="life-display">
+          <div class="life-label">Puntos de vida</div>
+          <div class="life-number" id="lifeNumber">20</div>
+          <div class="life-controls">
+            <button class="life-btn minus" onclick="addLife(-1)" title="Quitar vida">−</button>
+            <button class="life-btn plus"  onclick="addLife(1)"  title="Ganar vida">+</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Combat helper -->
+      <div class="card">
+        <div class="card-label">⚔️ Ayudante de Combate</div>
+
+        <div class="combat-grid">
+          <div class="combat-field">
+            <div class="combat-field-label">Cartas gratis</div>
+            <div class="combat-field-row">
+              <div class="combat-value" id="valFreeCards">0</div>
+              <div style="display:flex;flex-direction:column;gap:3px;">
+                <button class="combat-btn" onclick="adjField('freeCards',1)">+</button>
+                <button class="combat-btn" onclick="adjField('freeCards',-1)">−</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="combat-field">
+            <div class="combat-field-label">Fuerza requerida</div>
+            <div class="combat-field-row">
+              <div class="combat-value" id="valHazard">0</div>
+              <div style="display:flex;flex-direction:column;gap:3px;">
+                <button class="combat-btn" onclick="adjField('hazardTarget',1)">+</button>
+                <button class="combat-btn" onclick="adjField('hazardTarget',-1)">−</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="combat-field" style="grid-column:1/-1;">
+            <div class="combat-field-label">Fuerza Robinson acumulada</div>
+            <div class="combat-field-row">
+              <div class="combat-value" id="valStrength">0</div>
+              <div style="display:flex;gap:4px;">
+                <button class="combat-btn" onclick="adjField('robinsonStrength',1)">+</button>
+                <button class="combat-btn" onclick="adjField('robinsonStrength',-1)">−</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Diff display -->
+        <div class="combat-diff combat-neutral" id="combatDiff">
+          <div>
+            <div class="combat-diff-label" id="diffLabel">Diferencia</div>
+            <div style="font-size:11px;color:var(--muted)" id="diffSub">—</div>
+          </div>
+          <div class="combat-diff-value" id="diffValue">—</div>
+        </div>
+
+        <!-- Combat actions -->
+        <div class="combat-actions">
+          <button class="btn btn-secondary" onclick="spendLife()">−1 PV → carta extra</button>
+          <button class="btn btn-danger"    id="btnAcceptDefeat" onclick="acceptDefeat()">Aceptar derrota</button>
+        </div>
+
+        <div style="margin-top:8px;font-size:11px;color:var(--muted);text-align:center" id="lifeSpentInfo">
+          PV gastados en combate: <span id="valLifeSpent">0</span>
+        </div>
+
+        <button class="btn-reset" onclick="resetFight()">↺ Reiniciar combate</button>
+      </div>
+
+      <!-- Game reset -->
+      <button class="btn-reset" onclick="confirmReset()" style="border-color:#795548;color:var(--muted);">
+        ⚠️ Reiniciar partida completa
+      </button>
+
+    </section>
+
+    <!-- ══ TAB: PUNTUACIÓN ══ -->
+    <section class="tab" id="tab-score">
+
+      <div class="card">
+        <div class="score-life">
+          <div class="life-label">Vida restante al final</div>
+          <div class="score-number" id="scoreLifeNum" style="color:var(--accent)">—</div>
+        </div>
+      </div>
+
+      <div class="score-rank card" id="scoreRankCard">
+        <div class="score-rank-title" id="scoreRankTitle">Juega una partida</div>
+        <div class="score-rank-desc"  id="scoreRankDesc">para ver tu resultado aquí</div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Tabla de clasificación</div>
+        <table class="score-table">
+          <thead>
+            <tr>
+              <th>PV</th>
+              <th>Resultado</th>
+            </tr>
+          </thead>
+          <tbody id="rankTable"></tbody>
+        </table>
+      </div>
+
+    </section>
+
+    <!-- ══ TAB: REGLAS ══ -->
+    <section class="tab" id="tab-rules">
+
+      <div class="card">
+        <div class="rules-section">
+          <h3>🎯 Objetivo</h3>
+          <p>Sobrevivir en una isla desierta como Robinson Crusoe. Supera las tres fases de peligros y vence a los piratas para escapar con la mayor cantidad de vida posible.</p>
+        </div>
+        <hr class="rules-divider">
+        <div class="rules-section">
+          <h3>📍 Fases</h3>
+          <p>El mazo de peligros se divide en tres fases. Avanza por ellas en orden:</p>
+          <ul>
+            <li><span class="pill pill-green">Verde</span> — peligros más fáciles</li>
+            <li><span class="pill pill-yellow">Amarilla</span> — dificultad media</li>
+            <li><span class="pill pill-red">Roja</span> — peligros severos</li>
+            <li><span class="pill pill-purple">☠️ Piratas</span> — combate final</li>
+          </ul>
+        </div>
+        <hr class="rules-divider">
+        <div class="rules-section">
+          <h3>🔄 Turno</h3>
+          <p>Cada turno: roba 2 cartas de peligro, elige 1 para enfrentar (la otra regresa al mazo), roba cartas de Robinson según las cartas gratis del peligro. Puedes gastar 1 PV para robar 1 carta adicional de Robinson. Luego juega o descarta las cartas robadas.</p>
+        </div>
+        <hr class="rules-divider">
+        <div class="rules-section">
+          <h3>✅ Combate: Victoria</h3>
+          <p>Si tu fuerza acumulada ≥ fuerza requerida del peligro, ganas. Toma la carta de peligro como habilidad; si la fuerza sobrante ≥ 1, puedes destruirla en su lugar.</p>
+        </div>
+        <hr class="rules-divider">
+        <div class="rules-section">
+          <h3>❌ Combate: Derrota</h3>
+          <p>Si tu fuerza acumulada &lt; fuerza requerida, pierdes tantos PV como diferencia negativa haya. La carta de peligro se descarta (o va al final del mazo, según variante).</p>
+        </div>
+        <hr class="rules-divider">
+        <div class="rules-section">
+          <h3>☠️ Piratas</h3>
+          <p>Tras superar la fase roja se enfrentan dos cartas de piratas. Usa todo tu mazo Robinson acumulado. Si pierdes, pierdes los PV de diferencia; si ganas, escapas de la isla.</p>
+        </div>
+        <hr class="rules-divider">
+        <div class="rules-section">
+          <h3>🏁 Fin de partida</h3>
+          <ul>
+            <li><strong>Derrota:</strong> PV llegan a 0 antes de tiempo.</li>
+            <li><strong>Victoria:</strong> Superas a los piratas con PV &gt; 0.</li>
+          </ul>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ══ TAB: SETUP ══ -->
+    <section class="tab" id="tab-setup">
+
+      <div class="card">
+        <div class="card-label">Dificultad</div>
+        <div class="diff-options">
+          <button class="diff-btn" data-diff="easy" onclick="selectDiff('easy')">
+            <div class="diff-icon">🌿</div>
+            <span class="diff-name">Fácil</span>
+            <span class="diff-pv">22 PV</span>
+          </button>
+          <button class="diff-btn selected" data-diff="normal" onclick="selectDiff('normal')">
+            <div class="diff-icon">🌴</div>
+            <span class="diff-name">Normal</span>
+            <span class="diff-pv">20 PV</span>
+          </button>
+          <button class="diff-btn" data-diff="hard" onclick="selectDiff('hard')">
+            <div class="diff-icon">💀</div>
+            <span class="diff-name">Difícil</span>
+            <span class="diff-pv">18 PV</span>
+          </button>
+        </div>
+
+        <div id="diffDesc" style="font-size:13px;color:var(--muted);margin-bottom:16px;padding:10px 12px;background:var(--surface2);border-radius:8px;">
+          Recomendada para la primera partida. Robinson empieza con 20 puntos de vida.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Mazo inicial de Robinson</div>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:12px;">Baraja estas cartas para formar el mazo de partida:</p>
+        <ul class="deck-list">
+          <li class="deck-item"><span class="card-name">Distracción (−1 fuerza)</span><span class="deck-count">×6</span></li>
+          <li class="deck-item"><span class="card-name">Comer bien</span><span class="deck-count">×3</span></li>
+          <li class="deck-item"><span class="card-name">Foco</span><span class="deck-count">×1</span></li>
+          <li class="deck-item"><span class="card-name">Doble filo</span><span class="deck-count">×1</span></li>
+          <li class="deck-item"><span class="card-name">Luchador</span><span class="deck-count">×2</span></li>
+          <li class="deck-item"><span class="card-name">Corredor</span><span class="deck-count">×2</span></li>
+          <li class="deck-item"><span class="card-name">Astuto</span><span class="deck-count">×1</span></li>
+        </ul>
+        <div style="margin-top:10px;font-size:12px;color:var(--muted);text-align:right;font-variant-numeric:tabular-nums;">Total: 16 cartas</div>
+      </div>
+
+      <button class="btn btn-primary btn-full" style="padding:14px;" onclick="startGame()">
+        🌴 Iniciar partida
+      </button>
+
+    </section>
+
+  </main>
+
+  <!-- Bottom navigation -->
+  <nav class="nav">
+    <button class="nav-btn active" onclick="showTab('game',this)">
+      <span class="icon">⚔️</span>Juego
+    </button>
+    <button class="nav-btn" onclick="showTab('score',this)">
+      <span class="icon">📊</span>Puntuación
+    </button>
+    <button class="nav-btn" onclick="showTab('rules',this)">
+      <span class="icon">📖</span>Reglas
+    </button>
+    <button class="nav-btn" onclick="showTab('setup',this)">
+      <span class="icon">⚙️</span>Setup
+    </button>
+  </nav>
+
+</div>
+
+<script>
+// ── State ──────────────────────────────────────────────────────────────────
+
+const DIFFICULTIES = { easy: 22, normal: 20, hard: 18 };
+const DIFF_DESC = {
+  easy:   'Recomendada para la primera partida. Robinson empieza con 22 puntos de vida.',
+  normal: 'Recomendada para la primera partida. Robinson empieza con 20 puntos de vida.',
+  hard:   'Para jugadores experimentados. Solo 18 PV — cada decisión cuenta.'
+};
+
+const PHASES = [
+  { name: 'Fase Verde',    emoji: '🟢', color: '#388E3C', pill: 'pill-green'  },
+  { name: 'Fase Amarilla', emoji: '🟡', color: '#F9A825', pill: 'pill-yellow' },
+  { name: 'Fase Roja',     emoji: '🔴', color: '#D32F2F', pill: 'pill-red'   },
+  { name: '☠️ Piratas',    emoji: '☠️', color: '#4A148C', pill: 'pill-purple' },
+];
+
+const RANKS = [
+  { min: 0,  max: 0,  title: '💀 Derrota',          desc: 'No pudiste escapar de la isla.',              bg: '#B71C1C44', color: '#EF9A9A' },
+  { min: 1,  max: 5,  title: '🏝️ Sobreviviste',     desc: 'Escapaste, pero a duras penas.',              bg: '#F9A82522', color: '#FFD54F' },
+  { min: 6,  max: 10, title: '🎉 Victoria',          desc: 'Robinson logra escapar con honor.',           bg: '#1B5E2044', color: '#A5D6A7' },
+  { min: 11, max: 99, title: '🌟 Victoria Perfecta', desc: '¡Maestro superviviente! Dominio total.',      bg: '#1A237E55', color: '#CE93D8' },
+];
+
+let state = {
+  difficulty: 'normal',
+  lifePoints: 20,
+  phase: 0,
+  freeCards: 0,
+  hazardTarget: 0,
+  robinsonStrength: 0,
+  lifeSpentThisFight: 0,
+};
+
+// ── Persistence ────────────────────────────────────────────────────────────
+
+function saveState() {
+  try { localStorage.setItem('viernes_state', JSON.stringify(state)); } catch(_){}
+}
+
+function loadState() {
+  try {
+    const s = localStorage.getItem('viernes_state');
+    if (s) state = { ...state, ...JSON.parse(s) };
+  } catch(_){}
+}
+
+// ── Navigation ─────────────────────────────────────────────────────────────
+
+function showTab(id, btn) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+  document.getElementById('content').scrollTop = 0;
+  if (id === 'score') renderScore();
+}
+
+// ── Phase ──────────────────────────────────────────────────────────────────
+
+function changePhase(dir) {
+  state.phase = Math.max(0, Math.min(3, state.phase + dir));
+  saveState();
+  renderPhase();
+}
+
+function renderPhase() {
+  const p = PHASES[state.phase];
+  const block = document.getElementById('phaseBlock');
+  block.style.background = p.color + 'CC';
+  document.getElementById('phaseName').textContent  = p.name;
+  document.getElementById('phaseEmoji').textContent = p.emoji;
+  document.getElementById('btnPrevPhase').disabled = state.phase === 0;
+  document.getElementById('btnNextPhase').disabled = state.phase === 3;
+}
+
+// ── Life ───────────────────────────────────────────────────────────────────
+
+function addLife(n) {
+  state.lifePoints = Math.max(0, state.lifePoints + n);
+  saveState();
+  renderLife();
+}
+
+function renderLife() {
+  const el = document.getElementById('lifeNumber');
+  el.textContent = state.lifePoints;
+  el.classList.toggle('danger', state.lifePoints <= 3);
+}
+
+// ── Combat ─────────────────────────────────────────────────────────────────
+
+function adjField(field, n) {
+  state[field] = Math.max(0, state[field] + n);
+  saveState();
+  renderCombat();
+}
+
+function spendLife() {
+  if (state.lifePoints <= 0) return;
+  state.lifePoints--;
+  state.lifeSpentThisFight++;
+  saveState();
+  renderLife();
+  renderCombat();
+}
+
+function acceptDefeat() {
+  const diff = state.robinsonStrength - state.hazardTarget;
+  if (diff >= 0) { resetFight(); return; }
+  state.lifePoints = Math.max(0, state.lifePoints + diff); // diff is negative
+  saveState();
+  renderLife();
+  resetFight();
+}
+
+function resetFight() {
+  state.freeCards          = 0;
+  state.hazardTarget       = 0;
+  state.robinsonStrength   = 0;
+  state.lifeSpentThisFight = 0;
+  saveState();
+  renderCombat();
+}
+
+function renderCombat() {
+  document.getElementById('valFreeCards').textContent  = state.freeCards;
+  document.getElementById('valHazard').textContent     = state.hazardTarget;
+  document.getElementById('valStrength').textContent   = state.robinsonStrength;
+  document.getElementById('valLifeSpent').textContent  = state.lifeSpentThisFight;
+
+  const diff   = state.robinsonStrength - state.hazardTarget;
+  const active = state.hazardTarget > 0 || state.robinsonStrength > 0;
+
+  const diffEl  = document.getElementById('combatDiff');
+  const diffVal = document.getElementById('diffValue');
+  const diffLbl = document.getElementById('diffLabel');
+  const diffSub = document.getElementById('diffSub');
+  const defBtn  = document.getElementById('btnAcceptDefeat');
+
+  if (!active) {
+    diffEl.className  = 'combat-diff combat-neutral';
+    diffVal.textContent = '—';
+    diffLbl.textContent = 'Diferencia';
+    diffSub.textContent = '—';
+    defBtn.disabled     = true;
+    defBtn.style.opacity = '.4';
+    return;
+  }
+
+  defBtn.disabled     = diff >= 0;
+  defBtn.style.opacity = diff < 0 ? '1' : '.4';
+
+  if (diff >= 0) {
+    diffEl.className    = 'combat-diff combat-winning';
+    diffLbl.textContent = 'Ganando';
+    diffSub.textContent = diff > 0 ? `+${diff} puedes destruir la carta` : 'Victoria exacta';
+    diffVal.textContent = `+${diff}`;
+    diffVal.style.color = '#A5D6A7';
+  } else {
+    diffEl.className    = 'combat-diff combat-losing';
+    diffLbl.textContent = 'Perdiendo';
+    diffSub.textContent = `Perderías ${Math.abs(diff)} PV si aceptas`;
+    diffVal.textContent = diff;
+    diffVal.style.color = '#EF9A9A';
+  }
+}
+
+// ── Score ──────────────────────────────────────────────────────────────────
+
+function renderScore() {
+  const lp = state.lifePoints;
+  document.getElementById('scoreLifeNum').textContent = lp;
+
+  const rank = RANKS.find(r => lp >= r.min && lp <= r.max);
+  const card = document.getElementById('scoreRankCard');
+  if (rank) {
+    card.style.background = rank.bg;
+    document.getElementById('scoreRankTitle').textContent = rank.title;
+    document.getElementById('scoreRankTitle').style.color = rank.color;
+    document.getElementById('scoreRankDesc').textContent  = rank.desc;
+  }
+
+  const tbody = document.getElementById('rankTable');
+  tbody.innerHTML = '';
+  const rows = [
+    { range: '0',    label: '💀 Derrota',          current: lp === 0 },
+    { range: '1–5',  label: '🏝️ Sobreviviste',     current: lp >= 1  && lp <= 5  },
+    { range: '6–10', label: '🎉 Victoria',          current: lp >= 6  && lp <= 10 },
+    { range: '11+',  label: '🌟 Victoria Perfecta', current: lp >= 11 },
+  ];
+  rows.forEach(r => {
+    const tr = document.createElement('tr');
+    if (r.current) tr.className = 'current-row';
+    tr.innerHTML = `<td>${r.range}</td><td>${r.label}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+// ── Setup ──────────────────────────────────────────────────────────────────
+
+let selectedDiff = 'normal';
+
+function selectDiff(d) {
+  selectedDiff = d;
+  document.querySelectorAll('.diff-btn').forEach(b => {
+    b.classList.toggle('selected', b.dataset.diff === d);
+  });
+  document.getElementById('diffDesc').textContent = DIFF_DESC[d];
+}
+
+function startGame() {
+  state = {
+    difficulty: selectedDiff,
+    lifePoints: DIFFICULTIES[selectedDiff],
+    phase: 0,
+    freeCards: 0,
+    hazardTarget: 0,
+    robinsonStrength: 0,
+    lifeSpentThisFight: 0,
+  };
+  saveState();
+  render();
+  // Switch to game tab
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  const navBtns = document.querySelectorAll('.nav-btn');
+  navBtns[0].classList.add('active');
+  showTabDirect('game');
+}
+
+function showTabDirect(id) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  document.getElementById('content').scrollTop = 0;
+}
+
+function confirmReset() {
+  if (confirm('¿Reiniciar la partida completa?')) {
+    startGame();
+  }
+}
+
+// ── Full render ────────────────────────────────────────────────────────────
+
+function render() {
+  renderPhase();
+  renderLife();
+  renderCombat();
+  // Sync difficulty selector
+  selectedDiff = state.difficulty || 'normal';
+  document.querySelectorAll('.diff-btn').forEach(b => {
+    b.classList.toggle('selected', b.dataset.diff === selectedDiff);
+  });
+  document.getElementById('diffDesc').textContent = DIFF_DESC[selectedDiff];
+}
+
+// ── Init ───────────────────────────────────────────────────────────────────
+
+loadState();
+render();
+
+// ── Service Worker ─────────────────────────────────────────────────────────
+
+if ('serviceWorker' in navigator) {
+  const sw = `
+    const CACHE = 'viernes-v1';
+    self.addEventListener('install', e => {
+      self.skipWaiting();
+    });
+    self.addEventListener('activate', e => {
+      clients.claim();
+    });
+    self.addEventListener('fetch', e => {
+      e.respondWith(
+        caches.open(CACHE).then(cache =>
+          cache.match(e.request).then(cached => {
+            const network = fetch(e.request).then(res => {
+              cache.put(e.request, res.clone());
+              return res;
+            }).catch(() => cached);
+            return cached || network;
+          })
+        )
+      );
+    });
+  `;
+  const blob   = new Blob([sw], { type: 'application/javascript' });
+  const swUrl  = URL.createObjectURL(blob);
+  navigator.serviceWorker.register(swUrl).catch(() => {});
+}
+</script>
+
+</body>
+</html>
