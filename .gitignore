@@ -19,3 +19,6 @@ keystore.properties
 .cxx
 local.properties
 tools/pipeline-tests/
+
+# AAB de release — binario, se sube a Play Console manualmente, no va en git
+store/*.aab
