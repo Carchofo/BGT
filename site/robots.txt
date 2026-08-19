@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://carchofo.github.io/BGT/sitemap.xml
