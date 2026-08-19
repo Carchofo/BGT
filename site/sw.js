@@ -1,9 +1,10 @@
-const CACHE = 'bgt-v2';
+const CACHE = 'bgt-v3';
 const ASSETS = [
   '/BGT/',
   '/BGT/index.html',
   '/BGT/news.html',
   '/BGT/nosotros.html',
+  '/BGT/privacy.html',
   '/BGT/splendor.html',
   '/BGT/spooktacular.html',
   '/BGT/criaturas.html',
