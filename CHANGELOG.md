@@ -5,6 +5,19 @@ Cada versiÃ³n: **Added** (nuevo), **Fixed** (bug), **Changed** (mejora).
 
 ---
 
+## [v1.4.0] 2026-08-20 — Web PWA, SEO y primera subida a Play Store
+
+### Added
+- **Web PWA**: los 9 juegos ya se pueden jugar directamente en el navegador (iPad/iPhone/Safari), sin instalar nada. Funciona offline una vez cargado.
+- Política de privacidad publicada
+- Sitemap y meta descriptions para mejorar la visibilidad en buscadores
+- Pipeline de subida automática a Google Play Console (prueba interna)
+
+### Changed
+- Página de novedades actualizada con el lanzamiento web
+
+---
+
 ## [v0.9.2] 2026-07-27 — Splendor automa (beta)
 
 ### Added
