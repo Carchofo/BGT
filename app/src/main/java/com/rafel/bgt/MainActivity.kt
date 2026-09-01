@@ -36,6 +36,7 @@ import com.rafel.bgt.ui.screens.FridaySoloScreen
 import com.rafel.bgt.ui.screens.CMSoloModeScreen
 import com.rafel.bgt.ui.screens.TiletumSoloScreen
 import com.rafel.bgt.ui.screens.MaracaiboSoloScreen
+import com.rafel.bgt.ui.screens.WingspanSoloScreen
 import com.rafel.bgt.ui.screens.AboutScreen
 import com.rafel.bgt.ui.screens.HomeScreen
 import com.rafel.bgt.ui.screens.MonstersScreen
@@ -390,6 +391,7 @@ fun BGTApp() {
         composable("coimbra_solo")      { CoimbraSoloScreen(onBack = { navController.popBackStack() }) }
         composable("friday_solo")       { FridaySoloScreen(onBack = { navController.popBackStack() }) }
         composable("splendor_solo")     { SplendorSoloScreen(onBack = { navController.popBackStack() }) }
+        composable("wingspan_solo")     { WingspanSoloScreen(onBack = { navController.popBackStack() }) }
         composable("about")             { AboutScreen(onBack = { navController.popBackStack() }) }
     }
 }
