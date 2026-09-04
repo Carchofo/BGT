@@ -1239,17 +1239,51 @@
   <div class="container">
     <h2 class="section-title">🆕 Últimas novedades</h2>
     <p class="section-lead">La app crece con cada versión. Aquí tienes lo más reciente.</p>
-    <div style="max-width:680px;margin:0 auto;background:#fff;border:1px solid var(--cream-line);border-radius:12px;padding:1.5rem 2rem">
+    <div id="latest-release-card" style="max-width:680px;margin:0 auto;background:#fff;border:1px solid var(--cream-line);border-radius:12px;padding:1.5rem 2rem">
       <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;flex-wrap:wrap">
-        <span style="background:var(--navy);color:#fff;font-weight:800;font-size:.9rem;padding:.25rem .75rem;border-radius:20px">v0.9</span>
-        <span style="color:var(--muted);font-size:.85rem">Julio 2026</span>
+        <span style="background:var(--navy);color:#fff;font-weight:800;font-size:.9rem;padding:.25rem .75rem;border-radius:20px">v1.4.1</span>
+        <span style="color:var(--muted);font-size:.85rem">Agosto 2026</span>
         <span style="background:#e6f4e6;color:#2a7a2a;font-size:.75rem;font-weight:700;padding:.2rem .6rem;border-radius:20px">Última versión</span>
       </div>
       <ul style="list-style:none;display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.25rem">
-        <li style="display:flex;gap:.6rem;font-size:.95rem"><span style="color:var(--orange);margin-top:.1rem">▸</span>Mensaje de bienvenida para nuevos usuarios</li>
-        <li style="display:flex;gap:.6rem;font-size:.95rem"><span style="color:var(--orange);margin-top:.1rem">▸</span>Mejoras de estabilidad y firma de la app</li>
+        <li style="display:flex;gap:.6rem;font-size:.95rem"><span style="color:var(--orange);margin-top:.1rem">▸</span>🌐 Juega desde el navegador — los 9 juegos ya funcionan directamente en iPad/iPhone/Safari, sin instalar nada</li>
+        <li style="display:flex;gap:.6rem;font-size:.95rem"><span style="color:var(--orange);margin-top:.1rem">▸</span>Funciona offline una vez cargado (Progressive Web App)</li>
+        <li style="display:flex;gap:.6rem;font-size:.95rem"><span style="color:var(--orange);margin-top:.1rem">▸</span>Subida automática a Play Console arreglada — las actualizaciones llegan más rápido</li>
       </ul>
       <a href="news.html" style="display:inline-block;background:var(--orange);color:#fff;font-weight:700;padding:.5rem 1.25rem;border-radius:8px;text-decoration:none;font-size:.9rem">Ver historial completo →</a>
+      <script>
+      (function(){
+        // La tarjeta de arriba es el fallback (por si falla el fetch o JS está desactivado).
+        // Al cargar, se reemplaza con la entrada MÁS RECIENTE real de news.html — así esta
+        // sección nunca vuelve a quedarse desactualizada por olvido manual.
+        fetch('news.html').then(function(r){ return r.text(); }).then(function(html){
+          var doc = new DOMParser().parseFromString(html, 'text/html');
+          var latest = doc.querySelector('.timeline .release');
+          if (!latest) return;
+          var version = latest.querySelector('.release-version');
+          var date = latest.querySelector('.release-date');
+          var items = latest.querySelectorAll('.release-items li');
+          if (!version || !date || !items.length) return;
+
+          var card = document.getElementById('latest-release-card');
+          var badgeRow = card.querySelector('div');
+          badgeRow.innerHTML =
+            '<span style="background:var(--navy);color:#fff;font-weight:800;font-size:.9rem;padding:.25rem .75rem;border-radius:20px">' + version.textContent + '</span>' +
+            '<span style="color:var(--muted);font-size:.85rem">' + date.textContent + '</span>' +
+            '<span style="background:#e6f4e6;color:#2a7a2a;font-size:.75rem;font-weight:700;padding:.2rem .6rem;border-radius:20px">Última versión</span>';
+
+          var list = card.querySelector('ul');
+          list.innerHTML = '';
+          items.forEach(function(li, i){
+            if (i >= 3) return; // solo los 3 puntos principales, el resto está en "Ver historial completo"
+            var item = document.createElement('li');
+            item.style.cssText = 'display:flex;gap:.6rem;font-size:.95rem';
+            item.innerHTML = '<span style="color:var(--orange);margin-top:.1rem">▸</span>' + li.innerHTML;
+            list.appendChild(item);
+          });
+        }).catch(function(){ /* sin conexión o fallo de fetch: se queda el fallback estático */ });
+      })();
+      </script>
     </div>
   </div>
 </section>
