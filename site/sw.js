@@ -1,4 +1,4 @@
-const CACHE = 'bgt-v3';
+const CACHE = 'bgt-v4';
 const ASSETS = [
   '/BGT/',
   '/BGT/index.html',
@@ -43,6 +43,26 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
+  // Páginas HTML (navegación + fetch() a .html como el de "Últimas novedades"):
+  // red primero, para que nunca se quede pegado a una versión vieja del contenido.
+  // Solo si no hay red se usa la copia en caché (modo offline real de la PWA).
+  const isHtmlRequest = e.request.mode === 'navigate' ||
+    (e.request.destination === '' && e.request.url.endsWith('.html'));
+
+  if (isHtmlRequest) {
+    e.respondWith(
+      fetch(e.request)
+        .then(res => {
+          const copy = res.clone();
+          caches.open(CACHE).then(c => c.put(e.request, copy));
+          return res;
+        })
+        .catch(() => caches.match(e.request).then(cached => cached || caches.match('/BGT/')))
+    );
+    return;
+  }
+
+  // Assets estáticos (imágenes, manifest, etc.): caché primero, red de respaldo.
   e.respondWith(
     caches.match(e.request).then(cached => cached || fetch(e.request).catch(() => caches.match('/BGT/')))
   );
