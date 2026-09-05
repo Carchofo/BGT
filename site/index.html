@@ -1230,7 +1230,7 @@
 
       <button type="submit" id="submit-btn">Enviar petición</button>
       <div id="form-status"></div>
-      <div class="form-note">⚠️ Este formulario solo funciona en la red local del desarrollador todavía. <strong>Usa el bot de Telegram (botón "Únete al grupo" arriba)</strong> — funciona ya mismo desde cualquier sitio y es la vía recomendada.</div>
+      <div class="form-note">También puedes usar el <strong>bot de Telegram</strong> (botón "Únete al grupo" arriba) si lo prefieres.</div>
     </form>
   </div>
 </section>
@@ -1429,8 +1429,11 @@ var BGT_API = (function() {
              || location.hostname === '192.168.0.25';
   var base = isLocal
     ? 'http://192.168.0.25:5678'
-    : null; // ← PON AQUÍ TU URL PÚBLICA cuando tengas el tunnel:
-            //   'https://bgt.tudominio.com' o 'https://XXXX.trycloudflare.com'
+    // Cloudflare Quick Tunnel (2026-09-05) — sin dominio propio, URL temporal.
+    // Si deja de responder, es que el túnel se reinició con otra URL nueva:
+    // relanzar `cloudflared tunnel --url http://192.168.0.25:5678` y actualizar aquí.
+    // Fix definitivo cuando haya dominio: túnel con nombre + URL fija.
+    : 'https://sonic-provincial-cached-fast.trycloudflare.com';
   return {
     submit : base ? (base + '/webhook/bgt-community-submit') : null,
     bug    : base ? (base + '/webhook/bgt-bug')              : null,
@@ -1748,7 +1751,7 @@ var KOFI_USERNAME = 'carchofo';
       status.className = 'ok';
       form.reset(); showGroups(); photoName.hidden = true;
     }).catch(function () {
-      status.textContent = '❌ No se pudo enviar. Recuerda que por ahora solo funciona en la red local.';
+      status.textContent = '❌ No se pudo enviar. Inténtalo de nuevo en un momento.';
       status.className = 'err';
     }).finally(function () { btn.disabled = false; });
   });
@@ -1905,7 +1908,7 @@ var KOFI_USERNAME = 'carchofo';
       cfAuthor.value = ''; cfText.value = '';
     })
     .catch(function(){
-      cfStatus.textContent = '❌ No se pudo enviar (solo funciona en la red local por ahora).';
+      cfStatus.textContent = '❌ No se pudo enviar. Inténtalo de nuevo en un momento.';
       cfStatus.className = 'comment-status err';
     })
     .finally(function(){ cfSubmit.disabled = false; });
@@ -2013,7 +2016,7 @@ var KOFI_USERNAME = 'carchofo';
       }, 2500);
     })
     .catch(function(){
-      brStatus.textContent = '❌ No se pudo enviar (solo funciona en la red local por ahora).';
+      brStatus.textContent = '❌ No se pudo enviar. Inténtalo de nuevo en un momento.';
       brStatus.className = 'bug-report-status err';
     })
     .finally(function(){ brSubmit.disabled = false; });
@@ -2209,7 +2212,7 @@ var KOFI_USERNAME = 'carchofo';
         variantForm.querySelectorAll('input,textarea').forEach(function(el){ el.value=''; });
       })
       .catch(function(){
-        vfStatus.textContent = '❌ No se pudo enviar (solo funciona en la red local por ahora).';
+        vfStatus.textContent = '❌ No se pudo enviar. Inténtalo de nuevo en un momento.';
         vfStatus.className = 'variant-add-status err';
       })
       .finally(function(){ vfSubmit.disabled = false; });
@@ -2362,7 +2365,7 @@ var BGT_TRANS = {
     'modal.forum_link': '🗣️ Ver debate completo en el foro →',
     'modal.no_comments': 'Aún no hay comentarios. ¡Sé el primero!',
     'modal.comment_sending': '⏳ Enviando…', 'modal.comment_ok': '✅ ¡Comentario enviado! Aparecerá pronto.',
-    'modal.comment_err': '❌ No se pudo enviar (solo funciona en la red local por ahora).',
+    'modal.comment_err': '❌ No se pudo enviar. Inténtalo de nuevo en un momento.',
     'modal.comment_empty': '❌ Escribe algo antes de enviar.',
     'modal.bug_ok': '✅ Reporte enviado. ¡Gracias!', 'modal.bug_err': '❌ No se pudo enviar.',
     'modal.bug_empty': '❌ Describe el problema antes de enviar.',
