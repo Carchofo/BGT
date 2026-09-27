@@ -1,11 +1,27 @@
-{
-  "_nota": "Comentarios rápidos por juego. Poblado por bgt-sync-stats.ps1 a partir del webhook bgt-community-submit tipo 'comment'.",
-  "Spooktacular": [],
-  "Criaturas Maravillosas": [],
-  "Tiletum": [],
-  "Piratas de Maracaibo": [],
-  "Castle Combo": [],
-  "Coimbra": [],
-  "Cascadia": [],
-  "Viernes": []
+﻿{
+    "_nota":  "Comentarios rÃ¡pidos por juego. Poblado por bgt-sync-stats.ps1 a partir del webhook bgt-community-submit tipo \u0027comment\u0027.",
+    "Spooktacular":  [
+
+                     ],
+    "Criaturas Maravillosas":  [
+
+                               ],
+    "Tiletum":  [
+
+                ],
+    "Piratas de Maracaibo":  [
+
+                             ],
+    "Castle Combo":  [
+
+                     ],
+    "Coimbra":  [
+
+                ],
+    "Cascadia":  [
+
+                 ],
+    "Viernes":  [
+
+                ]
 }
