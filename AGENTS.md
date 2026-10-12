@@ -60,3 +60,9 @@ ahí antes de implementar cualquier variante.
   `nombre_juego` de conversaciones naturales/desordenadas (ver
   `bgt-games-vault/learnings/2026-07-22-game-request-extraction-bug.md`). Pendiente de
   sesión de prompt engineering dedicada antes de anunciar el bot ampliamente.
+
+## Disciplina de trabajo (Superpowers)
+Antes de tocar código, usa el flujo de Superpowers: clarifica lo que se pide si hay ambigüedad,
+diseña el enfoque, y da un plan concreto ANTES de escribir nada. No empieces a programar
+directamente salvo que la tarea sea trivial y obvia. Verifica el resultado al final (tests,
+build, lo que aplique) antes de darlo por terminado.
