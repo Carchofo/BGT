@@ -1082,6 +1082,20 @@
         </div>
       </div>
 
+      <div class="game-card" data-game="Wingspan" data-relevance="19" data-bgg-rank="25" data-comments="0">
+        <div class="banner placeholder" role="img" aria-label="Wingspan" style="display:flex;align-items:center;justify-content:center;font-size:3.5rem">🐦</div>
+        <div class="body">
+          <h3>Wingspan</h3>
+          <div class="bot-name">🐦 Automa oficial (Automa Factory)</div>
+          <p>Tracker del Automa oficial: acciones del mazo, huevos, comida y puntuación final con las 3 dificultades. Solo en la app Android.</p>
+          <div class="tags"><span class="tag bot" data-i18n="tag.solo">Solitario</span><span class="tag rules" data-i18n="tag.rules">Reglas</span><span class="tag new">🆕 Nuevo</span></div>
+        </div>
+        <div class="card-footer">
+          <button class="like-btn" data-game="Wingspan"><span class="like-heart">♡</span> <span class="like-count">0</span></button>
+          <a class="game-thread-link" href="https://github.com/Carchofo/BGT/discussions?discussions_q=Wingspan" target="_blank" rel="noopener">💬 Foro</a>
+        </div>
+      </div>
+
       <a class="game-card add-game-card" href="#pedir-juego">
         <div class="banner placeholder add-icon" role="img" aria-label="Pedir juego">+</div>
         <div class="body">
@@ -1619,7 +1633,7 @@ var KOFI_USERNAME = 'carchofo';
 // ── Formulario "Sugerencias y peticiones" ──
 (function () {
   var GAMES = ['Spooktacular','Criaturas Maravillosas','Tiletum','Piratas de Maracaibo',
-               'Castle Combo','Coimbra','Cascadia','Viernes'];
+               'Castle Combo','Coimbra','Cascadia','Viernes','Splendor','Wingspan'];
   document.querySelectorAll('select.game-list').forEach(function (sel) {
     sel.innerHTML = '<option value="">— Elige un juego —</option>' +
       GAMES.map(function (g) { return '<option value="' + g + '">' + g + '</option>'; }).join('');
