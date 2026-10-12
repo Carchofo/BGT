@@ -1,4 +1,4 @@
-const CACHE = 'bgt-v4';
+const CACHE = 'bgt-v5';
 const ASSETS = [
   '/BGT/',
   '/BGT/index.html',
@@ -14,6 +14,7 @@ const ASSETS = [
   '/BGT/cascadia.html',
   '/BGT/coimbra.html',
   '/BGT/viernes.html',
+  '/BGT/wingspan.html',
   '/BGT/manifest.json',
   '/BGT/assets/logo-icon.png',
   '/BGT/assets/logo-full.png',
